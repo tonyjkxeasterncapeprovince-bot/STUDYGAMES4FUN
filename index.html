@@ -427,7 +427,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
   <button type="button" id="creatorNextUpload" aria-label="Play next channel upload">Next ▶</button>
   <button type="button" id="creatorBrowseUploads" aria-label="Show channel playlist gallery">▦ Browse uploads</button>
  </div>
- <span class="creator-gallery-note" id="creatorGalleryNote">The playlist comes from your YouTube channel. Videos play in Study Games when YouTube allows embedding.</span>
+ <span class="creator-gallery-note" id="creatorGalleryNote">Use the YouTube API to load thumbnails of all public uploads. Videos play here when embedding is allowed.</span>
 </div>
 <div class="creator-underplayer">
       <div class="creator-player-meta"><strong id="creatorPlayingTitle">Channel video player</strong><span id="creatorStatus" role="status" aria-live="polite">YouTube videos that allow embedding play here.</span></div>
@@ -436,7 +436,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
   </div>
 
   <div id="creatorVideosPanel" class="creator-content-panel" role="tabpanel" aria-labelledby="creatorVideosTab">
-    <div class="creator-category-top"><div><h3>🎬 Videos</h3><p>Watch full-length uploads and new videos.</p></div><button class="creator-category-link" id="creatorViewAllVideos" type="button" aria-controls="creatorMediaPlayerCard">View all videos here ▶</button></div>
+    <div class="creator-category-top"><div><h3>🎬 Videos</h3><p>Browse all public uploads in a thumbnail grid. The Shorts tab shows likely short-form videos.</p></div><button class="creator-category-link" id="creatorViewAllVideos" type="button" aria-controls="creatorMediaPlayerCard">View all videos here ▶</button></div>
     <div class="creator-playlist-strip" role="group" aria-label="Watch channel video playlist">
       <button id="creatorPlayAllVideos" type="button" class="creator-playlist-action" aria-controls="creatorMediaPlayerCard">▶ Play video playlist</button>
       <span class="creator-playlist-desc" id="creatorVideosPlaylistHint">Tap Videos to watch full uploads inside Study Games.</span>
@@ -444,7 +444,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     <div class="creator-video-grid" id="creatorVideosGrid" aria-live="polite"></div>
   </div>
   <div id="creatorShortsPanel" class="creator-content-panel" role="tabpanel" aria-labelledby="creatorShortsTab" hidden>
-    <div class="creator-category-top"><div><h3>⚡ Shorts</h3><p>Your vertical, short-form videos have their own place here.</p></div><button class="creator-category-link" id="creatorViewAllShorts" type="button" aria-controls="creatorMediaPlayerCard">View all Shorts here ▶</button></div>
+    <div class="creator-category-top"><div><h3>⚡ Shorts</h3><p>Short-form candidates up to three minutes. YouTube does not report exact Shorts status in its Data API.</p></div><button class="creator-category-link" id="creatorViewAllShorts" type="button" aria-controls="creatorMediaPlayerCard">View all Shorts here ▶</button></div>
     <div class="creator-playlist-strip" role="group" aria-label="Watch channel Shorts playlist">
       <button id="creatorPlayAllShorts" type="button" class="creator-playlist-action" aria-controls="creatorMediaPlayerCard">▶ Play Shorts playlist</button>
       <span class="creator-playlist-desc" id="creatorShortsPlaylistHint">Tap Shorts to watch the channel’s Shorts inside Study Games.</span>
@@ -459,7 +459,17 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     <div class="creator-category-top"><div><h3>📝 Posts</h3><p>Channel news, community updates, and announcements.</p></div><span class="creator-category-note">Posts can be added here by the site owner</span></div>
     <div class="creator-post-grid" id="creatorPostsGrid" aria-live="polite"></div>
   </div>
-  <details class="creator-owner-settings"><summary>⚙ Channel settings &amp; paste-a-link tools</summary>
+  <details class="creator-owner-settings" id="sgApiSettings"><summary>⚙ YouTube API setup &amp; channel settings</summary>
+    <div class="sg-youtube-api-owner" aria-label="Connect the YouTube Data API">
+      <h3>📺 YouTube Data API v3</h3>
+      <p>The automatic YouTube gallery is included. New public uploads can appear automatically when visitors open Study Games. <strong>First connect a YouTube Data API key restricted to this website.</strong> Do not use an unrestricted key.</p>
+      <label for="sgYouTubeApiPreview">Preview with a restricted API key on this device</label>
+      <div class="sg-api-input-row"><input id="sgYouTubeApiPreview" type="password" autocomplete="off" placeholder="Restricted API key (preview only)" aria-label="Restricted API key for private local preview" /><button type="button" id="sgYouTubeApiPreviewButton">Preview gallery</button></div>
+       <div class="sg-api-publish-row"><button type="button" id="sgDownloadConnectedWebsite">⬇ Download connected website (index.html)</button><span id="sgDownloadStatus" role="status" aria-live="polite">Connect your key and download a new website file. Then upload it to GitHub.</span></div>
+      <p class="sg-api-help" id="sgApiPreviewNote">Previewing is temporary and does <strong>not</strong> connect the site for other visitors. When the preview works, tap <strong>Download connected website</strong>, then upload that new <code>index.html</code> to GitHub. Never send your API key in chat; a key published in website code is visible and must be restricted.</p>
+      <p class="sg-api-help">For GitHub Pages, restrict the key's <strong>website</strong> (HTTP referrer) to <code>https://tonyjkxeasterncapeprovince-bot.github.io/*</code> and its <strong>API</strong> to YouTube Data API v3. The public HTML will expose your restricted key, so monitor its usage.</p>
+    </div>
+  
   <div class="creator-tools" id="creatorTools">
     <div class="creator-tool">
       <h3>🔗 Channel settings</h3>
@@ -480,7 +490,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     </div>
   </div>
   </details>
-  <p class="creator-note">The Videos and Shorts buttons load YouTube’s embedded channel playlists here on Study Games. They are streamed, not downloaded. YouTube may restrict some videos or playlists, and embedded playback can be blocked on some networks. To add community posts, their content must be supplied separately.</p>
+  <p class="creator-note">The Videos section lists all public uploads when the YouTube Data API key is configured. The Shorts section estimates short-form content by duration (up to three minutes): some regular short videos may also appear there. These videos stream through the embedded YouTube player rather than being downloaded. Posts must be added separately.</p>
 </section>
 <section aria-labelledby="mediaHeading" data-screen="videos" hidden="" id="mediaCenter">
 <div class="sec-head"><h2 id="mediaHeading">▶ Video Library</h2><span>Search &amp; watch supported YouTube videos</span></div>
@@ -490,7 +500,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     <input id="ytSearchInput" type="search" placeholder="Search YouTube videos — music, gaming, math…" aria-label="Find YouTube videos" required />
     <button type="submit">Search videos</button>
   </form>
-  <p class="hint">To show live results here, an official YouTube Data API key is required. Watching a video link needs no key.</p>
+  <p class="hint">Channel galleries use the YouTube Data API key configured by the site owner. Video Library search has a separate optional search box. Watching a video link needs no key.</p>
   <details class="yt-api-details"><summary>Enable in-page video search (optional)</summary><p>Enter your own YouTube Data API v3 key. It is used only during this browser session, not saved into this site's code. Set HTTP referrer restrictions on the key before using it on a public website.</p><label for="ytApiKey">YouTube API key</label><input id="ytApiKey" type="password" autocomplete="off" placeholder="Paste your API key for in-page search" /><a href="https://developers.google.com/youtube/v3/getting-started" target="_blank" rel="noopener noreferrer">Official setup information ↗</a></details>
   <p id="ytSearchStatus" class="yt-search-status" role="status" aria-live="polite">You can also paste a direct video link into the player below.</p>
   <a href="https://www.youtube.com/" id="ytSearchOutside" class="media-open" target="_blank" rel="noopener noreferrer" hidden>Search on YouTube ↗</a>
@@ -674,7 +684,9 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     else webStatus.textContent='This box accepts website addresses, not search keywords. Try example.com.';
   });
   $('#testViewer').addEventListener('click',()=>{
-    const html=`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{margin:0;background:#f2f6ff;color:#182c4d;font:16px/1.6 system-ui,sans-serif}header{padding:22px;background:#dce7ff}main{max-width:550px;margin:48px auto;padding:28px;background:white;border:1px solid #c9d6eb;border-radius:18px;box-shadow:0 12px 36px #1a37691a}h1{margin:0 0 8px}button{border:0;border-radius:9px;background:#336cda;color:white;font:inherit;font-weight:800;padding:10px 16px;cursor:pointer}</style></head><body><header>📘 Study Games · Demo website</header><main><h1>✅ Internal tab is working</h1><p>This learning page is displayed inside Study Games, without opening a separate browser tab.</p><p>Sites that prohibit iframe embedding will still appear blank or show an error.</p><button id="count" onclick="this.textContent='Clicks: '+(++window.count|| (window.count=1))">Click to test</button></main></body></html>`;
+    const html=`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{margin:0;background:#f2f6ff;color:#182c4d;font:16px/1.6 system-ui,sans-serif}header{padding:22px;background:#dce7ff}main{max-width:550px;margin:48px auto;padding:28px;background:white;border:1px solid #c9d6eb;border-radius:18px;box-shadow:0 12px 36px #1a37691a}h1{margin:0 0 8px}button{border:0;border-radius:9px;background:#336cda;color:white;font:inherit;font-weight:800;padding:10px 16px;cursor:pointer}</style></head><body><header>📘 Study Games · Demo website</header><main><h1>✅ Internal tab is working</h1><p>This learning page is displayed inside Study Games, without opening a separate browser tab.</p><p>Sites that prohibit iframe embedding will still appear blank or show an error.</p><button id="count" onclick="this.textContent='Clicks: '+(++window.count|| (window.count=1))">Click to test</button></main>
+
+</body></html>`;
     addTab({label:'Study Demo',html});
   });
   $('#closeWeb').addEventListener('click',()=>{if(currentTabId!==null)closeTab(currentTabId)});
@@ -1119,8 +1131,8 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
   }
   document.getElementById('creatorPlayAllVideos').addEventListener('click',()=>playCategory('videos'));
   document.getElementById('creatorPlayAllShorts').addEventListener('click',()=>playCategory('shorts'));
-  document.getElementById('creatorViewAllVideos').addEventListener('click',()=>playCategory('videos'));
-  document.getElementById('creatorViewAllShorts').addEventListener('click',()=>playCategory('shorts'));
+  document.getElementById('creatorViewAllVideos').addEventListener('click',()=>{playCategory('videos',false);document.getElementById('creatorVideosGrid').scrollIntoView({behavior:'smooth',block:'start'});});
+  document.getElementById('creatorViewAllShorts').addEventListener('click',()=>{playCategory('shorts',false);document.getElementById('creatorShortsGrid').scrollIntoView({behavior:'smooth',block:'start'});});
   // Switching tabs immediately selects the matching playlist without opening YouTube.
   document.getElementById('creatorVideosTab').addEventListener('click',()=>playCategory('videos',false));
   document.getElementById('creatorShortsTab').addEventListener('click',()=>playCategory('shorts',false));
@@ -1301,135 +1313,259 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 @media(max-width:430px){#creatorChannel .creator-library-navigation{padding:13px}#creatorChannel .creator-video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#creatorChannel .creator-library-buttons button{padding:11px 7px}}
 </style>
 
-<script id="creator-full-gallery-script">
+<style id="creator-gallery-empty-style">
+#creatorChannel .creator-gallery-empty{grid-column:1/-1;border:1px dashed #8b4962;border-radius:12px;padding:22px 18px;background:rgba(22,10,19,.74);font-size:14px;line-height:1.55;text-align:center;color:#f4cbd6;min-height:84px;display:flex;align-items:center;justify-content:center}
+#creatorChannel .creator-video-grid{min-height:94px;scroll-margin-top:30px}
+#creatorChannel .creator-media-text{display:block}
+</style>
+
+<style id="sg-youtube-api-gallery-style">
+#creatorChannel .sg-youtube-api-owner{background:linear-gradient(145deg,#25111b,#140e18);border:1px solid #8b4255;border-radius:14px;padding:15px;margin:14px 0;color:#fbe8ed}
+#creatorChannel .sg-youtube-api-owner h3{color:white;margin:0 0 9px;font-size:19px}
+#creatorChannel .sg-youtube-api-owner p{line-height:1.5;font-size:13px;margin:8px 0 13px}
+#creatorChannel .sg-youtube-api-owner label{font-weight:700;font-size:13px;display:block;margin-bottom:7px}
+#creatorChannel .sg-api-input-row{display:flex;gap:8px;flex-wrap:wrap}
+#creatorChannel .sg-api-input-row input{min-width:180px;flex:1;background:#180e14;color:white;border:1px solid #9e4963;border-radius:8px;padding:11px}
+#creatorChannel .sg-api-input-row button,.sg-gallery-more{border:0;border-radius:9px;background:#e21d42;color:#fff;font-weight:800;padding:12px 14px;cursor:pointer}
+#creatorChannel .sg-api-help{color:#e8b7c6;font-size:12px;overflow-wrap:anywhere}
+#creatorChannel .sg-api-help code{font-size:11px;word-break:break-word}
+#creatorChannel .sg-gallery-more{grid-column:1/-1;display:block;min-height:44px;margin:3px 0 7px}
+#creatorChannel .sg-gallery-progress{grid-column:1/-1;font-size:13px;color:#f4ccd6;padding:10px 4px}
+#creatorChannel .creator-media-cover{background:#140e15}
+#creatorChannel .creator-media-card .sg-media-meta{display:block;padding:0 10px 9px;color:#d7b4bf;font-size:11px;font-weight:500}
+#creatorChannel .sg-current-item{outline:2px solid #f53e61;outline-offset:1px}
+</style>
+
+<style>
+#creatorChannel .sg-api-publish-row{display:flex;flex-direction:column;gap:9px;margin:12px 0;padding:14px;border:1px solid #8b3550;background:#1b1018;border-radius:12px}
+#creatorChannel .sg-api-publish-row button{background:#f53a61;border:0;color:white;font-weight:800;font-size:14px;border-radius:11px;padding:13px 16px;cursor:pointer}
+#creatorChannel .sg-api-publish-row button:hover{background:#fb5275}
+#creatorChannel #sgDownloadStatus{font-size:12px;color:#f3cada;line-height:1.6}
+</style>
+<script id="sg-official-youtube-data-api">
 (()=>{
 'use strict';
-// Uses YouTube's official IFrame Player API to read the selected playlist's
-// available video IDs and provide next/previous navigation. This requires no API key.
-// YouTube controls the content and may expose only a subset of a playlist.
-const iframe=document.getElementById('creatorPlayer');
-const videoGrid=document.getElementById('creatorVideosGrid');
-const shortsGrid=document.getElementById('creatorShortsGrid');
-const count=document.getElementById('creatorPlaylistCount');
-const note=document.getElementById('creatorGalleryNote');
-const status=document.getElementById('creatorStatus');
-const prev=document.getElementById('creatorPrevUpload');
-const next=document.getElementById('creatorNextUpload');
-const browse=document.getElementById('creatorBrowseUploads');
-let player=null, ready=false, currentList='',lastPlaylistSig='',pollId=null;
-const lists={videos:null,shorts:null};
-const channelID='UCmmumLVTcTEL9BqQLkWu6ww';
-const playlistIDs={videos:'UULF'+channelID.slice(2),shorts:'UUSH'+channelID.slice(2)};
-function kind(){return document.getElementById('creatorShortsTab').getAttribute('aria-selected')==='true'?'shorts':'videos';}
-function playlistForCurrentFrame(){
- try{const url=new URL(iframe.src);return url.searchParams.get('list')||'';}catch{return '';}
+// STUDY GAMES OWNER SETUP: Replace the value below with a Google Cloud API key
+// restricted to YouTube Data API v3 AND your public GitHub Pages site.
+// IMPORTANT: An API key in public HTML is visible to visitors. Restrictions are essential.
+const PUBLISHED_YOUTUBE_API_KEY = 'REPLACE_WITH_YOUR_RESTRICTED_YOUTUBE_API_KEY';
+const CHANNEL_ID = 'UCmmumLVTcTEL9BqQLkWu6ww';
+const API_ORIGIN = 'https://www.googleapis.com/youtube/v3/';
+const videosGrid = document.getElementById('creatorVideosGrid');
+const shortsGrid = document.getElementById('creatorShortsGrid');
+const player = document.getElementById('creatorPlayer');
+const introPlaceholder = document.getElementById('creatorPlaceholder');
+const playerTitle = document.getElementById('creatorPlayingTitle');
+const playerStatus = document.getElementById('creatorStatus');
+const counter = document.getElementById('creatorPlaylistCount');
+const galleryNote = document.getElementById('creatorGalleryNote');
+const previewInput = document.getElementById('sgYouTubeApiPreview');
+const previewBtn = document.getElementById('sgYouTubeApiPreviewButton');
+const previewNote = document.getElementById('sgApiPreviewNote');
+const exportBtn = document.getElementById('sgDownloadConnectedWebsite');
+const exportStatus = document.getElementById('sgDownloadStatus');
+const KEY_CONFIGURED = PUBLISHED_YOUTUBE_API_KEY !== 'REPLACE_WITH_YOUR_RESTRICTED_YOUTUBE_API_KEY' && !!PUBLISHED_YOUTUBE_API_KEY.trim();
+let key = KEY_CONFIGURED ? PUBLISHED_YOUTUBE_API_KEY.trim() : '';
+let batchAbort = null, currentRun = 0;
+let uploadsPlaylist = null, pageToken = undefined, busy = false, allLoaded = false;
+let allItems = [], itemsById = new Map(), selectedId = null;
+let lastSynced = 0;
+const REFRESH_INTERVAL_MS = 30 * 60 * 1000; // Check for newly uploaded videos when the page is revisited.
+
+function changeNote(msg){galleryNote.textContent=msg;counter.textContent=msg;}
+function clearAndMessage(grid,msg){const e=document.createElement('div');e.className='creator-gallery-empty';e.textContent=msg;grid.replaceChildren(e);}
+function setLoading(msg){
+  [videosGrid,shortsGrid].forEach(g=>clearAndMessage(g,msg));
+  changeNote(msg);
 }
-function showKind(k){
- const t=document.getElementById(k==='shorts'?'creatorShortsTab':'creatorVideosTab');
- if(t.getAttribute('aria-selected')!=='true')t.click();
- if(iframe.hidden||!playlistForCurrentFrame()){
-  document.getElementById(k==='shorts'?'creatorPlayAllShorts':'creatorPlayAllVideos').click();
- }
+function playerPlay(video){
+  selectedId=video.id;
+  player.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(video.id)+'?autoplay=1&playsinline=1&rel=0';
+  player.hidden=false; introPlaceholder.hidden=true;
+  playerTitle.textContent=video.title;
+  playerStatus.textContent=video.embeddable===false?'YouTube may not allow this upload to play on other websites.':'Playing inside Study Games when YouTube allows embedding.';
+  document.querySelectorAll('#creatorChannel .sg-current-item').forEach(b=>b.classList.remove('sg-current-item'));
+  const btn=document.getElementById('sg-card-'+video.id);
+  if(btn)btn.classList.add('sg-current-item');
+  document.getElementById('creatorMediaPlayerCard').scrollIntoView({block:'start',behavior:'smooth'});
 }
-function updateNav(){
- const k=kind(), arr=lists[k];
- if(arr&&arr.length){
-  count.textContent=arr.length+' '+(k==='shorts'?'Shorts':'videos')+' available in the embedded playlist. Tap a thumbnail below or use Previous / Next.';
-  note.textContent='This gallery uses the video IDs YouTube provides to the embedded playlist; more uploads may exist on the channel.';
- } else {
-  count.textContent='Use Previous / Next or tap the playlist selector in the YouTube player to browse '+(k==='shorts'?'Shorts':'videos')+'.';
-  note.textContent='When YouTube supplies a playlist list, its thumbnails will appear below. All playback stays in Study Games when embedding is allowed.';
- }
+function durationInSeconds(value){
+  if(typeof value!=='string')return null;
+  const m=value.match(/^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/);
+  if(!m)return null;
+  return (+m[1]||0)*86400+(+m[2]||0)*3600+(+m[3]||0)*60+(+m[4]||0);
 }
-function populate(k,videoIDs){
- const ids=[...new Set(videoIDs)].filter(id=>/^[A-Za-z0-9_-]{11}$/.test(id));
- if(!ids.length)return;
- const sig=k+':'+ids.join(','); if(lastPlaylistSig===sig)return;
- lastPlaylistSig=sig;
- lists[k]=ids;
- const grid=k==='shorts'?shortsGrid:videoGrid;
- grid.replaceChildren();
- const label=k==='shorts'?'Short':'Video';
- ids.forEach((id,i)=>{
-  const b=document.createElement('button');b.type='button';b.className='creator-media-card';
-  b.setAttribute('aria-label','Play '+label+' '+(i+1)+' inside Study Games');
-  const img=document.createElement('img');img.className='creator-media-cover';img.loading='lazy';img.alt='';img.src='https://i.ytimg.com/vi/'+id+'/mqdefault.jpg';
-  const t=document.createElement('div');t.className='creator-media-text';t.textContent=label+' '+(i+1)+' · ▶ Play';
-  b.append(img,t);
-  b.addEventListener('click',()=>{
-    showKind(k);
-    const current=playlistForCurrentFrame();
-    if(current===playlistIDs[k]&&ready&&player&&typeof player.playVideoAt==='function'){
-      try{player.playVideoAt(i);}catch(_e){/* fallback below */}
-    } else {
-      iframe.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&playsinline=1&rel=0&enablejsapi=1';
-      iframe.hidden=false;
-      document.getElementById('creatorPlaceholder').hidden=true;
+function niceLength(seconds){if(seconds===null)return '';return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;}
+function card(video,k){
+  const b=document.createElement('button');b.type='button';b.className='creator-media-card';b.id='sg-card-'+video.id;
+  b.setAttribute('aria-label','Play '+video.title+' inside Study Games');
+  const pic=document.createElement('img');pic.className='creator-media-cover';pic.loading='lazy';pic.alt='';pic.src=video.thumbnail;
+  const text=document.createElement('span');text.className='creator-media-text';text.textContent=video.title;
+  const meta=document.createElement('span');meta.className='sg-media-meta';meta.textContent=niceLength(video.duration)||'Video';
+  b.append(pic,text,meta);b.addEventListener('click',()=>playerPlay(video));
+  return b;
+}
+function render(){
+  const vids=allItems; // "Videos" lists ALL uploads; no Shorts are hidden from here.
+  // YouTube Data API has durations, but not a definitive isShort field or aspect ratio.
+  const clips=allItems.filter(v=>v.duration!==null && v.duration<=180);
+  function paint(grid,records,k){
+    const fragment=document.createDocumentFragment();
+    if(!records.length){const d=document.createElement('div');d.className='creator-gallery-empty';d.textContent='No '+(k==='shorts'?'short-form candidates':'public videos')+' in the pages loaded yet.';fragment.append(d);}
+    else records.forEach(v=>fragment.append(card(v,k)));
+    grid.replaceChildren(fragment);
+    if(!allLoaded){
+      const more=document.createElement('button');more.type='button';more.className='sg-gallery-more';
+      more.textContent=busy?'Loading more uploads…':'Load more uploads';more.disabled=busy;
+      more.addEventListener('click',()=>{void loadPage(currentRun)});
+      grid.append(more);
     }
-    document.getElementById('creatorPlayingTitle').textContent=label+' '+(i+1)+' of '+ids.length;
-    document.getElementById('creatorMediaPlayerCard').scrollIntoView({behavior:'smooth',block:'start'});
-  });
-  grid.appendChild(b);
- });
- const el=document.getElementById(k==='shorts'?'creatorShortsCount':'creatorVideosCount');
- el.textContent='('+ids.length+' available)';
- updateNav();
+  }
+  paint(videosGrid,vids,'videos');paint(shortsGrid,clips,'shorts');
+  const total=allLoaded?`All ${vids.length} public uploads loaded`:`${vids.length} public uploads loaded`;
+  const countStr=`${total} • ${clips.length} short-form candidates (duration estimate)`;
+  changeNote(countStr);
 }
-function readPlaylist(){
- if(!ready||!player||typeof player.getPlaylist!=='function')return;
- let items=[];try{items=player.getPlaylist()||[];}catch(_e){}
- const id=playlistForCurrentFrame();
- const k=id===playlistIDs.shorts?'shorts':id===playlistIDs.videos?'videos':null;
- if(k&&items.length) populate(k,items);
+async function api(resource,params,run){
+  const url=new URL(API_ORIGIN+resource);
+  for(const [p,v] of Object.entries({...params,key}))url.searchParams.set(p,String(v));
+  const response=await fetch(url,{signal:batchAbort?.signal,referrerPolicy:'strict-origin-when-cross-origin'});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok){
+    const details=data?.error?.message||`Google API error ${response.status}`;
+    throw new Error(details);
+  }
+  if(run!==currentRun)throw new Error('Refresh superseded this request');
+  return data;
 }
-function onReady(){ready=true;readPlaylist();}
-function hookAPI(){
- if(!window.YT||typeof window.YT.Player!=='function'||player||!playlistForCurrentFrame())return;
- try{
-  player=new window.YT.Player(iframe,{
-   events:{onReady:onReady,onStateChange:()=>readPlaylist(),onError:()=>{note.textContent='Some uploads cannot be played here due to YouTube restrictions.';}}
-  });
- }catch(_e){player=null;}
+async function loadPage(run){
+  if(busy||allLoaded||!key||run!==currentRun)return;
+  busy=true;
+  let failed=false;
+  try{
+    const response=await api('playlistItems',{part:'snippet,contentDetails',playlistId:uploadsPlaylist,maxResults:50,...(pageToken?{pageToken}:{})},run);
+    const list=(response.items||[]).filter(item=>item.contentDetails?.videoId && /^[A-Za-z0-9_-]{11}$/.test(item.contentDetails.videoId));
+    const fresh=list.filter(i=>!itemsById.has(i.contentDetails.videoId));
+    if(fresh.length){
+      const detail=await api('videos',{part:'contentDetails,status',id:fresh.map(i=>i.contentDetails.videoId).join(',')},run);
+      const info=new Map((detail.items||[]).map(i=>[i.id,i]));
+      for(const item of fresh){
+        const id=item.contentDetails.videoId, d=info.get(id);
+        // Skip uploads that are no longer publicly available.
+        if(!d)continue;
+        const seconds=durationInSeconds(d.contentDetails?.duration);
+        const s=item.snippet||{};
+        const thumbs=s.thumbnails||{};
+        const thumb=thumbs.medium?.url||thumbs.high?.url||thumbs.default?.url||'https://i.ytimg.com/vi/'+id+'/mqdefault.jpg';
+        const itemData={id,title:s.title||'Untitled video',thumbnail:thumb,duration:seconds,embeddable:d.status?.embeddable};
+        itemsById.set(id,itemData); allItems.push(itemData);
+      }
+    }
+    pageToken=response.nextPageToken;
+    allLoaded=!pageToken;
+    render();
+  }catch(e){
+    failed=true;
+    if(run===currentRun){
+      const msg='Could not load the YouTube video list: '+(e?.message||'Check the API key or internet connection.')+'. Confirm YouTube Data API v3 is enabled and the key permits your GitHub Pages website.';
+      if(!allItems.length)setLoading(msg);else changeNote(msg);
+    }
+  }finally{busy=false;if(!failed)render();}
+  return !failed;
 }
-const prior=window.onYouTubeIframeAPIReady;
-window.onYouTubeIframeAPIReady=()=>{if(typeof prior==='function')prior();hookAPI();};
-const loader=document.createElement('script');loader.src='https://www.youtube.com/iframe_api';loader.async=true;document.head.append(loader);
-function sendCommand(command){
- try{iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:command,args:[]}),'https://www.youtube-nocookie.com');}catch(_e){}
+async function start(apiKey){
+  if(!apiKey||apiKey==='REPLACE_WITH_YOUR_RESTRICTED_YOUTUBE_API_KEY'){
+    setLoading('YouTube gallery is installed but needs a website-restricted API key configured by the site owner. Open “YouTube API setup” below.');return;
+  }
+  if(batchAbort)batchAbort.abort();batchAbort=new AbortController();
+  const run=++currentRun;key=apiKey.trim();uploadsPlaylist=null;pageToken=undefined;busy=false;allLoaded=false;
+  allItems=[];itemsById=new Map();setLoading('Loading your public YouTube uploads…');
+  try{
+    const info=await api('channels',{part:'contentDetails,snippet',id:CHANNEL_ID},run);
+    const channel=info.items?.[0];
+    if(!channel)throw new Error('No YouTube channel matched that Channel ID');
+    uploadsPlaylist=channel.contentDetails?.relatedPlaylists?.uploads;
+    if(!uploadsPlaylist)throw new Error('YouTube did not return an uploads playlist for this channel');
+    const actual=channel.snippet?.title||'YouTube channel';
+    previewNote.textContent='Connected to channel: '+actual+'. The grid below loads public uploads; Shorts are estimated by duration.';
+    // Automatically page through every public upload, not just the first 50.
+    // These list requests cost much less quota than searching for each video.
+    let ok = true;
+    while(ok && !allLoaded && run===currentRun){
+      ok = await loadPage(run);
+      if(ok && !allLoaded) await new Promise(resolve=>setTimeout(resolve,100));
+    }
+    if(ok && run===currentRun) lastSynced=Date.now();
+  }catch(e){if(run!==currentRun)return;setLoading('Could not connect to YouTube: '+(e?.message||'Check the key and channel ID')+'. Make sure the key is enabled for YouTube Data API v3.');}
 }
-function navigate(which){
- showKind(kind());
- const f=which==='next'?'nextVideo':'previousVideo';
- if(ready&&player&&typeof player[f]==='function'){
-  try{player[f]();}catch(_e){sendCommand(f);}
- }else{sendCommand(f);}
- status.textContent='Browsing the '+(kind()==='shorts'?'Shorts':'videos')+' playlist inside Study Games. If nothing changes, start playing the video first.';
- readPlaylist();
+function currentTab(){return document.getElementById('creatorShortsTab').getAttribute('aria-selected')==='true'?'shorts':'videos';}
+function gridGo(k){
+  document.getElementById(k==='shorts'?'creatorShortsTab':'creatorVideosTab').click();
+  document.getElementById(k==='shorts'?'creatorShortsGrid':'creatorVideosGrid').scrollIntoView({block:'start',behavior:'smooth'});
 }
-prev.addEventListener('click',()=>navigate('previous'));
-next.addEventListener('click',()=>navigate('next'));
-browse.addEventListener('click',()=>{
- const k=kind(); showKind(k);readPlaylist();
- const grid=k==='shorts'?shortsGrid:videoGrid;
- if(lists[k]&&lists[k].length){grid.scrollIntoView({behavior:'smooth',block:'start'});}
- else{
-  status.textContent='Tap Play and the playlist icon in the YouTube player to browse every accessible upload. You can also use Next / Previous here.';
-  document.getElementById('creatorMediaPlayerCard').scrollIntoView({behavior:'smooth',block:'start'});
- }
+function addOverride(id,fn){
+  const btn=document.getElementById(id);
+  btn.addEventListener('click',(e)=>{
+    if(!key)return; // allow old playlist behavior until API connected
+    e.preventDefault();e.stopImmediatePropagation();fn();
+  },true);
+}
+addOverride('creatorViewAllVideos',()=>gridGo('videos'));
+addOverride('creatorViewAllShorts',()=>gridGo('shorts'));
+addOverride('creatorBrowseUploads',()=>gridGo(currentTab()));
+function step(dir){
+  const items=currentTab()==='shorts'?allItems.filter(v=>v.duration!==null&&v.duration<=180):allItems;
+  if(!items.length){changeNote('No loaded uploads to play.');return;}
+  const i=items.findIndex(v=>v.id===selectedId);
+  playerPlay(items[i<0?0:(i+dir+items.length)%items.length]);
+}
+addOverride('creatorPrevUpload',()=>step(-1));
+addOverride('creatorNextUpload',()=>step(1));
+addOverride('creatorPlayAllVideos',()=>{if(allItems.length)playerPlay(allItems[0]);else gridGo('videos');});
+addOverride('creatorPlayAllShorts',()=>{const first=allItems.find(v=>v.duration!==null&&v.duration<=180);if(first)playerPlay(first);else gridGo('shorts');});
+previewBtn.addEventListener('click',()=>{
+  const val=previewInput.value.trim();
+  if(!val){previewNote.textContent='Enter a YouTube Data API v3 key restricted to your website to preview.';return;}
+  previewNote.textContent='Previewing with a key only in this browser session. This does not publish the key for visitors.';
+  void start(val);
 });
-['creatorVideosTab','creatorShortsTab'].forEach(id=>document.getElementById(id).addEventListener('click',()=>{
- updateNav();setTimeout(readPlaylist,900);
-}));
-iframe.addEventListener('load',()=>{
- hookAPI();
- currentList=playlistForCurrentFrame();
- lastPlaylistSig='';
- // The YouTube API may become ready only after the user presses Play.
- setTimeout(readPlaylist,1200);setTimeout(readPlaylist,3300);
+// Create a one-file site with the restricted API key configured. A public GitHub Pages
+// HTML file cannot keep an API key secret; the owner must configure restrictions first.
+exportBtn.addEventListener('click',()=>{
+  const configured = previewInput.value.trim() || (KEY_CONFIGURED ? PUBLISHED_YOUTUBE_API_KEY : '');
+  if(!/^AIza[\w-]{25,}$/.test(configured)){
+    exportStatus.textContent='Paste your Google Cloud YouTube Data API key above first. The key usually starts with AIza.';
+    return;
+  }
+  const original = "const PUBLISHED_YOUTUBE_API_KEY = 'REPLACE_WITH_YOUR_RESTRICTED_YOUTUBE_API_KEY';";
+  const replacement = 'const PUBLISHED_YOUTUBE_API_KEY = ' + JSON.stringify(configured) + ';';
+  const clone=document.documentElement.cloneNode(true);
+  const script=clone.querySelector('#sg-official-youtube-data-api');
+  if(!script){exportStatus.textContent='Could not prepare website: setup script missing.';return;}
+  if(script.textContent.includes(original))script.textContent=script.textContent.replace(original,replacement);
+  else script.textContent=script.textContent.replace(/const PUBLISHED_YOUTUBE_API_KEY = (?:'[^']*'|"[^"]*");/,replacement);
+  if(!script.textContent.includes(replacement)){exportStatus.textContent='Could not prepare website: API key setup failed.';return;}
+  // Remove live player URLs and previewed galleries from the exported file.
+  for(const id of ['creatorVideosGrid','creatorShortsGrid']){const el=clone.querySelector('#'+id);if(el)el.replaceChildren();}
+  const outPlayer=clone.querySelector('#creatorPlayer');if(outPlayer){outPlayer.removeAttribute('src');outPlayer.setAttribute('hidden','');}
+  const outPlaceholder=clone.querySelector('#creatorPlaceholder');if(outPlaceholder)outPlaceholder.removeAttribute('hidden');
+  const file = new Blob(['<!DOCTYPE html>\n',clone.outerHTML],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(file);
+  const a=document.createElement('a');a.href=url;a.download='index.html';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+  exportStatus.textContent='Downloaded index.html. Now upload this new file to your GitHub STUDYGAMES4FUN repository and commit the change. The gallery will then be available to visitors.';
 });
-// Poll gently while the channel tab is active; playlist IDs sometimes arrive later.
-setInterval(()=>{if(!document.getElementById('creatorChannel').hidden)readPlaylist();},5000);
-updateNav();
+// Reload the public uploads periodically when a visitor returns to Study Games.
+function maybeRefresh(){
+  if(key && !busy && Date.now()-lastSynced>=REFRESH_INTERVAL_MS && !document.hidden && !document.getElementById('creatorChannel').hidden){
+    void start(key);
+  }
+}
+document.addEventListener('visibilitychange',maybeRefresh);
+window.addEventListener('focus',maybeRefresh);
+setInterval(maybeRefresh,5*60*1000);
+// An owner must publish the restricted key above to enable the gallery for everyone.
+void start(key);
 })();
 </script>
 </body>
