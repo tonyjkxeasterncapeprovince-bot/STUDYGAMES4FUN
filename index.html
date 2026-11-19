@@ -419,7 +419,17 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
       <iframe id="creatorPlayer" title="TonyJKX Eastern Cape Province YouTube player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
     </div>
     <div class="creator-playlist-tip" id="creatorPlaylistTip"><strong>Browse videos right here</strong><span>Tap Play, then use the YouTube player's playlist menu to select an upload. The video stays in Study Games.</span></div>
-    <div class="creator-underplayer">
+    
+<div id="creatorLibraryNavigation" class="creator-library-navigation" role="group" aria-label="Browse all channel uploads">
+ <div class="creator-library-navigation-heading"><strong>📚 Browse the whole channel</strong><span id="creatorPlaylistCount" aria-live="polite">Select Videos or Shorts, then use Next or Previous to move through uploads.</span></div>
+ <div class="creator-library-buttons">
+  <button type="button" id="creatorPrevUpload" aria-label="Play previous channel upload">◀ Previous</button>
+  <button type="button" id="creatorNextUpload" aria-label="Play next channel upload">Next ▶</button>
+  <button type="button" id="creatorBrowseUploads" aria-label="Show channel playlist gallery">▦ Browse uploads</button>
+ </div>
+ <span class="creator-gallery-note" id="creatorGalleryNote">The playlist comes from your YouTube channel. Videos play in Study Games when YouTube allows embedding.</span>
+</div>
+<div class="creator-underplayer">
       <div class="creator-player-meta"><strong id="creatorPlayingTitle">Channel video player</strong><span id="creatorStatus" role="status" aria-live="polite">YouTube videos that allow embedding play here.</span></div>
       <div class="creator-player-subscribe"><span>Subscribe to the creator</span><div class="g-ytsubscribe" data-channelid="UCmmumLVTcTEL9BqQLkWu6ww" data-layout="default" data-theme="dark" data-count="hidden"></div></div>
     </div>
@@ -926,7 +936,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
       status.textContent='Please enter the full 24-character channel ID beginning with UC.';return;
     }
     const uploadPlaylist='UU'+id.slice(2);
-    showVideo('https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(uploadPlaylist),'All public channel uploads');
+    showVideo('https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(uploadPlaylist)+'&enablejsapi=1&playsinline=1','All public channel uploads');
     status.textContent='Showing the channel uploads playlist. Availability depends on YouTube permissions and network access.';
     try{localStorage.setItem('study-games-youtube-channel-id',id);}catch{}
   }
@@ -1090,7 +1100,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     }
     // YouTube's channel-generated playlists: UULF for standard uploads, UUSH for Shorts.
     const list=(kind==='shorts'?'UUSH':'UULF')+id.slice(2);
-    const url='https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(list);
+    const url='https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(list)+'&enablejsapi=1&playsinline=1&rel=0';
     // Clicking either gallery always stays on this website. The iframe provides the
     // YouTube playlist selector, rather than sending the visitor to a channel tab.
     if(frame.src!==url) frame.src=url;
@@ -1267,6 +1277,159 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
  audio.addEventListener('pause',sync);
  audio.addEventListener('ended',()=>{if(!audio.loop&&!userChoseMute){audio.currentTime=0;void playMusic(false)}});
  sync();
+})();
+</script>
+
+<style id="creator-browse-library-css">
+#creatorChannel .creator-library-navigation{display:grid;gap:12px;padding:15px 17px;background:linear-gradient(118deg,#260811,#110e16);border-top:1px solid #793345;border-bottom:1px solid #653043}
+#creatorChannel .creator-library-navigation-heading{display:grid;gap:3px}
+#creatorChannel .creator-library-navigation-heading strong{font-size:16px;color:#fff}
+#creatorChannel .creator-library-navigation-heading span{font-size:13px;color:#e8c6d2;line-height:1.4}
+#creatorChannel .creator-library-buttons{display:flex;gap:8px;flex-wrap:wrap}
+#creatorChannel .creator-library-buttons button{border:1px solid #ce3c57;background:linear-gradient(135deg,#aa102b,#4b101d);color:#fff;padding:11px 14px;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;min-height:42px;flex:1 1 100px}
+#creatorChannel .creator-library-buttons button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#creatorChannel .creator-gallery-note{font-size:12px;color:#ceabb6;line-height:1.5}
+#creatorChannel .creator-library-heading{color:#fff;font-size:15px;font-weight:800;margin:13px 0 7px}
+#creatorChannel .creator-library-count{font-size:12px;font-weight:500;color:#ddadbf}
+#creatorChannel .creator-video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+#creatorChannel .creator-media-card{cursor:pointer;min-width:0;border:1px solid #76273e;background:#180f18;color:#fff;text-align:left;border-radius:12px;overflow:hidden;padding:0}
+#creatorChannel .creator-media-card:hover{border-color:#ff3455}
+#creatorChannel .creator-media-card:focus-visible{outline:3px solid #ffb2c5;outline-offset:3px}
+#creatorChannel .creator-media-cover{display:block;aspect-ratio:16/9;object-fit:cover;width:100%}
+#creatorChannel .creator-shorts-grid .creator-media-cover{aspect-ratio:9/12;object-fit:cover}
+#creatorChannel .creator-media-text{padding:10px;font-size:13px;font-weight:700}
+@media(max-width:430px){#creatorChannel .creator-library-navigation{padding:13px}#creatorChannel .creator-video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#creatorChannel .creator-library-buttons button{padding:11px 7px}}
+</style>
+
+<script id="creator-full-gallery-script">
+(()=>{
+'use strict';
+// Uses YouTube's official IFrame Player API to read the selected playlist's
+// available video IDs and provide next/previous navigation. This requires no API key.
+// YouTube controls the content and may expose only a subset of a playlist.
+const iframe=document.getElementById('creatorPlayer');
+const videoGrid=document.getElementById('creatorVideosGrid');
+const shortsGrid=document.getElementById('creatorShortsGrid');
+const count=document.getElementById('creatorPlaylistCount');
+const note=document.getElementById('creatorGalleryNote');
+const status=document.getElementById('creatorStatus');
+const prev=document.getElementById('creatorPrevUpload');
+const next=document.getElementById('creatorNextUpload');
+const browse=document.getElementById('creatorBrowseUploads');
+let player=null, ready=false, currentList='',lastPlaylistSig='',pollId=null;
+const lists={videos:null,shorts:null};
+const channelID='UCmmumLVTcTEL9BqQLkWu6ww';
+const playlistIDs={videos:'UULF'+channelID.slice(2),shorts:'UUSH'+channelID.slice(2)};
+function kind(){return document.getElementById('creatorShortsTab').getAttribute('aria-selected')==='true'?'shorts':'videos';}
+function playlistForCurrentFrame(){
+ try{const url=new URL(iframe.src);return url.searchParams.get('list')||'';}catch{return '';}
+}
+function showKind(k){
+ const t=document.getElementById(k==='shorts'?'creatorShortsTab':'creatorVideosTab');
+ if(t.getAttribute('aria-selected')!=='true')t.click();
+ if(iframe.hidden||!playlistForCurrentFrame()){
+  document.getElementById(k==='shorts'?'creatorPlayAllShorts':'creatorPlayAllVideos').click();
+ }
+}
+function updateNav(){
+ const k=kind(), arr=lists[k];
+ if(arr&&arr.length){
+  count.textContent=arr.length+' '+(k==='shorts'?'Shorts':'videos')+' available in the embedded playlist. Tap a thumbnail below or use Previous / Next.';
+  note.textContent='This gallery uses the video IDs YouTube provides to the embedded playlist; more uploads may exist on the channel.';
+ } else {
+  count.textContent='Use Previous / Next or tap the playlist selector in the YouTube player to browse '+(k==='shorts'?'Shorts':'videos')+'.';
+  note.textContent='When YouTube supplies a playlist list, its thumbnails will appear below. All playback stays in Study Games when embedding is allowed.';
+ }
+}
+function populate(k,videoIDs){
+ const ids=[...new Set(videoIDs)].filter(id=>/^[A-Za-z0-9_-]{11}$/.test(id));
+ if(!ids.length)return;
+ const sig=k+':'+ids.join(','); if(lastPlaylistSig===sig)return;
+ lastPlaylistSig=sig;
+ lists[k]=ids;
+ const grid=k==='shorts'?shortsGrid:videoGrid;
+ grid.replaceChildren();
+ const label=k==='shorts'?'Short':'Video';
+ ids.forEach((id,i)=>{
+  const b=document.createElement('button');b.type='button';b.className='creator-media-card';
+  b.setAttribute('aria-label','Play '+label+' '+(i+1)+' inside Study Games');
+  const img=document.createElement('img');img.className='creator-media-cover';img.loading='lazy';img.alt='';img.src='https://i.ytimg.com/vi/'+id+'/mqdefault.jpg';
+  const t=document.createElement('div');t.className='creator-media-text';t.textContent=label+' '+(i+1)+' · ▶ Play';
+  b.append(img,t);
+  b.addEventListener('click',()=>{
+    showKind(k);
+    const current=playlistForCurrentFrame();
+    if(current===playlistIDs[k]&&ready&&player&&typeof player.playVideoAt==='function'){
+      try{player.playVideoAt(i);}catch(_e){/* fallback below */}
+    } else {
+      iframe.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&playsinline=1&rel=0&enablejsapi=1';
+      iframe.hidden=false;
+      document.getElementById('creatorPlaceholder').hidden=true;
+    }
+    document.getElementById('creatorPlayingTitle').textContent=label+' '+(i+1)+' of '+ids.length;
+    document.getElementById('creatorMediaPlayerCard').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  grid.appendChild(b);
+ });
+ const el=document.getElementById(k==='shorts'?'creatorShortsCount':'creatorVideosCount');
+ el.textContent='('+ids.length+' available)';
+ updateNav();
+}
+function readPlaylist(){
+ if(!ready||!player||typeof player.getPlaylist!=='function')return;
+ let items=[];try{items=player.getPlaylist()||[];}catch(_e){}
+ const id=playlistForCurrentFrame();
+ const k=id===playlistIDs.shorts?'shorts':id===playlistIDs.videos?'videos':null;
+ if(k&&items.length) populate(k,items);
+}
+function onReady(){ready=true;readPlaylist();}
+function hookAPI(){
+ if(!window.YT||typeof window.YT.Player!=='function'||player||!playlistForCurrentFrame())return;
+ try{
+  player=new window.YT.Player(iframe,{
+   events:{onReady:onReady,onStateChange:()=>readPlaylist(),onError:()=>{note.textContent='Some uploads cannot be played here due to YouTube restrictions.';}}
+  });
+ }catch(_e){player=null;}
+}
+const prior=window.onYouTubeIframeAPIReady;
+window.onYouTubeIframeAPIReady=()=>{if(typeof prior==='function')prior();hookAPI();};
+const loader=document.createElement('script');loader.src='https://www.youtube.com/iframe_api';loader.async=true;document.head.append(loader);
+function sendCommand(command){
+ try{iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:command,args:[]}),'https://www.youtube-nocookie.com');}catch(_e){}
+}
+function navigate(which){
+ showKind(kind());
+ const f=which==='next'?'nextVideo':'previousVideo';
+ if(ready&&player&&typeof player[f]==='function'){
+  try{player[f]();}catch(_e){sendCommand(f);}
+ }else{sendCommand(f);}
+ status.textContent='Browsing the '+(kind()==='shorts'?'Shorts':'videos')+' playlist inside Study Games. If nothing changes, start playing the video first.';
+ readPlaylist();
+}
+prev.addEventListener('click',()=>navigate('previous'));
+next.addEventListener('click',()=>navigate('next'));
+browse.addEventListener('click',()=>{
+ const k=kind(); showKind(k);readPlaylist();
+ const grid=k==='shorts'?shortsGrid:videoGrid;
+ if(lists[k]&&lists[k].length){grid.scrollIntoView({behavior:'smooth',block:'start'});}
+ else{
+  status.textContent='Tap Play and the playlist icon in the YouTube player to browse every accessible upload. You can also use Next / Previous here.';
+  document.getElementById('creatorMediaPlayerCard').scrollIntoView({behavior:'smooth',block:'start'});
+ }
+});
+['creatorVideosTab','creatorShortsTab'].forEach(id=>document.getElementById(id).addEventListener('click',()=>{
+ updateNav();setTimeout(readPlaylist,900);
+}));
+iframe.addEventListener('load',()=>{
+ hookAPI();
+ currentList=playlistForCurrentFrame();
+ lastPlaylistSig='';
+ // The YouTube API may become ready only after the user presses Play.
+ setTimeout(readPlaylist,1200);setTimeout(readPlaylist,3300);
+});
+// Poll gently while the channel tab is active; playlist IDs sometimes arrive later.
+setInterval(()=>{if(!document.getElementById('creatorChannel').hidden)readPlaylist();},5000);
+updateNav();
 })();
 </script>
 </body>
