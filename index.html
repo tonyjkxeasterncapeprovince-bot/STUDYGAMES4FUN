@@ -408,6 +408,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
       <span class="creator-subs-note">Subscription sign-in/confirmation is handled by YouTube.</span>
     </div>
   </div>
+  <div class="sg-channel-livebar" id="sgChannelLivebar" role="status" aria-live="polite"><span class="sg-live-dot"></span><span id="sgChannelLiveText">YouTube channel library • Connect YouTube Data API to load video cards automatically</span><button type="button" id="sgJumpToSetup">⚙ Connect gallery</button></div>
   <nav class="creator-tabs" role="tablist" aria-label="Channel content">
     <button type="button" class="creator-tab is-selected" id="creatorVideosTab" data-creator-tab="videos" role="tab" aria-selected="true" aria-controls="creatorVideosPanel">▶ Videos</button>
     <button type="button" class="creator-tab" id="creatorShortsTab" data-creator-tab="shorts" role="tab" aria-selected="false" aria-controls="creatorShortsPanel">▣ Shorts</button>
@@ -418,7 +419,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
       <div class="creator-placeholder" id="creatorPlaceholder"><span aria-hidden="true">▶</span><strong>Watch inside Study Games</strong><p>Choose a video or Short to start watching here.</p></div>
       <iframe id="creatorPlayer" title="TonyJKX Eastern Cape Province YouTube player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
     </div>
-    <div class="creator-playlist-tip" id="creatorPlaylistTip"><strong>Browse videos right here</strong><span>Tap Play, then use the YouTube player's playlist menu to select an upload. The video stays in Study Games.</span></div>
+    <div class="creator-playlist-tip" id="creatorPlaylistTip"><strong>Browse videos right here</strong><span>Choose a thumbnail in the Videos or Shorts grid below. Your selected upload plays right here without a new tab (when YouTube permits embedding).</span></div>
     
 <div id="creatorLibraryNavigation" class="creator-library-navigation" role="group" aria-label="Browse all channel uploads">
  <div class="creator-library-navigation-heading"><strong>📚 Browse the whole channel</strong><span id="creatorPlaylistCount" aria-live="polite">Select Videos or Shorts, then use Next or Previous to move through uploads.</span></div>
@@ -436,19 +437,23 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
   </div>
 
   <div id="creatorVideosPanel" class="creator-content-panel" role="tabpanel" aria-labelledby="creatorVideosTab">
-    <div class="creator-category-top"><div><h3>🎬 Videos</h3><p>Browse all public uploads in a thumbnail grid. The Shorts tab shows likely short-form videos.</p></div><button class="creator-category-link" id="creatorViewAllVideos" type="button" aria-controls="creatorMediaPlayerCard">View all videos here ▶</button></div>
+    <div class="creator-category-top"><div><h3>🎬 Videos</h3><p>Tap any thumbnail to play inside Study Games. This tab shows regular videos by default; turn on “Include Shorts” to see every public upload.</p></div><button class="creator-category-link" id="creatorViewAllVideos" type="button" aria-controls="creatorMediaPlayerCard">View all videos here ▶</button></div>
     <div class="creator-playlist-strip" role="group" aria-label="Watch channel video playlist">
-      <button id="creatorPlayAllVideos" type="button" class="creator-playlist-action" aria-controls="creatorMediaPlayerCard">▶ Play video playlist</button>
+      <button id="creatorPlayAllVideos" type="button" class="creator-playlist-action" aria-controls="creatorMediaPlayerCard">▶ Play newest video</button>
       <span class="creator-playlist-desc" id="creatorVideosPlaylistHint">Tap Videos to watch full uploads inside Study Games.</span>
     </div>
+    <div class="sg-library-toolbar" aria-label="Find channel videos"><label class="sg-search-wrap"><span>⌕</span><input type="search" id="sgSearchVideos" placeholder="Search videos by title…" autocomplete="off" /></label><select id="sgSortVideos" aria-label="Sort videos"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select><label class="sg-toggle-label"><input type="checkbox" id="sgAllUploadsToggle" /> Include Shorts</label></div>
+    <p class="sg-gallery-count" id="sgVideoCount">Video thumbnails appear here after the gallery is connected.</p>
     <div class="creator-video-grid" id="creatorVideosGrid" aria-live="polite"></div>
   </div>
   <div id="creatorShortsPanel" class="creator-content-panel" role="tabpanel" aria-labelledby="creatorShortsTab" hidden>
-    <div class="creator-category-top"><div><h3>⚡ Shorts</h3><p>Short-form candidates up to three minutes. YouTube does not report exact Shorts status in its Data API.</p></div><button class="creator-category-link" id="creatorViewAllShorts" type="button" aria-controls="creatorMediaPlayerCard">View all Shorts here ▶</button></div>
+    <div class="creator-category-top"><div><h3>⚡ Shorts</h3><p>Browse likely Shorts in a vertical thumbnail grid. YouTube does not provide an official Shorts flag, so very short regular videos may also appear.</p></div><button class="creator-category-link" id="creatorViewAllShorts" type="button" aria-controls="creatorMediaPlayerCard">View all Shorts here ▶</button></div>
     <div class="creator-playlist-strip" role="group" aria-label="Watch channel Shorts playlist">
-      <button id="creatorPlayAllShorts" type="button" class="creator-playlist-action" aria-controls="creatorMediaPlayerCard">▶ Play Shorts playlist</button>
+      <button id="creatorPlayAllShorts" type="button" class="creator-playlist-action" aria-controls="creatorMediaPlayerCard">▶ Play newest Short</button>
       <span class="creator-playlist-desc" id="creatorShortsPlaylistHint">Tap Shorts to watch the channel’s Shorts inside Study Games.</span>
     </div>
+    <div class="sg-library-toolbar" aria-label="Find channel Shorts"><label class="sg-search-wrap"><span>⌕</span><input type="search" id="sgSearchShorts" placeholder="Search Shorts by title…" autocomplete="off" /></label><select id="sgSortShorts" aria-label="Sort Shorts"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></div>
+    <p class="sg-gallery-count" id="sgShortCount">Shorts thumbnails appear here after the gallery is connected.</p>
     <div class="creator-video-grid creator-shorts-grid" id="creatorShortsGrid" aria-live="polite"></div>
     <form class="creator-input-row creator-short-input" id="creatorShortForm">
       <input type="url" id="creatorShortUrl" placeholder="Paste a YouTube Shorts link" aria-label="YouTube Shorts URL" required />
@@ -490,7 +495,7 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     </div>
   </div>
   </details>
-  <p class="creator-note">The Videos section lists all public uploads when the YouTube Data API key is configured. The Shorts section estimates short-form content by duration (up to three minutes): some regular short videos may also appear there. These videos stream through the embedded YouTube player rather than being downloaded. Posts must be added separately.</p>
+  <p class="creator-note">The Videos tab shows regular public uploads in a tappable grid when the YouTube Data API key is configured. The Shorts section estimates short-form content by duration (up to three minutes): some regular short videos may also appear there. These videos stream through the embedded YouTube player rather than being downloaded. Posts must be added separately.</p>
 </section>
 <section aria-labelledby="mediaHeading" data-screen="videos" hidden="" id="mediaCenter">
 <div class="sec-head"><h2 id="mediaHeading">▶ Video Library</h2><span>Search &amp; watch supported YouTube videos</span></div>
@@ -1342,6 +1347,38 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 #creatorChannel .sg-api-publish-row button:hover{background:#fb5275}
 #creatorChannel #sgDownloadStatus{font-size:12px;color:#f3cada;line-height:1.6}
 </style>
+
+<style id="sg-grid-upgrade-2026">
+#creatorChannel .sg-channel-livebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #8b3351;border-radius:13px;background:linear-gradient(115deg,#2b0d1a,#11111c);padding:12px 14px;margin:10px 0 15px;color:#ffe9ef;font-size:13px}
+#creatorChannel .sg-channel-livebar > span:nth-child(2){flex:1 1 250px}
+#creatorChannel .sg-live-dot{width:9px;height:9px;border-radius:50%;background:#f75a75;box-shadow:0 0 15px #f75a75;flex:none}
+#creatorChannel #sgJumpToSetup{color:white;font-weight:800;background:#b31539;border:1px solid #e74967;border-radius:9px;padding:10px 12px}
+#creatorChannel .sg-library-toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:12px 0 8px}
+#creatorChannel .sg-search-wrap{display:flex;flex:1 1 240px;align-items:center;gap:8px;background:#130f18;border:1px solid #72364c;border-radius:10px;padding:0 12px;min-height:45px;color:#ffd4df}
+#creatorChannel .sg-search-wrap input{border:0;outline:none;background:transparent;color:#fff;width:100%;padding:12px 0;font-size:14px;min-width:0}
+#creatorChannel .sg-search-wrap:focus-within{border-color:#ff688b}
+#creatorChannel .sg-library-toolbar select{background:#180d18;color:#fff;border:1px solid #72364c;border-radius:10px;padding:10px;min-height:45px;font-size:13px}
+#creatorChannel .sg-toggle-label{font-size:12px;font-weight:700;color:#ffc6d5;display:flex;align-items:center;gap:6px;min-height:40px;white-space:nowrap}
+#creatorChannel .sg-toggle-label input{accent-color:#ff3a65;width:17px;height:17px}
+#creatorChannel .sg-gallery-count{color:#ffd1df;font-size:12px;margin:5px 0 12px}
+#creatorChannel .creator-video-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px}
+#creatorChannel .creator-shorts-grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr))}
+#creatorChannel .creator-media-card{position:relative;transition:transform .16s ease,border-color .16s ease;display:block;min-width:0;padding:0}
+#creatorChannel .creator-media-card:hover{transform:translateY(-3px);border-color:#ff4870}
+#creatorChannel .sg-media-poster{position:relative;display:block}
+#creatorChannel .creator-video-grid .creator-media-cover{aspect-ratio:16/9;width:100%;object-fit:cover}
+#creatorChannel .creator-shorts-grid .creator-media-cover{aspect-ratio:9/14;width:100%;object-fit:cover}
+#creatorChannel .sg-timepill{position:absolute;right:7px;bottom:7px;padding:3px 6px;background:#08070bda;border-radius:6px;color:white;font-size:11px;font-weight:800}
+#creatorChannel .sg-card-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#ee1748d9;color:white;font-size:16px;box-shadow:0 0 20px #f0205199}
+#creatorChannel .creator-media-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;min-height:50px;padding:9px 10px 5px;font-size:13px}
+#creatorChannel .creator-media-card .sg-media-meta{display:block;padding:0 10px 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#creatorChannel .sg-gallery-more{background:#e2274e;color:white}
+@media(max-width:600px){
+  #creatorChannel .creator-video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #creatorChannel .creator-shorts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #creatorChannel .sg-library-toolbar select{flex:1 1 100px}
+}
+</style>
 <script id="sg-official-youtube-data-api">
 (()=>{
 'use strict';
@@ -1351,6 +1388,15 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 const PUBLISHED_YOUTUBE_API_KEY = 'REPLACE_WITH_YOUR_RESTRICTED_YOUTUBE_API_KEY';
 const CHANNEL_ID = 'UCmmumLVTcTEL9BqQLkWu6ww';
 const API_ORIGIN = 'https://www.googleapis.com/youtube/v3/';
+const liveStatus = document.getElementById('sgChannelLiveText');
+const jumpSetup = document.getElementById('sgJumpToSetup');
+const searchVideos = document.getElementById('sgSearchVideos');
+const searchShorts = document.getElementById('sgSearchShorts');
+const sortVideos = document.getElementById('sgSortVideos');
+const sortShorts = document.getElementById('sgSortShorts');
+const allToggle = document.getElementById('sgAllUploadsToggle');
+const videosCount = document.getElementById('sgVideoCount');
+const shortsCount = document.getElementById('sgShortCount');
 const videosGrid = document.getElementById('creatorVideosGrid');
 const shortsGrid = document.getElementById('creatorShortsGrid');
 const player = document.getElementById('creatorPlayer');
@@ -1396,36 +1442,72 @@ function durationInSeconds(value){
   return (+m[1]||0)*86400+(+m[2]||0)*3600+(+m[3]||0)*60+(+m[4]||0);
 }
 function niceLength(seconds){if(seconds===null)return '';return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;}
+function shortCandidate(video){
+  // Google Data API v3 does not provide a definitive Shorts field.
+  return /(?:^|\s)#shorts?\b/i.test(video.title) || (video.duration!==null && video.duration<=180);
+}
+function dateLabel(value){
+  if(!value)return 'YouTube upload';
+  const d = new Date(value);
+  return Number.isNaN(+d)?'YouTube upload':new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric'}).format(d);
+}
 function card(video,k){
   const b=document.createElement('button');b.type='button';b.className='creator-media-card';b.id='sg-card-'+video.id;
   b.setAttribute('aria-label','Play '+video.title+' inside Study Games');
+  const cover=document.createElement('span');cover.className='sg-media-poster';
   const pic=document.createElement('img');pic.className='creator-media-cover';pic.loading='lazy';pic.alt='';pic.src=video.thumbnail;
-  const text=document.createElement('span');text.className='creator-media-text';text.textContent=video.title;
-  const meta=document.createElement('span');meta.className='sg-media-meta';meta.textContent=niceLength(video.duration)||'Video';
-  b.append(pic,text,meta);b.addEventListener('click',()=>playerPlay(video));
+  const play=document.createElement('span');play.className='sg-card-play';play.textContent='▶';play.setAttribute('aria-hidden','true');
+  const time=document.createElement('span');time.className='sg-timepill';time.textContent=niceLength(video.duration)||'VIDEO';
+  cover.append(pic,play,time);
+  const label=document.createElement('span');label.className='creator-media-text';label.textContent=video.title;
+  const meta=document.createElement('span');meta.className='sg-media-meta';meta.textContent=dateLabel(video.publishedAt)+(video.embeddable===false?' · Embed unavailable':'');
+  b.append(cover,label,meta);
+  b.addEventListener('click',()=>playerPlay(video));
   return b;
 }
+function filteredVideos(){
+  return allItems.filter(v=>allToggle.checked || !shortCandidate(v));
+}
+function filteredShorts(){
+  return allItems.filter(shortCandidate);
+}
 function render(){
-  const vids=allItems; // "Videos" lists ALL uploads; no Shorts are hidden from here.
-  // YouTube Data API has durations, but not a definitive isShort field or aspect ratio.
-  const clips=allItems.filter(v=>v.duration!==null && v.duration<=180);
+  const vids=filteredVideos(),shorts=filteredShorts();
+  const filtered=(list,q,sort)=>list.filter(v=>v.title.toLowerCase().includes(q.trim().toLowerCase()))
+      .sort((a,b)=>sort==='oldest'?a.publishedAt.localeCompare(b.publishedAt):b.publishedAt.localeCompare(a.publishedAt));
   function paint(grid,records,k){
     const fragment=document.createDocumentFragment();
-    if(!records.length){const d=document.createElement('div');d.className='creator-gallery-empty';d.textContent='No '+(k==='shorts'?'short-form candidates':'public videos')+' in the pages loaded yet.';fragment.append(d);}
-    else records.forEach(v=>fragment.append(card(v,k)));
+    if(!records.length){
+      const empty=document.createElement('div');empty.className='creator-gallery-empty';
+      empty.textContent=allItems.length?'No matching '+(k==='shorts'?'Shorts candidates':'videos')+'. Try clearing your search or including Shorts.':'Connect your YouTube API to display public uploads.';
+      fragment.append(empty);
+    }else records.forEach(v=>fragment.append(card(v,k)));
     grid.replaceChildren(fragment);
     if(!allLoaded){
       const more=document.createElement('button');more.type='button';more.className='sg-gallery-more';
-      more.textContent=busy?'Loading more uploads…':'Load more uploads';more.disabled=busy;
+      more.textContent=busy?'Loading uploads…':'Load more uploads';more.disabled=busy;
       more.addEventListener('click',()=>{void loadPage(currentRun)});
       grid.append(more);
     }
   }
-  paint(videosGrid,vids,'videos');paint(shortsGrid,clips,'shorts');
-  const total=allLoaded?`All ${vids.length} public uploads loaded`:`${vids.length} public uploads loaded`;
-  const countStr=`${total} • ${clips.length} short-form candidates (duration estimate)`;
-  changeNote(countStr);
+  const shownVideos=filtered(vids,searchVideos.value,sortVideos.value);
+  const shownShorts=filtered(shorts,searchShorts.value,sortShorts.value);
+  paint(videosGrid,shownVideos,'videos');paint(shortsGrid,shownShorts,'shorts');
+  videosCount.textContent=`${shownVideos.length} ${allToggle.checked?'uploads':'videos'} shown${allLoaded?'':' · still loading'}`;
+  shortsCount.textContent=`${shownShorts.length} likely Shorts shown${allLoaded?'':' · still loading'} (estimated by duration and title)`;
+  const total=allLoaded?`All ${allItems.length} available public uploads loaded`:`${allItems.length} uploads loaded so far`;
+  changeNote(`${total} · ${shorts.length} likely Shorts`);
+  if(allItems.length)liveStatus.textContent=`${allItems.length} public uploads found · select a video or Short to watch inside Study Games`;
 }
+searchVideos.addEventListener('input',render);
+searchShorts.addEventListener('input',render);
+sortVideos.addEventListener('change',render);
+sortShorts.addEventListener('change',render);
+allToggle.addEventListener('change',render);
+jumpSetup.addEventListener('click',()=>{
+  const details=document.getElementById('sgApiSettings');
+  details.open=true;details.scrollIntoView({behavior:'smooth',block:'start'});
+});
 async function api(resource,params,run){
   const url=new URL(API_ORIGIN+resource);
   for(const [p,v] of Object.entries({...params,key}))url.searchParams.set(p,String(v));
@@ -1457,7 +1539,7 @@ async function loadPage(run){
         const s=item.snippet||{};
         const thumbs=s.thumbnails||{};
         const thumb=thumbs.medium?.url||thumbs.high?.url||thumbs.default?.url||'https://i.ytimg.com/vi/'+id+'/mqdefault.jpg';
-        const itemData={id,title:s.title||'Untitled video',thumbnail:thumb,duration:seconds,embeddable:d.status?.embeddable};
+        const itemData={id,title:s.title||'Untitled video',thumbnail:thumb,duration:seconds,embeddable:d.status?.embeddable,publishedAt:s.publishedAt||''};
         itemsById.set(id,itemData); allItems.push(itemData);
       }
     }
@@ -1468,18 +1550,18 @@ async function loadPage(run){
     failed=true;
     if(run===currentRun){
       const msg='Could not load the YouTube video list: '+(e?.message||'Check the API key or internet connection.')+'. Confirm YouTube Data API v3 is enabled and the key permits your GitHub Pages website.';
-      if(!allItems.length)setLoading(msg);else changeNote(msg);
+      if(!allItems.length)setLoading(msg);else changeNote(msg);liveStatus.textContent='YouTube API error — see message in gallery';
     }
   }finally{busy=false;if(!failed)render();}
   return !failed;
 }
 async function start(apiKey){
   if(!apiKey||apiKey==='REPLACE_WITH_YOUR_RESTRICTED_YOUTUBE_API_KEY'){
-    setLoading('YouTube gallery is installed but needs a website-restricted API key configured by the site owner. Open “YouTube API setup” below.');return;
+    setLoading('Channel gallery ready for setup: open “YouTube API setup & channel settings” below, preview your restricted key, download your connected website and upload it to GitHub.');liveStatus.textContent='Connect your restricted YouTube API key to display all video thumbnails';return;
   }
   if(batchAbort)batchAbort.abort();batchAbort=new AbortController();
   const run=++currentRun;key=apiKey.trim();uploadsPlaylist=null;pageToken=undefined;busy=false;allLoaded=false;
-  allItems=[];itemsById=new Map();setLoading('Loading your public YouTube uploads…');
+  allItems=[];itemsById=new Map();setLoading('Loading your public YouTube uploads…');liveStatus.textContent='Connecting to YouTube Data API…';
   try{
     const info=await api('channels',{part:'contentDetails,snippet',id:CHANNEL_ID},run);
     const channel=info.items?.[0];
@@ -1487,7 +1569,7 @@ async function start(apiKey){
     uploadsPlaylist=channel.contentDetails?.relatedPlaylists?.uploads;
     if(!uploadsPlaylist)throw new Error('YouTube did not return an uploads playlist for this channel');
     const actual=channel.snippet?.title||'YouTube channel';
-    previewNote.textContent='Connected to channel: '+actual+'. The grid below loads public uploads; Shorts are estimated by duration.';
+    previewNote.textContent='Connected to YouTube channel: '+actual+'. Check this is the channel you want. Public uploads load in a grid; Shorts are estimated by duration.';
     // Automatically page through every public upload, not just the first 50.
     // These list requests cost much less quota than searching for each video.
     let ok = true;
@@ -1514,15 +1596,15 @@ addOverride('creatorViewAllVideos',()=>gridGo('videos'));
 addOverride('creatorViewAllShorts',()=>gridGo('shorts'));
 addOverride('creatorBrowseUploads',()=>gridGo(currentTab()));
 function step(dir){
-  const items=currentTab()==='shorts'?allItems.filter(v=>v.duration!==null&&v.duration<=180):allItems;
+  const items=currentTab()==='shorts'?filteredShorts():filteredVideos();
   if(!items.length){changeNote('No loaded uploads to play.');return;}
   const i=items.findIndex(v=>v.id===selectedId);
   playerPlay(items[i<0?0:(i+dir+items.length)%items.length]);
 }
 addOverride('creatorPrevUpload',()=>step(-1));
 addOverride('creatorNextUpload',()=>step(1));
-addOverride('creatorPlayAllVideos',()=>{if(allItems.length)playerPlay(allItems[0]);else gridGo('videos');});
-addOverride('creatorPlayAllShorts',()=>{const first=allItems.find(v=>v.duration!==null&&v.duration<=180);if(first)playerPlay(first);else gridGo('shorts');});
+addOverride('creatorPlayAllVideos',()=>{const first=filteredVideos()[0];if(first)playerPlay(first);else gridGo('videos');});
+addOverride('creatorPlayAllShorts',()=>{const first=filteredShorts()[0];if(first)playerPlay(first);else gridGo('shorts');});
 previewBtn.addEventListener('click',()=>{
   const val=previewInput.value.trim();
   if(!val){previewNote.textContent='Enter a YouTube Data API v3 key restricted to your website to preview.';return;}
