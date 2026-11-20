@@ -1108,6 +1108,9 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     shortHint.textContent=ready?'Ready to watch the channel Shorts inside Study Games.':'To activate this, connect the channel ID in the section below.';
   }
   function playCategory(kind, shouldScroll=true){
+    // When the Data API gallery is working, it owns in-page playback and navigation.
+    // Don't overwrite its selected video with the older channel playlist iframe.
+    if(window.__sgApiGalleryActive===true)return;
     const id=channelId();
     if(!id){
       status.textContent='First connect the YouTube channel ID (UC…) using the form below.';
@@ -1415,6 +1418,8 @@ let key = KEY_CONFIGURED ? PUBLISHED_YOUTUBE_API_KEY.trim() : '';
 let batchAbort = null, currentRun = 0;
 let uploadsPlaylist = null, pageToken = undefined, busy = false, allLoaded = false;
 let allItems = [], itemsById = new Map(), selectedId = null;
+let selectedKind = 'videos';
+window.__sgApiGalleryActive = false;
 let lastSynced = 0;
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000; // Check for newly uploaded videos when the page is revisited.
 
@@ -1424,17 +1429,47 @@ function setLoading(msg){
   [videosGrid,shortsGrid].forEach(g=>clearAndMessage(g,msg));
   changeNote(msg);
 }
-function playerPlay(video){
+function orderedVisibleItems(kind){
+  const isShorts=kind==='shorts';
+  const source=isShorts?filteredShorts():filteredVideos();
+  const query=(isShorts?searchShorts:searchVideos).value.trim().toLowerCase();
+  const sort=(isShorts?sortShorts:sortVideos).value;
+  return source.filter(v=>v.title.toLowerCase().includes(query))
+    .sort((a,b)=>sort==='oldest'?a.publishedAt.localeCompare(b.publishedAt):b.publishedAt.localeCompare(a.publishedAt));
+}
+function updatePlayerPosition(){
+  const records=orderedVisibleItems(selectedKind);
+  const index=records.findIndex(v=>v.id===selectedId);
+  if(index>=0){
+    const label=selectedKind==='shorts'?'Short':'Video';
+    counter.textContent=`${label} ${index+1} of ${records.length} — ${records[index].title}`;
+    const prev=document.getElementById('creatorPrevUpload');
+    const next=document.getElementById('creatorNextUpload');
+    prev.setAttribute('aria-label',`Play previous ${label.toLowerCase()}`);
+    next.setAttribute('aria-label',`Play next ${label.toLowerCase()}`);
+  }
+}
+function playerPlay(video,kind=currentTab()){
+  if(!video||!video.id)return;
   selectedId=video.id;
+  selectedKind=kind==='shorts'?'shorts':'videos';
+  // Replacing the embed URL explicitly loads the newly selected video instead of
+  // relying on YouTube's embedded playlist Next/Previous controls.
   player.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(video.id)+'?autoplay=1&playsinline=1&rel=0';
-  player.hidden=false; introPlaceholder.hidden=true;
+  player.hidden=false;introPlaceholder.hidden=true;
   playerTitle.textContent=video.title;
-  playerStatus.textContent=video.embeddable===false?'YouTube may not allow this upload to play on other websites.':'Playing inside Study Games when YouTube allows embedding.';
+  const label=selectedKind==='shorts'?'Short':'Video';
+  playerStatus.textContent=video.embeddable===false?
+    'YouTube does not allow this upload to play on other websites.':
+    `Selected ${label.toLowerCase()} — use Previous or Next to change videos without leaving Study Games.`;
   document.querySelectorAll('#creatorChannel .sg-current-item').forEach(b=>b.classList.remove('sg-current-item'));
-  const btn=document.getElementById('sg-card-'+video.id);
-  if(btn)btn.classList.add('sg-current-item');
+  document.querySelectorAll('#creatorChannel [data-sg-video-id]').forEach(b=>{
+    if(b.dataset.sgVideoId===video.id)b.classList.add('sg-current-item');
+  });
+  updatePlayerPosition();
   document.getElementById('creatorMediaPlayerCard').scrollIntoView({block:'start',behavior:'smooth'});
 }
+
 function durationInSeconds(value){
   if(typeof value!=='string')return null;
   const m=value.match(/^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/);
@@ -1452,7 +1487,9 @@ function dateLabel(value){
   return Number.isNaN(+d)?'YouTube upload':new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric'}).format(d);
 }
 function card(video,k){
-  const b=document.createElement('button');b.type='button';b.className='creator-media-card';b.id='sg-card-'+video.id;
+  const b=document.createElement('button');b.type='button';b.className='creator-media-card';b.id='sg-card-'+k+'-'+video.id;
+  b.dataset.sgVideoId=video.id;
+  if(video.id===selectedId)b.classList.add('sg-current-item');
   b.setAttribute('aria-label','Play '+video.title+' inside Study Games');
   const cover=document.createElement('span');cover.className='sg-media-poster';
   const pic=document.createElement('img');pic.className='creator-media-cover';pic.loading='lazy';pic.alt='';pic.src=video.thumbnail;
@@ -1462,7 +1499,7 @@ function card(video,k){
   const label=document.createElement('span');label.className='creator-media-text';label.textContent=video.title;
   const meta=document.createElement('span');meta.className='sg-media-meta';meta.textContent=dateLabel(video.publishedAt)+(video.embeddable===false?' · Embed unavailable':'');
   b.append(cover,label,meta);
-  b.addEventListener('click',()=>playerPlay(video));
+  b.addEventListener('click',()=>playerPlay(video,k));
   return b;
 }
 function filteredVideos(){
@@ -1490,14 +1527,18 @@ function render(){
       grid.append(more);
     }
   }
-  const shownVideos=filtered(vids,searchVideos.value,sortVideos.value);
-  const shownShorts=filtered(shorts,searchShorts.value,sortShorts.value);
+  const shownVideos=orderedVisibleItems('videos');
+  const shownShorts=orderedVisibleItems('shorts');
   paint(videosGrid,shownVideos,'videos');paint(shortsGrid,shownShorts,'shorts');
   videosCount.textContent=`${shownVideos.length} ${allToggle.checked?'uploads':'videos'} shown${allLoaded?'':' · still loading'}`;
   shortsCount.textContent=`${shownShorts.length} likely Shorts shown${allLoaded?'':' · still loading'} (estimated by duration and title)`;
   const total=allLoaded?`All ${allItems.length} available public uploads loaded`:`${allItems.length} uploads loaded so far`;
   changeNote(`${total} · ${shorts.length} likely Shorts`);
-  if(allItems.length)liveStatus.textContent=`${allItems.length} public uploads found · select a video or Short to watch inside Study Games`;
+  if(allItems.length){
+    window.__sgApiGalleryActive = true;
+    liveStatus.textContent=`${allItems.length} public uploads found · select a video or Short to watch inside Study Games`;
+    if(selectedId)updatePlayerPosition();
+  }
 }
 searchVideos.addEventListener('input',render);
 searchShorts.addEventListener('input',render);
@@ -1561,7 +1602,7 @@ async function start(apiKey){
   }
   if(batchAbort)batchAbort.abort();batchAbort=new AbortController();
   const run=++currentRun;key=apiKey.trim();uploadsPlaylist=null;pageToken=undefined;busy=false;allLoaded=false;
-  allItems=[];itemsById=new Map();setLoading('Loading your public YouTube uploads…');liveStatus.textContent='Connecting to YouTube Data API…';
+  allItems=[];itemsById=new Map();selectedId=null;window.__sgApiGalleryActive=false;setLoading('Loading your public YouTube uploads…');liveStatus.textContent='Connecting to YouTube Data API…';
   try{
     const info=await api('channels',{part:'contentDetails,snippet',id:CHANNEL_ID},run);
     const channel=info.items?.[0];
@@ -1588,7 +1629,13 @@ function gridGo(k){
 function addOverride(id,fn){
   const btn=document.getElementById(id);
   btn.addEventListener('click',(e)=>{
-    if(!key)return; // allow old playlist behavior until API connected
+    if(!key){
+      if(id==='creatorNextUpload'||id==='creatorPrevUpload'){
+        e.preventDefault();e.stopImmediatePropagation();
+        changeNote('To browse each upload with Next and Previous, connect the YouTube Data API gallery and publish the connected website.');
+      }
+      return; // Other buttons retain the older playlist behavior until API connected.
+    }
     e.preventDefault();e.stopImmediatePropagation();fn();
   },true);
 }
@@ -1596,15 +1643,25 @@ addOverride('creatorViewAllVideos',()=>gridGo('videos'));
 addOverride('creatorViewAllShorts',()=>gridGo('shorts'));
 addOverride('creatorBrowseUploads',()=>gridGo(currentTab()));
 function step(dir){
-  const items=currentTab()==='shorts'?filteredShorts():filteredVideos();
-  if(!items.length){changeNote('No loaded uploads to play.');return;}
-  const i=items.findIndex(v=>v.id===selectedId);
-  playerPlay(items[i<0?0:(i+dir+items.length)%items.length]);
+  const kind=currentTab();
+  const items=orderedVisibleItems(kind);
+  if(!items.length){
+    changeNote('No videos have loaded in this tab yet. Open Connect gallery and check your YouTube API setup.');
+    return;
+  }
+  const index=items.findIndex(v=>v.id===selectedId);
+  // If no item in this tab has been selected, Next starts with its first video
+  // and Previous starts with its last video.
+  const targetIndex=index<0?(dir>0?0:items.length-1):
+    (index+dir+items.length)%items.length;
+  const target=items[targetIndex];
+  if(target)playerPlay(target,kind);
 }
+
 addOverride('creatorPrevUpload',()=>step(-1));
 addOverride('creatorNextUpload',()=>step(1));
-addOverride('creatorPlayAllVideos',()=>{const first=filteredVideos()[0];if(first)playerPlay(first);else gridGo('videos');});
-addOverride('creatorPlayAllShorts',()=>{const first=filteredShorts()[0];if(first)playerPlay(first);else gridGo('shorts');});
+addOverride('creatorPlayAllVideos',()=>{gridGo('videos');const first=orderedVisibleItems('videos')[0];if(first)playerPlay(first,'videos');});
+addOverride('creatorPlayAllShorts',()=>{gridGo('shorts');const first=orderedVisibleItems('shorts')[0];if(first)playerPlay(first,'shorts');});
 previewBtn.addEventListener('click',()=>{
   const val=previewInput.value.trim();
   if(!val){previewNote.textContent='Enter a YouTube Data API v3 key restricted to your website to preview.';return;}
