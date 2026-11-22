@@ -426,38 +426,45 @@ body.sg-movie-open{overflow:hidden}
 </style>
 
 <style id="sg-3d-focus-illusion-style">
-/* Visual-only 3D focus illusion. No hardware privacy, screen or monitoring changes. */
+/* Visual-only adjustments; no viewing-angle or device-monitoring effect. */
 #sg-depth-privacy {
-  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  margin:16px 0 24px;padding:16px 18px;border:1px solid #4c668b;border-radius:17px;
-  background:linear-gradient(120deg,#16253b 0%,#121a30 55%,#1b1b39 100%);
-  box-shadow:inset 0 1px 0 #ffffff1a,0 9px 25px #0003;
+  display:flex;flex-direction:column;align-items:stretch;gap:12px;
+  margin:16px 0 24px;padding:17px 18px;border:1px solid #59749e;border-radius:17px;
+  background:linear-gradient(125deg,#152841,#101b32 55%,#1b1b3b 100%);
+  box-shadow:inset 0 1px 0 #ffffff25,0 12px 25px #0004;
 }
-#sg-depth-privacy h3 {margin:0 0 5px;color:#e8f0ff;font-size:17px;letter-spacing:.1px}
-#sg-depth-privacy p {margin:0;max-width:550px;color:#b7c5de;font-size:12.5px;line-height:1.5}
-#sg-depth-privacy .sg-depth-controls {display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-#sg-depth-switch, #sg-depth-quick-exit {
-  color:#ecf5ff;border:1px solid #96b1ec;border-radius:11px;
-  background:linear-gradient(125deg,#374e79,#283958);padding:11px 16px;
+#sg-depth-privacy h3 {margin:0 0 5px;color:#eef5ff;font-size:19px;letter-spacing:.15px}
+#sg-depth-privacy p {margin:0;color:#c2d0e8;font-size:13px;line-height:1.5}
+#sg-depth-privacy .sg-depth-controls {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:center}
+#sg-depth-privacy .sg-depth-actions {display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#sg-depth-switch, #sg-depth-reset, #sg-depth-quick-exit {
+  color:#f4f8ff;border:1px solid #91b6ef;border-radius:12px;
+  background:linear-gradient(125deg,#385883,#263c65);padding:11px 15px;
   min-height:44px;font:800 13px/1.25 system-ui,-apple-system,sans-serif;
   cursor:pointer;box-shadow:0 6px 15px #0004;
 }
-#sg-depth-switch[aria-pressed="true"]{background:linear-gradient(135deg,#275a65,#183e56);border-color:#8be8f4}
-#sg-depth-privacy label {display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;color:#d3e0f9;min-width:112px}
-#sg-depth-strength {cursor:pointer;width:135px;accent-color:#9dc4ff}
+#sg-depth-switch[aria-pressed="true"]{background:linear-gradient(135deg,#23616a,#164852);border-color:#92eef5}
+#sg-depth-reset{background:#202b45;border-color:#5f769a}
+#sg-depth-privacy label{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:700;color:#e1eaff}
+#sg-depth-privacy label .sg-depth-readout{color:#a9ddff;font-variant-numeric:tabular-nums}
+#sg-depth-privacy input[type="range"]{width:100%;height:24px;cursor:pointer;accent-color:#a9ccff}
+#sg-depth-state{font-size:12px!important;color:#9bcce1!important}
 #sg-depth-overlay {position:fixed;inset:0;z-index:45;pointer-events:none;overflow:hidden;display:none}
 body.sg-depth-mode #sg-depth-overlay{display:block}
+/* The next two layers affect the whole screen, not just its edges. */
+#sg-depth-softener {position:absolute;inset:0;background:rgba(0,0,0,var(--sg-focus-dim,.17));
+  -webkit-backdrop-filter:blur(var(--sg-focus-blur,0px));backdrop-filter:blur(var(--sg-focus-blur,0px));}
 #sg-depth-vignette {position:absolute;inset:0;opacity:var(--sg-focus-opacity,.85);background:
-  linear-gradient(90deg,#010207 0%,#030509ed 7%,#02040bae 16%,#05091669 28%,transparent 43%,transparent 57%,#05091669 72%,#02040bae 84%,#030509ed 93%,#010207 100%),
-  linear-gradient(0deg,#02040a78 0%,transparent 20%,transparent 79%,#02040a78 100%);
+  linear-gradient(90deg,#010207 0%,#030509e8 7%,#02040baa 16%,#05091666 28%,transparent 43%,transparent 57%,#05091666 72%,#02040baa 84%,#030509e8 93%,#010207 100%),
+  linear-gradient(0deg,#02040a70 0%,transparent 20%,transparent 79%,#02040a70 100%);
 }
-#sg-depth-slats {position:absolute;inset:0;opacity:calc(var(--sg-focus-opacity,.85)*.36);
-  background:repeating-linear-gradient(90deg,#03060a9c 0 2px,transparent 2px 8px);
+#sg-depth-slats {position:absolute;inset:0;opacity:calc(var(--sg-focus-opacity,.85)*.3);
+  background:repeating-linear-gradient(90deg,#03060a8a 0 2px,transparent 2px 8px);
   -webkit-mask-image:linear-gradient(90deg,black 0%,transparent 32%,transparent 68%,black 100%);
   mask-image:linear-gradient(90deg,black 0%,transparent 32%,transparent 68%,black 100%);
 }
-#sg-depth-frame {position:absolute;inset:4vh 20vw;border:1px solid #9eb8f522;border-radius:24px;
-  box-shadow:inset 13px 0 21px -20px #b2ccff85,inset -13px 0 21px -20px #b2ccff85,0 0 48px #1e335929;
+#sg-depth-frame {position:absolute;inset:4vh 20vw;border:1px solid #9eb8f52a;border-radius:24px;
+  box-shadow:inset 13px 0 21px -20px #b2ccff88,inset -13px 0 21px -20px #b2ccff88,0 0 48px #1e335929;
   transform:perspective(950px) rotateX(.5deg);}
 body.sg-depth-mode .study-card,body.sg-depth-mode .game-card,body.sg-depth-mode .sg-film-card {
   transform:perspective(850px) rotateX(1.4deg) translateZ(0);
@@ -466,21 +473,22 @@ body.sg-depth-mode .study-card,body.sg-depth-mode .game-card,body.sg-depth-mode 
 body.sg-depth-mode .study-card:hover,body.sg-depth-mode .game-card:hover,body.sg-depth-mode .sg-film-card:hover {
   transform:perspective(850px) rotateX(0deg) translateY(-3px);
 }
-#sg-depth-quick-exit {display:none;position:fixed;z-index:47;bottom:max(16px,env(safe-area-inset-bottom));left:max(16px,env(safe-area-inset-left));
-  background:#142b3fe8;border-color:#91cfff;backdrop-filter:blur(8px);font-size:12px}
+#sg-depth-quick-exit {display:none;position:fixed;z-index:47;
+  bottom:max(16px,env(safe-area-inset-bottom));left:max(16px,env(safe-area-inset-left));
+  background:#142b3ff5;border-color:#91cfff;backdrop-filter:blur(8px);font-size:13px}
 body.sg-depth-mode #sg-depth-quick-exit{display:block}
-#sg-depth-switch:focus-visible,#sg-depth-quick-exit:focus-visible,#sg-depth-strength:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#sg-depth-switch:focus-visible,#sg-depth-reset:focus-visible,#sg-depth-quick-exit:focus-visible,#sg-depth-privacy input:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media(max-width:630px){
-  #sg-depth-privacy {padding:13px;gap:12px}
-  #sg-depth-privacy .sg-depth-controls {width:100%;justify-content:space-between}
-  #sg-depth-vignette {background:linear-gradient(90deg,#020409 0%,#030509e9 6%,#0305098c 15%,transparent 36%,transparent 64%,#0305098c 85%,#030509e9 94%,#020409 100%),linear-gradient(0deg,#02040a6b,transparent 15%,transparent 85%,#02040a6b)}
-  #sg-depth-frame {inset:3vh 15vw}
+  #sg-depth-privacy{padding:14px;gap:12px}
+  #sg-depth-privacy .sg-depth-controls{grid-template-columns:1fr;gap:13px}
+  #sg-depth-vignette{background:linear-gradient(90deg,#020409 0%,#030509e9 6%,#0305098c 15%,transparent 36%,transparent 64%,#0305098c 85%,#030509e9 94%,#020409 100%),linear-gradient(0deg,#02040a6b,transparent 15%,transparent 85%,#02040a6b)}
+  #sg-depth-frame{inset:3vh 15vw}
 }
 @media(prefers-reduced-motion:reduce){body.sg-depth-mode .study-card,body.sg-depth-mode .game-card,body.sg-depth-mode .sg-film-card{transition:none}}
 </style>
 </head>
 <body>
-<div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
+<div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-softener"></div><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
 <button id="sg-depth-quick-exit" type="button" aria-label="Turn off 3D Focus illusion">◈ 3D Focus ON · Turn Off</button>
 
 <!-- Opening cinematic: no tracking, external fonts, or screen capture modifications. -->
@@ -521,14 +529,27 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 
 
 
-<div id="sg-depth-privacy" aria-label="3D Focus visual effect">
-  <div><h3>◈ 3D Focus Illusion</h3><p>Try a cinematic depth effect with shaded side edges and a bright center. This changes only how the page looks—it does not prevent side viewing or device monitoring.</p></div>
+<div id="sg-depth-privacy" aria-label="3D Focus visual controls">
+  <div>
+    <h3>◈ 3D Focus &amp; Screen Effects</h3>
+    <p>Optional darker screen, adjustable blur, and cinematic depth edges. Visual only: people beside the screen may still see it.</p>
+  </div>
+  <div class="sg-depth-actions">
+    <button id="sg-depth-switch" type="button" aria-pressed="false" aria-controls="sg-depth-overlay">Turn On Effects</button>
+    <button id="sg-depth-reset" type="button">Reset to Normal</button>
+  </div>
   <div class="sg-depth-controls">
-    <button id="sg-depth-switch" type="button" aria-pressed="false" aria-controls="sg-depth-overlay">Turn On 3D Focus</button>
-    <label for="sg-depth-strength">Edge shadow strength
-      <input id="sg-depth-strength" type="range" min="35" max="100" step="5" value="85" aria-label="Adjust 3D focus edge shadow strength"/>
+    <label for="sg-depth-brightness">Brightness <span class="sg-depth-readout" id="sg-depth-brightness-value">80%</span>
+      <input id="sg-depth-brightness" type="range" min="45" max="100" step="5" value="80" aria-label="Adjust screen brightness effect"/>
+    </label>
+    <label for="sg-depth-blur">Blur <span class="sg-depth-readout" id="sg-depth-blur-value">0.7px</span>
+      <input id="sg-depth-blur" type="range" min="0" max="3" step="0.1" value="0.7" aria-label="Adjust screen blur effect"/>
+    </label>
+    <label for="sg-depth-strength">3D edge shadow <span class="sg-depth-readout" id="sg-depth-strength-value">85%</span>
+      <input id="sg-depth-strength" type="range" min="0" max="100" step="5" value="85" aria-label="Adjust 3D effect edge shadow"/>
     </label>
   </div>
+  <p id="sg-depth-state" role="status">Effects are off. Move a slider to preview them.</p>
 </div>
 <div aria-label="Study Games features" class="home-chips"><span>🔢 Math</span><span>🔬 Science</span><span>🏛️ Social Studies</span><span>📖 ELA</span><span>🌎 Geography</span></div></div><section aria-labelledby="subjectsHeading" data-screen="home" id="subjects" tabindex="-1">
 <div class="sec-head"><h2 id="subjectsHeading">Study games by subject</h2><span>Quick quizzes • Instant feedback</span></div>
@@ -2118,29 +2139,43 @@ void hydratePosters();
 <script id="sg-3d-focus-illusion-script">
 (()=>{
   'use strict';
-  const toggle=document.getElementById('sg-depth-switch');
-  const off=document.getElementById('sg-depth-quick-exit');
-  const slider=document.getElementById('sg-depth-strength');
-  const overlay=document.getElementById('sg-depth-overlay');
-  if(!toggle||!off||!slider||!overlay)return;
+  const $=id=>document.getElementById(id);
+  const toggle=$('sg-depth-switch'),off=$('sg-depth-quick-exit'),reset=$('sg-depth-reset');
+  const brightnessInput=$('sg-depth-brightness'),blurInput=$('sg-depth-blur'),shadowInput=$('sg-depth-strength');
+  const stateLabel=$('sg-depth-state');
+  if(!toggle||!off||!reset||!brightnessInput||!blurInput||!shadowInput||!$('sg-depth-overlay'))return;
   const KEY='sg-depth-focus-v1';
-  let enabled=false, intensity=85;
+  let enabled=false, brightness=80, blur=0.7, intensity=85;
+  const clamp=(v,min,max,fallback)=>Number.isFinite(Number(v))?Math.min(max,Math.max(min,Number(v))):fallback;
   try{
-    const settings=JSON.parse(localStorage.getItem(KEY)||'{}');
-    enabled=settings.enabled===true;
-    if(Number.isFinite(settings.intensity))intensity=Math.max(35,Math.min(100,settings.intensity));
+    const cfg=JSON.parse(localStorage.getItem(KEY)||'{}');
+    enabled=cfg.enabled===true;
+    brightness=clamp(cfg.brightness,45,100,80);
+    blur=clamp(cfg.blur,0,3,0.7);
+    intensity=clamp(cfg.intensity,0,100,85);
   }catch{}
   function update(){
     document.body.classList.toggle('sg-depth-mode',enabled);
     document.body.style.setProperty('--sg-focus-opacity',String(intensity/100));
+    document.body.style.setProperty('--sg-focus-dim',String((100-brightness)/100));
+    document.body.style.setProperty('--sg-focus-blur',blur.toFixed(1)+'px');
     toggle.setAttribute('aria-pressed',String(enabled));
-    toggle.textContent=enabled?'Turn Off 3D Focus':'Turn On 3D Focus';
-    slider.value=String(intensity);
-    try{localStorage.setItem(KEY,JSON.stringify({enabled,intensity}));}catch{}
+    toggle.textContent=enabled?'Turn Off Effects':'Turn On Effects';
+    brightnessInput.value=String(brightness);
+    blurInput.value=String(blur);
+    shadowInput.value=String(intensity);
+    $('sg-depth-brightness-value').textContent=brightness+'%';
+    $('sg-depth-blur-value').textContent=blur.toFixed(1)+'px';
+    $('sg-depth-strength-value').textContent=intensity+'%';
+    stateLabel.textContent=enabled?'Effects are ON. Use Turn Off Effects or Reset to Normal to restore your screen.':'Effects are off. Move a slider to preview them.';
+    try{localStorage.setItem(KEY,JSON.stringify({enabled,brightness,blur,intensity}));}catch{}
   }
   toggle.addEventListener('click',()=>{enabled=!enabled;update();});
   off.addEventListener('click',()=>{enabled=false;update();toggle.focus();});
-  slider.addEventListener('input',()=>{intensity=Number(slider.value)||85;update();});
+  reset.addEventListener('click',()=>{enabled=false;brightness=100;blur=0;intensity=0;update();});
+  brightnessInput.addEventListener('input',()=>{brightness=clamp(brightnessInput.value,45,100,80);enabled=true;update();});
+  blurInput.addEventListener('input',()=>{blur=clamp(blurInput.value,0,3,0.7);enabled=true;update();});
+  shadowInput.addEventListener('input',()=>{intensity=clamp(shadowInput.value,0,100,85);enabled=true;update();});
   update();
 })();
 </script>
