@@ -530,12 +530,13 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
   overflow:hidden; border-radius:15px; border:1px solid #5c466f;
   background:#fff; height:min(68vh,720px); min-height:340px;
 }
-#sgMovies #sgTexSmithFrame { display:block; width:100%; height:100%; border:0; background:#fff; }
+#sgMovies #sgTexSmithFrame, #sgMovies #sgDownloaderWorldFrame { display:block; width:100%; height:100%; border:0; background:#fff; }
 #sgMovies .sg-texsmith-help {
   margin:16px 0 0; padding:13px 15px; border-radius:12px;
   border:1px solid #4d4267; background:#201c30; line-height:1.6;
 }
 #sgMovies .sg-texsmith-help a { color:#f4c9fa; font-weight:700; }
+#sgMovies .sg-viewer-guide { padding:12px 16px; margin:0 0 16px; background:#201c30; border:1px solid #4d4267; border-radius:12px; line-height:1.6; }
 @media (max-width:680px) {
   #sgMovies .sg-texsmith-open { width:100%; }
   #sgMovies .sg-texsmith-frame-wrap { height:64vh; min-height:350px; }
@@ -632,23 +633,32 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <article class="game-card"><div class="game-icon" style="background:#4c304c">🃏</div><h3>Memory Flip</h3><p>Reveal the cards and find all eight matching pairs.</p><button data-game="memory" type="button">Play Memory →</button></article>
 <article class="game-card"><div class="game-icon" style="background:#324b53">⚡</div><h3>Reaction Rush</h3><p>Wait for green, then click as quickly as you can.</p><button data-game="reaction" type="button">Play Reaction Rush →</button></article>
 </div></section>
+<!-- External viewing is opt-in; no automatic shared-account login is embedded. -->
 <section id="sgMovies" data-screen="movies" hidden class="sg-entertainment" aria-labelledby="sgMoviesTitle">
   <div class="sg-head">
-    <div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">Movie Theater</h2><p>Open TexSmith without leaving the Study Games page.</p></div>
-    <span class="sg-badge">📺 TexSmith viewer</span>
+    <div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">Movie Theater</h2><p>Use TexSmith and Downloader World from the Study Games Movie Theater.</p></div>
+    <span class="sg-badge">🌐 Website viewers</span>
   </div>
   <div class="sg-tabs" role="tablist" aria-label="Choose movie collection">
     <button type="button" id="sgFreeFilmsTab" role="tab" aria-selected="true" aria-controls="sgFreeFilmsPanel">🍿 Movies</button>
     <button type="button" id="sgPremiumFilmsTab" role="tab" aria-selected="false" aria-controls="sgPremiumFilmsPanel">⭐ Premium movies</button>
     <button type="button" id="sgTexSmithTab" role="tab" aria-selected="false" aria-controls="sgTexSmithPanel">📺 TexSmith</button>
+    <button type="button" id="sgDownloaderWorldTab" role="tab" aria-selected="false" aria-controls="sgDownloaderWorldPanel">🌐 Downloader World</button>
   </div>
   <div class="sg-panel" id="sgFreeFilmsPanel" role="tabpanel" aria-labelledby="sgFreeFilmsTab">
     <div class="sg-texsmith-feature" aria-labelledby="sgTexSmithFeatureTitle">
       <span class="sg-badge">📺 WEBSITE VIEWER</span>
       <h3 id="sgTexSmithFeatureTitle">TexSmith</h3>
-      <p>Open the TexSmith website inside the Study Games Movie Theater. No new tab will open.</p>
+      <p>Try the TexSmith website in this Movie Theater, without launching a separate browser tab. Playback depends on the provider.</p>
       <button type="button" id="sgTexSmithLaunch" class="sg-texsmith-open">▶ Open TexSmith inside Study Games</button>
       <p class="sg-muted">The website may restrict embedded viewing; Study Games cannot override those restrictions.</p>
+    </div>
+    <div class="sg-texsmith-feature" style="margin-top:18px" aria-labelledby="sgDownloaderWorldFeatureTitle">
+      <span class="sg-badge">🌐 WEBSITE VIEWER</span>
+      <h3 id="sgDownloaderWorldFeatureTitle">Downloader World</h3>
+      <p>Try Downloader World in the Study Games viewer. If Downloader World offers a built-in browser, follow its own controls to find TexSmith.</p>
+      <button type="button" id="sgDownloaderWorldLaunch" class="sg-texsmith-open">▶ Try watching with Downloader World</button>
+      <p class="sg-muted">No new tab is opened by this button. Provider sign-in and movie playback may not work in an embedded viewer. No shared login is installed.</p>
     </div>
   </div>
   <div class="sg-panel" id="sgPremiumFilmsPanel" role="tabpanel" aria-labelledby="sgPremiumFilmsTab" hidden>
@@ -670,13 +680,17 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
         <h3>TexSmith inside Study Games</h3>
         <p>Visit the TexSmith website in the theater. Its content is provided by TexSmith, not hosted by Study Games.</p>
       </div>
-      <button class="sg-texsmith-open" id="sgTexSmithReload" type="button">↻ Reload TexSmith here</button>
+      <div class="sg-row" style="gap:10px; flex-wrap:wrap">
+        <button class="sg-texsmith-open" id="sgTexSmithReload" type="button">↻ Try TexSmith here</button>
+        <button class="sg-texsmith-open" id="sgTexSmithEnd" type="button">✕ Close viewer</button>
+      </div>
     </div>
     <div class="sg-texsmith-frame-wrap">
       <iframe
         id="sgTexSmithFrame"
         title="TexSmith website inside the Study Games Movie Theater"
-        src="https://texsmith-9889f.firebaseapp.com/?params=TexSmith"
+        src="about:blank"
+        data-src="https://texsmith-9889f.firebaseapp.com/?params=TexSmith"
         loading="lazy"
         referrerpolicy="no-referrer"
         sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
@@ -687,8 +701,46 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
     <p class="sg-texsmith-help" role="note">
       <strong>Website not showing?</strong> Some websites prevent embedded viewing.
       If the page is blank or says “refused to connect,” the website does not permit this kind of in-page display.
-      Study Games cannot override its embedding restrictions. The Reload button only retries inside the theater.
+      Study Games cannot override its embedding restrictions. <a href="https://texsmith-9889f.firebaseapp.com/?params=TexSmith" rel="noopener noreferrer">Open TexSmith in this tab</a> if embedding fails (this leaves Study Games without creating a new tab).
+      The linked TexSmith webpage currently presents itself as a writing assistant, so it may not be the movie player you used.
     </p>
+    <p id="sgTexSmithStatus" class="sg-muted" role="status" aria-live="polite">Viewer is inactive until selected.</p>
+  </div>
+  <div class="sg-panel" id="sgDownloaderWorldPanel" role="tabpanel" aria-labelledby="sgDownloaderWorldTab" hidden>
+    <div class="sg-texsmith-heading">
+      <div>
+        <span class="sg-badge">🌐 EXTERNAL WEBSITE</span>
+        <h3>Downloader World inside Study Games</h3>
+        <p>Try opening Downloader World without leaving Study Games. Any account sign-in remains handled by Downloader World itself.</p>
+      </div>
+      <div class="sg-row" style="gap:10px; flex-wrap:wrap">
+        <button class="sg-texsmith-open" id="sgDownloaderWorldReload" type="button">↻ Retry viewer</button>
+        <button class="sg-texsmith-open" id="sgDownloaderShowTexSmith" type="button">📺 View TexSmith here</button>
+        <button class="sg-texsmith-open" id="sgDownloaderWorldEnd" type="button">✕ Close &amp; reset</button>
+      </div>
+    </div>
+    <div class="sg-viewer-guide" role="note">
+      <strong>How this works:</strong> ① Try Downloader World here. ② Use only an account you're authorized to use. ③ If it has a browser feature, use that feature to access TexSmith. ④ Close &amp; reset when finished. Some sign-in flows require leaving the embedded viewer.
+    </div>
+    <div class="sg-texsmith-frame-wrap">
+      <iframe
+        id="sgDownloaderWorldFrame"
+        title="Downloader World login website inside Study Games"
+        src="about:blank"
+        data-src="https://www.downloader.world/login"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+        allow="fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <p class="sg-texsmith-help" role="note">
+      <strong>Try it:</strong> Open Downloader World here, then use its own website to sign in if you have authorized access. If it offers a browser feature, try locating TexSmith using that feature. Study Games cannot control or verify navigation inside Downloader World.
+      If the page or sign-in is blocked, <a href="https://www.downloader.world/login" rel="noopener noreferrer">continue to Downloader World in this same tab</a> (you will leave Study Games; no new tab opens).
+      <strong>Privacy:</strong> Your personal email, password, and login tokens are not in this file. Closing the viewer removes its display but cannot clear the provider's cookies, browser history, saved passwords, or server sessions.
+    </p>
+    <p id="sgDownloaderWorldStatus" class="sg-muted" role="status" aria-live="polite">Viewer is inactive until opened.</p>
   </div>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
@@ -2052,24 +2104,64 @@ function config(){let local={};try{local=JSON.parse(localStorage.getItem('sg-cin
 function userToken(){try{return localStorage.getItem('sg-premium-entitlement')||'';}catch{return '';}}
 function setToken(v){try{localStorage.setItem('sg-premium-entitlement',v);}catch{}}
 function showView(name){if(window.studyGamesShowView)window.studyGamesShowView(name);}
+// The embedded viewers do not store secrets or session credentials in Study Games.
+// Resetting only unloads our iframes: browsers/providers retain control of their own cookies and sessions.
+const PROVIDERS = Object.freeze({
+  downloader: 'https://www.downloader.world/login',
+  texsmith: 'https://texsmith-9889f.firebaseapp.com/?params=TexSmith'
+});
+function unloadViewer(id){
+  const frame=$(id);
+  if(frame && frame.getAttribute('src')!=='about:blank') frame.setAttribute('src','about:blank');
+}
+function closeAllViewers(showStatus=true){
+  unloadViewer('sgDownloaderWorldFrame');
+  unloadViewer('sgTexSmithFrame');
+  if(showStatus){
+    $('sgDownloaderWorldStatus').textContent='Viewer closed. Provider cookies and logins may remain in the browser.';
+    $('sgTexSmithStatus').textContent='Viewer closed. Provider cookies and logins may remain in the browser.';
+  }
+}
+function startDownloaderViewer(){
+  $('sgDownloaderWorldFrame').setAttribute('src',PROVIDERS.downloader);
+  $('sgDownloaderWorldStatus').textContent='Attempting to load Downloader World inside Study Games. If blank, use the same-tab link below. Shared automatic login is not enabled.';
+}
+function startTexSmithViewer(){
+  $('sgTexSmithFrame').setAttribute('src',PROVIDERS.texsmith);
+  $('sgTexSmithStatus').textContent='Attempting to open the TexSmith website inside Study Games. This is not a guarantee of movie playback.';
+}
 function setTab(tab){
+  if(tab!==state.active) closeAllViewers(false);
   state.active=tab;
   $('sgFreeFilmsTab').setAttribute('aria-selected',String(tab==='free'));
   $('sgPremiumFilmsTab').setAttribute('aria-selected',String(tab==='premium'));
   $('sgTexSmithTab').setAttribute('aria-selected',String(tab==='texsmith'));
+  $('sgDownloaderWorldTab').setAttribute('aria-selected',String(tab==='downloader'));
   $('sgFreeFilmsPanel').hidden=tab!=='free';
   $('sgPremiumFilmsPanel').hidden=tab!=='premium';
   $('sgTexSmithPanel').hidden=tab!=='texsmith';
+  $('sgDownloaderWorldPanel').hidden=tab!=='downloader';
+  if(tab==='downloader' && $('sgDownloaderWorldFrame').getAttribute('src')==='about:blank') startDownloaderViewer();
+  if(tab==='texsmith' && $('sgTexSmithFrame').getAttribute('src')==='about:blank') startTexSmithViewer();
 }
 $('sgFreeFilmsTab').addEventListener('click',()=>setTab('free'));
 $('sgPremiumFilmsTab').addEventListener('click',()=>setTab('premium'));
 $('sgTexSmithTab').addEventListener('click',()=>setTab('texsmith'));
- $('sgTexSmithLaunch').addEventListener('click',()=>setTab('texsmith'));
- $('sgTexSmithReload').addEventListener('click',()=>{
-   const frame=$('sgTexSmithFrame');
-   frame.src='https://texsmith-9889f.firebaseapp.com/?params=TexSmith';
-   setTab('texsmith');
- });
+$('sgDownloaderWorldTab').addEventListener('click',()=>setTab('downloader'));
+$('sgDownloaderWorldLaunch').addEventListener('click',()=>setTab('downloader'));
+$('sgTexSmithLaunch').addEventListener('click',()=>setTab('texsmith'));
+$('sgDownloaderWorldReload').addEventListener('click',()=>{closeAllViewers(false);setTab('downloader');});
+$('sgTexSmithReload').addEventListener('click',()=>{closeAllViewers(false);setTab('texsmith');});
+$('sgDownloaderShowTexSmith').addEventListener('click',()=>setTab('texsmith'));
+$('sgDownloaderWorldEnd').addEventListener('click',()=>closeAllViewers(true));
+$('sgTexSmithEnd').addEventListener('click',()=>closeAllViewers(true));
+// Clear the visible viewer on exit, switching browser tabs, or leaving the Movie Theater.
+window.addEventListener('pagehide',()=>closeAllViewers(false));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)closeAllViewers(false);});
+const movieSection=$('sgMovies');
+if(movieSection){
+  new MutationObserver(()=>{if(movieSection.hidden)closeAllViewers(false);}).observe(movieSection,{attributes:true,attributeFilter:['hidden']});
+}
 $('sgPremiumGoToCodes').addEventListener('click',()=>showView('support'));
 // There are no movie cards or background film downloads in this version.
 
