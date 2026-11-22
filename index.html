@@ -347,6 +347,41 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 @media(max-width:680px){.sg-entertainment .sg-panels{grid-template-columns:1fr}.sg-entertainment .sg-film-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sg-entertainment{padding:15px}}
 
 </style>
+<style id="sg-cinema-grid-upgrade">
+.sg-entertainment .sg-cinema-intro{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sg-entertainment .sg-cinema-intro h3{font-size:1.15rem;margin:0 0 6px}
+.sg-entertainment .sg-cinema-intro p{margin:0}
+.sg-entertainment .sg-film-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:17px}
+.sg-entertainment .sg-film-card{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;border-color:#594258;background:#201727;min-height:250px}
+.sg-entertainment .sg-film-card:hover,.sg-entertainment .sg-film-card:focus-visible{border-color:#ff82ab;box-shadow:0 8px 22px #0007;outline:2px solid transparent}
+.sg-entertainment .sg-film-cover{aspect-ratio:2/3;position:relative;isolation:isolate;background:linear-gradient(145deg,#632649,#31183e 54%,#171628);min-height:190px}
+.sg-entertainment .sg-film-card:nth-child(4n+2) .sg-film-cover{background:linear-gradient(145deg,#48416c,#26214a 60%,#161627)}
+.sg-entertainment .sg-film-card:nth-child(4n+3) .sg-film-cover{background:linear-gradient(145deg,#6a4532,#402d36 60%,#1b1722)}
+.sg-entertainment .sg-film-card:nth-child(4n+4) .sg-film-cover{background:linear-gradient(145deg,#244e52,#202f4b 60%,#151b27)}
+.sg-entertainment .sg-film-cover img{position:absolute;inset:0;z-index:0;object-fit:cover;filter:brightness(.78)}
+.sg-entertainment .sg-film-symbol{font-size:58px;text-shadow:0 3px 12px #0008;z-index:1}
+.sg-entertainment .sg-film-cover img~.sg-film-symbol{opacity:0}
+.sg-entertainment .sg-film-play{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);background:#0b0b10b8;border:1px solid #ffffff9c;border-radius:50%;width:55px;height:55px;display:grid;place-items:center;font-size:22px;padding-left:3px;color:#fff}
+.sg-entertainment .sg-film-info{padding:13px}
+.sg-entertainment .sg-film-info strong{font-size:1rem}
+.sg-entertainment .sg-film-info small{line-height:1.4}
+.sg-entertainment .sg-film-info small:last-child{color:#aee4bb}
+.sg-entertainment .sg-cinema-disclaimer{margin-top:16px}
+.sg-entertainment .sg-premium-plan{background:linear-gradient(145deg,#2b1838,#1d1830 70%)!important;border-color:#73517a!important}
+.sg-entertainment .sg-premium-plan h3{font-size:1.6rem;margin:12px 0 8px}
+.sg-entertainment .sg-price-line{display:flex;align-items:center;gap:12px;margin:12px 0}
+.sg-entertainment .sg-price-line strong{font-size:3rem;line-height:1}
+.sg-entertainment .sg-price-line span{font-size:1rem;line-height:1.35}
+.sg-entertainment .sg-price-line small{color:#e2c8dd}
+body.sg-movie-open{overflow:hidden}
+.sg-entertainment .sg-player-overlay{position:fixed;inset:0;z-index:99999;border:0;border-radius:0;padding:clamp(10px,3vw,25px);background:#07060bf5;display:flex;align-items:center;justify-content:center;overflow:auto}
+.sg-entertainment .sg-player-shell{width:min(1050px,100%);max-height:95vh;overflow-y:auto;border:1px solid #59445d;border-radius:18px;padding:clamp(12px,3vw,24px);background:#17121f}
+.sg-entertainment .sg-player-shell .sg-head{margin-bottom:8px}
+.sg-entertainment .sg-player-shell h3{margin:0}
+.sg-entertainment .sg-player{max-height:min(65vh,650px);background:#000;margin:6px 0;width:100%;aspect-ratio:16/9}
+.sg-entertainment .sg-player-shell .sg-row{margin-top:12px}
+@media(max-width:680px){.sg-entertainment .sg-film-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sg-entertainment .sg-film-cover{min-height:150px}.sg-entertainment .sg-film-info{padding:9px}.sg-entertainment .sg-film-play{width:42px;height:42px;font-size:18px}.sg-entertainment .sg-player-overlay{padding:8px}.sg-entertainment .sg-player-shell{padding:12px}.sg-entertainment .sg-player-shell h3{font-size:1.1rem}}
+</style>
 </head>
 <body>
 <!-- Opening cinematic: no tracking, external fonts, or screen capture modifications. -->
@@ -407,30 +442,32 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 <article class="game-card"><div class="game-icon" style="background:#324b53">⚡</div><h3>Reaction Rush</h3><p>Wait for green, then click as quickly as you can.</p><button data-game="reaction" type="button">Play Reaction Rush →</button></article>
 </div></section>
 <section id="sgMovies" data-screen="movies" hidden class="sg-entertainment" aria-labelledby="sgMoviesTitle">
-  <div class="sg-head"><div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">The Movie Library</h2><p>Watch legitimately reusable films and educational cinema without leaving Study Games.</p></div><span class="sg-badge">1,000-film collection goal</span></div>
+  <div class="sg-head"><div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">The Movie Library</h2><p>Tap a movie poster to open the player. Watch a selection of public-domain classics streamed from Wikimedia Commons.</p></div><span class="sg-badge">Free classic films • No search needed</span></div>
   <div class="sg-tabs" role="tablist" aria-label="Choose movie collection">
    <button type="button" id="sgFreeFilmsTab" role="tab" aria-selected="true" aria-controls="sgFreeFilmsPanel">🍿 Free movies</button>
    <button type="button" id="sgPremiumFilmsTab" role="tab" aria-selected="false" aria-controls="sgPremiumFilmsPanel">⭐ Premium movies</button>
   </div>
-  <div class="sg-panel" id="sgFreeFilmsPanel">
-    <div class="sg-row"><div style="flex:1;min-width:180px"><label for="sgMovieSearch">Search movie titles</label><input type="search" id="sgMovieSearch" placeholder="Find a film in this collection…" /></div><button type="button" id="sgLoadFilms" class="sg-primary">Load legal films</button></div>
-    <p class="sg-muted">Sourced from Wikimedia Commons public-domain film categories. Each item links to its rights and credits. Availability varies; some titles are short films or clips, not feature movies.</p>
-    <div class="sg-progress" aria-hidden="true"><span id="sgMovieProgress"></span></div>
-    <p id="sgMovieStatus" class="sg-message" role="status">Press “Load legal films” to retrieve available films.</p>
-    <div id="sgMovieGrid" class="sg-film-grid" aria-label="Available legal films"></div>
-    <div class="sg-row" style="margin-top:20px"><button type="button" id="sgLoadMoreFilms" hidden>Load more available films</button><span class="sg-muted" id="sgMovieCount">0 verified video files loaded · Goal: 1,000</span></div>
+<div class="sg-panel" id="sgFreeFilmsPanel">
+  <div class="sg-cinema-intro"><div><h3>🎞️ Pick a movie and watch</h3><p class="sg-muted">No searching, loading buttons, or sign-in. Choose a movie poster to open the player right here.</p></div><span class="sg-badge">Curated public-domain cinema</span></div>
+  <p id="sgMovieStatus" class="sg-message" role="status">Tap any movie to play. Movies are streamed from Wikimedia Commons; playback needs an internet connection.</p>
+  <div id="sgMovieGrid" class="sg-film-grid" aria-label="Watch public-domain classic films"></div>
+  <p class="sg-muted sg-cinema-disclaimer" id="sgMovieCount">Classic films and short films • Source and usage rights shown in the player • Rights may differ outside the United States.</p>
+</div>
+<div class="sg-panel" id="sgPremiumFilmsPanel" hidden>
+  <h3>⭐ Premium Movie Lounge</h3>
+  <p>Explore hand-picked classic cinema. All films here also remain available from their original public-domain sources. Premium subscriptions are planned for extra Study Games features and curated viewing.</p>
+  <div class="sg-row"><button type="button" id="sgPremiumGoToCodes" class="sg-primary">See Premium plans &amp; codes</button><span class="sg-badge" id="sgPremiumStatusLabel">Not activated</span></div>
+  <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Featured classic films"></div>
+  <p class="sg-note">The subscription service is not connected yet. No subscription payments are taken on this page.</p>
+</div>
+<div class="sg-panel sg-player-overlay" id="sgMoviePlayerPanel" hidden role="dialog" aria-modal="true" aria-label="Movie player">
+  <div class="sg-player-shell">
+    <div class="sg-head"><h3 id="sgNowPlaying">Now playing</h3><button type="button" id="sgCloseMovie" aria-label="Close movie player">✕ Close</button></div>
+    <video id="sgMoviePlayer" class="sg-player" controls playsinline preload="none" crossorigin="anonymous"></video>
+    <p id="sgPlayerStatus" class="sg-message" role="status">If the film does not start, press Play in the video player.</p>
+    <div class="sg-row"><a id="sgMovieRights" class="sg-action" href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer">Original film, license &amp; credits ↗</a><span class="sg-muted" id="sgMovieAttribution"></span></div>
   </div>
-  <div class="sg-panel" id="sgPremiumFilmsPanel" hidden>
-    <h3>⭐ Premium movie collection</h3><p>Explore an expanded collection of legally reusable films. A valid Premium membership will unlock additional curated titles here when the secure membership service is connected.</p>
-    <div class="sg-row"><button type="button" id="sgPremiumGoToCodes" class="sg-primary">Redeem a Premium code</button><span class="sg-badge" id="sgPremiumStatusLabel">Not activated</span></div>
-    <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Premium-collection films"></div>
-    <p class="sg-note">Public-domain and openly licensed films remain legally available from their original sources. Premium pays for Study Games features and curated access—not ownership or exclusivity of the films.</p>
-  </div>
-  <div class="sg-panel" id="sgMoviePlayerPanel" hidden style="margin-top:20px">
-    <div class="sg-head"><h3 id="sgNowPlaying">Playing film</h3><button type="button" id="sgCloseMovie">✕ Close player</button></div>
-    <video id="sgMoviePlayer" class="sg-player" controls playsinline preload="metadata"></video>
-    <div class="sg-row"><a id="sgMovieRights" class="sg-action" href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer">View original source, license & credits ↗</a><span class="sg-muted" id="sgMovieAttribution"></span></div>
-  </div>
+</div>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
   <div class="sg-head"><div><span class="sg-badge">💛 SUPPORT THE PROJECT</span><h2 id="sgSupportTitle">Donations & Premium</h2><p>Help grow Study Games and its legal movie library.</p></div><span class="sg-badge">Secure checkout required</span></div>
@@ -448,15 +485,21 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
     <p class="sg-muted">Codes are claimed once for one browser/device and cannot be safely validated by a public HTML file alone. Save your access token if a future login/recovery feature is added.</p>
    </div>
   </div>
-  <div class="sg-panel" style="margin-top:18px"><h3>💎 Buy Premium</h3><p>Premium will unlock additional curated, legally reusable movies and site features. This is not active until a real checkout and membership service are configured.</p>
-    <button type="button" id="sgBuyPremium">Premium checkout (not set up)</button><p id="sgBuyStatus" class="sg-message" role="status">No payments are being accepted here yet.</p>
-    <p class="sg-note">If you are under 18, a parent or legal guardian needs to handle the payment provider account and any required verification.</p>
-  </div>
+<div class="sg-panel sg-premium-plan" style="margin-top:18px">
+  <span class="sg-badge">💎 STUDY GAMES PREMIUM</span>
+  <h3>Try Premium free for 7 days</h3>
+  <div class="sg-price-line"><strong>$20</strong><span>every 2 months<br><small>after the free trial</small></span></div>
+  <p>Start with a <strong>7-day free trial</strong>. After the trial, the plan is <strong>$20 USD every two months</strong> until canceled. Cancel before the trial ends to avoid the first charge. Cancel anytime through the future subscription provider; access will follow its billing terms.</p>
+  <p class="sg-muted">The subscription and free-trial checkout are not active yet. A secure payment provider and server-side membership system must be connected before trials or billing can start.</p>
+  <button type="button" id="sgBuyPremium" class="sg-primary">Start my 7-day free trial (coming soon)</button>
+  <p id="sgBuyStatus" class="sg-message" role="status">Preview only. No trial has begun and no payment will be charged.</p>
+  <p class="sg-note">A parent or guardian must manage any required payment account verification and subscriptions for minors. Invitation-code Premium remains separate from the paid plan.</p>
+</div>
   <details id="sgOwnerSetup"><summary>⚙ Site owner setup (payments and Premium codes)</summary>
    <p class="sg-muted">Do not put secret payment keys or redemption codes into this public HTML. Deploy the separate secure backend provided with the download package; set the server URL below. Use a hosted payment service for donations.</p>
    <label for="sgPremiumApiInput">Premium redemption server URL (HTTPS)</label><input type="url" id="sgPremiumApiInput" placeholder="https://your-premium-worker.example.workers.dev" autocomplete="off" />
    <label for="sgDonationLinkInput">Hosted donation checkout link (optional)</label><input type="url" id="sgDonationLinkInput" placeholder="https://your-payment-provider.example/…" autocomplete="off" />
-   <label for="sgPaidLinkInput">Hosted Premium checkout link (optional)</label><input type="url" id="sgPaidLinkInput" placeholder="https://your-payment-provider.example/…" autocomplete="off" />
+   <label for="sgPaidLinkInput">Hosted verified subscription-trial checkout link (not active until a secure membership webhook is set up)</label><input type="url" id="sgPaidLinkInput" placeholder="https://your-payment-provider.example/…" autocomplete="off" />
    <div class="sg-row" style="margin-top:14px"><button id="sgPreviewSetup" type="button">Preview settings on this device</button><button id="sgExportSetup" type="button" class="sg-primary">Download configured index.html</button></div>
    <p id="sgOwnerStatus" class="sg-message" role="status">Nothing will charge visitors until a real checkout service is added.</p>
   </details>
@@ -1780,66 +1823,144 @@ void start(key);
   // Public values only. NEVER embed secret keys, raw one-use codes or payment secrets here.
   const PUBLISHED_CONFIG = { premiumApi: '', donationCheckout: '', premiumCheckout: '' };
   const $ = id => document.getElementById(id);
-  const state = { active: 'free', movies: { free: [], premium: [] }, indexes: {free: new Set(), premium: new Set()}, queues: {
-    free: ['Category:Videos_of_films_in_the_public_domain', 'Category:Films_from_Archive.org', 'Category:Films_in_the_public_domain'],
-    premium: ['Category:Films_by_Charlie_Chaplin','Category:Films_by_Georges_Méliès','Category:Films_by_Buster_Keaton','Category:Films_in_the_public_domain']
-  }, pending: false, premium: false, expires: null };
-  const MAX_FILM_ENTRIES = 1000;
-  const $status = $('sgMovieStatus');
-  function cleanUrl(raw) {try {const url = new URL(String(raw||'').trim()); return url.protocol === 'https:' ? url.href.replace(/\/$/,'') : '';} catch{return '';}}
-  function config(){let local={};try{local=JSON.parse(localStorage.getItem('sg-cinema-owner-preview')||'{}');}catch{}return {...PUBLISHED_CONFIG,...local};}
-  function userToken(){try{return localStorage.getItem('sg-premium-entitlement')||'';}catch{return '';}}
-  function setToken(v){try{localStorage.setItem('sg-premium-entitlement',v);}catch{}}
-  function showView(name){if(window.studyGamesShowView)window.studyGamesShowView(name);}
-  function setTab(tab) {
-    state.active = tab;
-    $('sgFreeFilmsTab').setAttribute('aria-selected',String(tab==='free'));
-    $('sgPremiumFilmsTab').setAttribute('aria-selected',String(tab==='premium'));
-    $('sgFreeFilmsPanel').hidden=tab!=='free';
-    $('sgPremiumFilmsPanel').hidden=tab!=='premium';
-    if(tab==='premium'){
-      if(state.premium){loadFilmBatch('premium');}
-      else {$('sgPremiumMovieGrid').replaceChildren(); const p=document.createElement('p');p.textContent='Premium movie collection will appear after redeeming a valid code and connecting the secure membership service.';$('sgPremiumMovieGrid').append(p);}
+// Curated full films and classic shorts. Every source points to its Commons file page.
+// Film files are resolved through the public Wikimedia Commons API; no search is required.
+const CURATED_FILMS = [
+  { name: 'The Kid', year: '1921', kind: 'Comedy · Feature', file: 'The Kid (1921).webm', emoji: '🎩' },
+  { name: 'The General', year: '1926', kind: 'Comedy · Feature', file: 'The General (1926).webm', emoji: '🚂' },
+  { name: 'Sherlock Jr.', year: '1924', kind: 'Comedy · Feature', file: 'Sherlock Jr. (1924).webm', emoji: '🕵️' },
+  { name: 'A Trip to the Moon', year: '1902', kind: 'Sci-fi · Short', file: 'Le Voyage dans la Lune (1902).webm', emoji: '🌙' },
+  { name: 'One Week', year: '1920', kind: 'Comedy · Short', file: 'One Week (1920).webm', emoji: '🏠' },
+  { name: 'The Immigrant', year: '1917', kind: 'Comedy · Short', file: 'The Immigrant (1917).webm', emoji: '🎭' },
+  { name: 'The Gold Rush', year: '1925', kind: 'Comedy · Feature', file: 'The Gold Rush (1925).webm', emoji: '🏔️' },
+  { name: 'Steamboat Bill, Jr.', year: '1928', kind: 'Comedy · Feature', file: 'Steamboat Bill Jr. (1928).webm', emoji: '🚢' },
+  { name: 'The Cabinet of Dr. Caligari', year: '1920', kind: 'Mystery · Feature', file: 'The Cabinet of Dr. Caligari.webm', emoji: '🎞️' },
+  { name: 'The Great Train Robbery', year: '1903', kind: 'Western · Short', file: 'The Great Train Robbery (1903).webm', emoji: '🎬' }
+];
+const state = { active: 'free', premium: false, expires: null };
+let currentPlayerToken = 0;
+let lastFocused = null;
+const $status = $('sgMovieStatus');
+function cleanUrl(raw) { try {const url=new URL(String(raw||'').trim()); return url.protocol==='https:' ? url.href.replace(/\/$/,'') : '';} catch {return '';} }
+function config(){let local={};try{local=JSON.parse(localStorage.getItem('sg-cinema-owner-preview')||'{}');}catch{}return {...PUBLISHED_CONFIG,...local};}
+function userToken(){try{return localStorage.getItem('sg-premium-entitlement')||'';}catch{return '';}}
+function setToken(v){try{localStorage.setItem('sg-premium-entitlement',v);}catch{}}
+function showView(name){if(window.studyGamesShowView)window.studyGamesShowView(name);}
+function commonsFilePage(file){return 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(file.replace(/ /g,'_'));}
+function commonsFallbackVideo(file){return 'https://commons.wikimedia.org/wiki/Special:Redirect/file/'+encodeURIComponent(file);}
+function licensingName(metadata){const raw=metadata?.LicenseShortName?.value||'';const n=document.createElement('textarea');n.innerHTML=String(raw);return (n.value||'').replace(/<[^>]*>/g,'').trim().slice(0,90) || 'See Commons file page';}
+function allowedLicense(metadata){const s=licensingName(metadata).toLowerCase();return /public domain|cc0|pdm|pd-|cc by(?:-sa)?\b/.test(s) && !/\b(?:nc|nd)\b/.test(s);}
+function setTab(tab){
+  state.active=tab;
+  $('sgFreeFilmsTab').setAttribute('aria-selected',String(tab==='free'));
+  $('sgPremiumFilmsTab').setAttribute('aria-selected',String(tab==='premium'));
+  $('sgFreeFilmsPanel').hidden=tab!=='free';
+  $('sgPremiumFilmsPanel').hidden=tab!=='premium';
+}
+$('sgFreeFilmsTab').addEventListener('click',()=>setTab('free'));
+$('sgPremiumFilmsTab').addEventListener('click',()=>setTab('premium'));
+$('sgPremiumGoToCodes').addEventListener('click',()=>showView('support'));
+async function commons(params){
+  const u=new URL('https://commons.wikimedia.org/w/api.php');
+  for(const [key,value] of Object.entries(params))u.searchParams.set(key,value);
+  u.searchParams.set('action','query');u.searchParams.set('format','json');u.searchParams.set('origin','*');
+  const r=await fetch(u,{mode:'cors',credentials:'omit'});
+  if(!r.ok)throw new Error('The Wikimedia film service is temporarily unavailable.');
+  const d=await r.json();if(d.error)throw new Error(d.error.info||'Wikimedia film lookup failed.');return d;
+}
+function makeFilmCard(item){
+  const button=document.createElement('button');button.type='button';button.className='sg-film-card';
+  button.setAttribute('aria-label','Watch '+item.name+' ('+item.year+')');
+  const poster=document.createElement('span');poster.className='sg-film-poster sg-film-cover';
+  const symbol=document.createElement('span');symbol.className='sg-film-symbol';symbol.textContent=item.emoji;
+  const play=document.createElement('span');play.className='sg-film-play';play.setAttribute('aria-hidden','true');play.textContent='▶';
+  poster.append(symbol,play);item.posterNode=poster;
+  const info=document.createElement('span');info.className='sg-film-info';
+  const title=document.createElement('strong');title.textContent=item.name;
+  const meta=document.createElement('small');meta.textContent=item.year+' · '+item.kind;
+  const rights=document.createElement('small');rights.textContent='Public-domain classic · Watch now';
+  info.append(title,meta,rights);button.append(poster,info);
+  button.addEventListener('click',()=>{void showFilm(item);});
+  return button;
+}
+function renderFilmGrids(){
+  $('sgMovieGrid').replaceChildren(...CURATED_FILMS.map(makeFilmCard));
+  const featured=CURATED_FILMS.filter(f=>['The General','A Trip to the Moon','The Kid','Sherlock Jr.'].includes(f.name));
+  $('sgPremiumMovieGrid').replaceChildren(...featured.map(f=>{
+    const b=makeFilmCard(f);b.title='Free public-domain film preview';return b;
+  }));
+  $('sgMovieCount').textContent=CURATED_FILMS.length+' classics available to choose from · Full films and shorts · Rights may vary by country';
+}
+async function resolveFilm(item){
+  if(item.verified===true && item.src) return item.src;
+  if(item.verified===false) throw new Error('The file’s reuse status could not be confirmed.');
+  const result=await commons({prop:'imageinfo',titles:'File:'+item.file,iiprop:'url|mime|extmetadata',iiurlwidth:'320'});
+  const page=Object.values(result.query?.pages||{})[0];
+  const info=page?.imageinfo?.[0];
+  if(!info || !String(info.mime||'').startsWith('video/') || !allowedLicense(info.extmetadata)){
+    item.verified=false;throw new Error('This video could not be verified for reuse. Open its Commons source to check its license.');
+  }
+  item.src=info.url;item.license=licensingName(info.extmetadata);item.verified=true;
+  if(info.thumburl)decoratePoster(item,info.thumburl);
+  return info.url;
+}
+function decoratePoster(item,thumb){
+  // Both free and featured cards may be present. Keep controls accessible above the image.
+  for(const button of document.querySelectorAll('.sg-film-card')){
+    if(button.getAttribute('aria-label')!=='Watch '+item.name+' ('+item.year+')')continue;
+    const poster=button.querySelector('.sg-film-poster');if(!poster || poster.querySelector('img'))continue;
+    const img=document.createElement('img');img.loading='lazy';img.alt='';img.referrerPolicy='no-referrer';img.src=thumb;
+    img.onerror=()=>img.remove();poster.prepend(img);
+  }
+}
+async function hydratePosters(){
+  try{
+    const data=await commons({prop:'imageinfo',titles:CURATED_FILMS.map(x=>'File:'+x.file).join('|'),iiprop:'url|mime|extmetadata',iiurlwidth:'320'});
+    let licensed=0;
+    for(const p of Object.values(data.query?.pages||{})){
+      const item=CURATED_FILMS.find(x=>p.title==='File:'+x.file);if(!item)continue;
+      const info=p.imageinfo?.[0];if(!info || !String(info.mime||'').startsWith('video/'))continue;
+      if(!allowedLicense(info.extmetadata))continue;
+      item.verified=true;item.src=info.url;item.license=licensingName(info.extmetadata);
+      if(info.thumburl)decoratePoster(item,info.thumburl);
+      licensed++;
     }
+    $status.textContent=licensed+' Wikimedia Commons film files ready. Tap a poster to play; if autoplay is blocked, tap Play in the player.';
+  }catch{
+    $status.textContent='Choose a poster to watch. Movie artwork may be unavailable on this connection; the film source will be checked when you tap.';
   }
-  $('sgFreeFilmsTab').addEventListener('click',()=>setTab('free'));
-  $('sgPremiumFilmsTab').addEventListener('click',()=>setTab('premium'));
-  $('sgPremiumGoToCodes').addEventListener('click',()=>showView('support'));
-  async function commons(params){const u=new URL('https://commons.wikimedia.org/w/api.php');for(const [key,value] of Object.entries(params))u.searchParams.set(key,value);u.searchParams.set('action','query');u.searchParams.set('format','json');u.searchParams.set('origin','*');const r=await fetch(u,{mode:'cors',credentials:'omit'});if(!r.ok)throw new Error('The film catalog server returned an error.');const d=await r.json();if(d.error)throw new Error(d.error.info||'Commons API error');return d;}
-  const fileMatch=/\.(webm|ogv|ogg|mp4|m4v|mpeg|mpg)$/i;
-  function licenseAllowed(info){const meta=info.extmetadata||{};const name=(meta.LicenseShortName?.value||'').toLowerCase();return name.includes('public domain')||name.includes('cc0')||name.startsWith('pd-')||name.includes('pdm')||(/^cc[ -]by(?:[ -]sa)?\b/.test(name) && !/\b(nc|nd)\b/.test(name));}
-  function safeText(v){const n=document.createElement('textarea');n.innerHTML=String(v||'');return (n.value||'').replace(/<[^>]*>/g,'').trim().slice(0,500);}
-  function showFilm(item){$('sgNowPlaying').textContent=item.name;$('sgMoviePlayerPanel').hidden=false;const v=$('sgMoviePlayer');v.pause();v.src=item.src;v.load();$('sgMovieRights').href=item.page;$('sgMovieAttribution').textContent='License: '+item.license+' · verify source permissions';$('sgMoviePlayerPanel').scrollIntoView({block:'start',behavior:'smooth'});}
-  $('sgCloseMovie').addEventListener('click',()=>{$('sgMoviePlayer').pause();$('sgMoviePlayer').removeAttribute('src');$('sgMoviePlayer').load();$('sgMoviePlayerPanel').hidden=true;});
-  function renderFilms(type){const root=$(type==='free'?'sgMovieGrid':'sgPremiumMovieGrid');root.replaceChildren();const text=$('sgMovieSearch').value.trim().toLowerCase();const shown=state.movies[type].filter(m=>type==='premium'||!text||m.name.toLowerCase().includes(text));
-    for(const item of shown){const button=document.createElement('button');button.type='button';button.className='sg-film-card';button.setAttribute('aria-label','Watch '+item.name);const poster=document.createElement('span');poster.className='sg-film-poster';if(item.thumb){const img=document.createElement('img');img.loading='lazy';img.alt='';img.src=item.thumb;img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();poster.textContent='🎞️'};poster.append(img);}else poster.textContent='🎞️';const content=document.createElement('span');content.className='sg-film-info';const label=document.createElement('strong');label.textContent=item.name;const meta=document.createElement('small');meta.textContent=(type==='premium'?'⭐ Premium curated · ':'')+item.license;content.append(label,meta);button.append(poster,content);button.addEventListener('click',()=>showFilm(item));root.append(button);}
-    if(!shown.length){const p=document.createElement('p');p.className='sg-muted';p.textContent=type==='premium'?'No premium titles have loaded yet.':'No matching titles yet. Load some films or try a different search.';root.append(p);} $('sgMovieCount').textContent=`${state.movies.free.length} reusable video files loaded · Goal: ${MAX_FILM_ENTRIES.toLocaleString()} full movies`; $('sgMovieProgress').style.width=Math.min(100,state.movies.free.length/MAX_FILM_ENTRIES*100)+'%';
+}
+async function showFilm(item){
+  const token=++currentPlayerToken;
+  const panel=$('sgMoviePlayerPanel'),video=$('sgMoviePlayer');
+  lastFocused=document.activeElement;
+  $('sgNowPlaying').textContent=item.name+' ('+item.year+')';
+  $('sgMovieRights').href=commonsFilePage(item.file);
+  $('sgMovieAttribution').textContent='Video: Wikimedia Commons · '+(item.license||'Review license at source');
+  $('sgPlayerStatus').textContent='Loading the film…';
+  video.pause();video.removeAttribute('src');video.load();panel.hidden=false;
+  document.body.classList.add('sg-movie-open');
+  $('sgCloseMovie').focus();
+  try{
+    const src=await resolveFilm(item);
+    if(token!==currentPlayerToken)return;
+    video.src=src||commonsFallbackVideo(item.file);video.load();
+    $('sgMovieAttribution').textContent='Video: Wikimedia Commons · '+item.license;
+    $('sgPlayerStatus').textContent='Press Play if the video does not start automatically. Source and credits are linked below.';
+    try{await video.play();}catch{ /* iPhone Safari may require a second tap on Play. */ }
+  }catch(err){
+    if(token!==currentPlayerToken)return;
+    $('sgPlayerStatus').textContent=err.message+' Use the source link below to watch on Wikimedia Commons.';
   }
-  $('sgMovieSearch').addEventListener('input',()=>renderFilms('free'));
-  async function loadFilmBatch(type){if(state.pending)return;if(type==='premium'&&!state.premium)return;const queue=state.queues[type];if(!queue.length){if(type==='free'){$status.textContent='All discovered categories have been checked. The 1,000-film goal requires adding more individually rights-checked films.';$('sgLoadMoreFilms').hidden=true;}return;}
-    state.pending=true;const loadBtn=$('sgLoadFilms');loadBtn.disabled=true;const more=$('sgLoadMoreFilms');more.disabled=true;$status.textContent='Looking for reusable films in the Commons catalog…';let added=0, checked=0;try{
-    for(let k=0;k<3 && queue.length && state.movies[type].length<MAX_FILM_ENTRIES;k++){
-      const category=queue.shift();const categories=await commons({list:'categorymembers',cmtitle:category,cmtype:'file|subcat',cmlimit:'500'});
-      const members=categories?.query?.categorymembers||[];const sub=members.filter(x=>x.ns===14).map(x=>x.title);if(queue.length<75){queue.push(...sub.slice(0,Math.max(0,75-queue.length)));}
-      const files=members.filter(x=>x.ns===6 && fileMatch.test(x.title)).map(x=>x.title);checked+=members.length;
-      for(let z=0;z<files.length;z+=30){const result=await commons({prop:'imageinfo',titles:files.slice(z,z+30).join('|'),iiprop:'url|mime|size|extmetadata',iiurlwidth:'300'});
-        for(const page of Object.values(result.query?.pages||{})){
-          const info=page.imageinfo?.[0];if(!info || !String(info.mime||'').startsWith('video/')||!licenseAllowed(info)||state.indexes[type].has(page.title))continue;
-          const rawName=page.title.replace(/^File:/,'').replace(fileMatch,'').replace(/[_-]/g,' ').replace(/\s+(\d{3,4}p|HD|full)\b/ig,'').trim();
-          const license=safeText(info.extmetadata?.LicenseShortName?.value)||'Open license';
-          state.indexes[type].add(page.title);state.movies[type].push({name:rawName,src:info.url,thumb:info.thumburl||'',license,page:info.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(page.title)});added++;if(state.movies[type].length>=MAX_FILM_ENTRIES)break;
-        }
-      }
-    }
-    renderFilms(type);
-    $status.textContent=`Added ${added} available open-license film videos. ${state.movies[type].length} loaded in this collection; ${queue.length} categories remain to explore. Titles and rights still need review before calling them full feature films.`;
-    more.hidden=!(queue.length && state.movies.free.length<MAX_FILM_ENTRIES);if(type==='premium'&&state.movies.premium.length===0){$('sgPremiumMovieGrid').textContent='No eligible premium selections were returned from the film archive yet.';}
-    }catch(err){$status.textContent='Could not load the Commons film catalog: '+err.message+'. Network filters or Commons availability may affect playback.';more.hidden=false;}
-    finally{state.pending=false;loadBtn.disabled=false;more.disabled=false;}
-  }
-  $('sgLoadFilms').addEventListener('click',()=>loadFilmBatch('free'));
-  $('sgLoadMoreFilms').addEventListener('click',()=>loadFilmBatch('free'));
-  function goCheckout(kind){if(kind==='premium'){$('sgBuyStatus').textContent='Paid Premium checkout is not activated: a verified payment webhook must create memberships before anyone is charged.';return;}const url=cleanUrl(kind==='donate'?config().donationCheckout:config().premiumCheckout);const output=$(kind==='donate'?'sgDonateStatus':'sgBuyStatus');if(kind==='donate'){const n=Number($('sgDonateAmount').value);if(!Number.isFinite(n)||n<1){output.textContent='Choose a donation amount of at least $1.';return;}output.textContent='Your requested amount is $'+n.toFixed(2)+'. Confirm the amount again on the payment provider page.';}
+}
+function closeFilm(){currentPlayerToken++;const v=$('sgMoviePlayer');v.pause();v.removeAttribute('src');v.load();$('sgMoviePlayerPanel').hidden=true;document.body.classList.remove('sg-movie-open');lastFocused?.focus?.();}
+$('sgCloseMovie').addEventListener('click',closeFilm);
+$('sgMoviePlayerPanel').addEventListener('click',e=>{if(e.target.id==='sgMoviePlayerPanel')closeFilm();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sgMoviePlayerPanel').hidden)closeFilm();});
+$('sgMoviePlayer').addEventListener('error',()=>{if(!$('sgMoviePlayerPanel').hidden)$('sgPlayerStatus').textContent='This video could not be played in your browser. Use the original Wikimedia Commons link below to view it.';});
+renderFilmGrids();
+void hydratePosters();
+  function goCheckout(kind){if(kind==='premium'){$('sgBuyStatus').textContent='The 7-day free trial and $20 every two months subscription are not active yet. The owner must connect a secure subscription checkout, cancellation handling and verified membership webhook. No trial or charge has started.';return;}const url=cleanUrl(kind==='donate'?config().donationCheckout:config().premiumCheckout);const output=$(kind==='donate'?'sgDonateStatus':'sgBuyStatus');if(kind==='donate'){const n=Number($('sgDonateAmount').value);if(!Number.isFinite(n)||n<1){output.textContent='Choose a donation amount of at least $1.';return;}output.textContent='Your requested amount is $'+n.toFixed(2)+'. Confirm the amount again on the payment provider page.';}
     if(!url){output.textContent='Checkout is not connected yet. No payment has been taken. The owner must add a hosted payment link.';return;}
     window.open(url,'_blank','noopener,noreferrer');
   }
