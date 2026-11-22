@@ -339,6 +339,25 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 </style>
 <style id="sg-cinema-css">
 /* Study Games Movies, Support & Premium — contained styles */
+
+/* Movie cards first: keep the gallery visible above the fold on phones. */
+#sgMovies #sgFreeFilmsPanel{display:flex;flex-direction:column}
+#sgMovies #sgMovieGrid{order:-2;margin-top:0}
+#sgMovies #sgMovieCount{order:-1;margin:8px 0 2px}
+#sgMovies .sg-cinema-intro{margin-top:15px}
+@media(max-width:680px){
+ #sgMovies .sg-head{margin-bottom:9px}
+ #sgMovies .sg-head p{font-size:.88rem;line-height:1.35;margin:4px 0}
+ #sgMovies .sg-tabs{margin:9px 0 12px;gap:6px}
+ #sgMovies .sg-tabs button{padding:7px 10px;min-height:38px;font-size:.87rem}
+ #sgMovies .sg-film-poster{aspect-ratio:16/10}
+ #sgMovies .sg-film-info{padding:10px}
+}
+
+.sg-entertainment a.sg-film-card,.sg-entertainment a.sg-film-card:visited{color:#f9f5ff;text-decoration:none;display:block;padding:0;min-height:0}
+.sg-entertainment a.sg-film-card:hover{background:#241e32}
+.sg-entertainment a.sg-film-card:focus-visible{outline:3px solid #f2bb64;outline-offset:3px}
+
 .sg-entertainment{--film-ink:#f6f3fb;--film-edge:#353049;color:var(--film-ink);background:radial-gradient(ellipse at 88% 3%,#44152b 0,transparent 40%),linear-gradient(155deg,#0b0d19,#181020 70%,#090a14);border:1px solid #35263e;border-radius:24px;padding:clamp(16px,3vw,32px);margin:14px 0 40px;box-shadow:0 22px 70px #0005}
 .sg-entertainment h2,.sg-entertainment h3{color:#fff;margin:.25em 0}.sg-entertainment p{color:#ccc4d4}.sg-entertainment button,.sg-entertainment a.sg-action{font:inherit;border:1px solid #6e3d58;border-radius:12px;background:#33263a;color:white;padding:10px 14px;cursor:pointer;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:7px;font-weight:750;min-height:43px}
 .sg-entertainment button:hover,.sg-entertainment a.sg-action:hover{background:#533149}.sg-entertainment button:focus-visible,.sg-entertainment input:focus-visible{outline:3px solid #f2bb64;outline-offset:3px}.sg-entertainment button:disabled{opacity:.55;cursor:not-allowed}.sg-entertainment .sg-primary{background:linear-gradient(135deg,#a72855,#e63d65);border-color:#ea6382}.sg-entertainment .sg-primary:hover{background:#b82f59}
@@ -382,6 +401,29 @@ body.sg-movie-open{overflow:hidden}
 .sg-entertainment .sg-player-shell .sg-row{margin-top:12px}
 @media(max-width:680px){.sg-entertainment .sg-film-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sg-entertainment .sg-film-cover{min-height:150px}.sg-entertainment .sg-film-info{padding:9px}.sg-entertainment .sg-film-play{width:42px;height:42px;font-size:18px}.sg-entertainment .sg-player-overlay{padding:8px}.sg-entertainment .sg-player-shell{padding:12px}.sg-entertainment .sg-player-shell h3{font-size:1.1rem}}
 </style>
+<style id="sg-emergency-button-css">
+/* Accessible, one-click Google Classroom link on the Study Games main screen. */
+#sg-emergency-shortcut { margin: 0 0 18px; }
+#sg-emergency-shortcut .sg-emergency-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 52px; padding: 12px 21px;
+  border: 2px solid #fa5263; border-radius: 13px;
+  background: #28111b; color: #ff586a;
+  font: 900 16px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; box-shadow: 0 5px 20px #dc334b24;
+  transition: background-color .15s, box-shadow .15s;
+}
+#sg-emergency-shortcut .sg-emergency-button:hover,
+#sg-emergency-shortcut .sg-emergency-button:focus-visible {
+  background: #431c28; color: #ff8190;
+  box-shadow: 0 7px 25px #ef496b40;
+}
+#sg-emergency-shortcut .sg-emergency-button:focus-visible { outline: 3px solid #ff9aab; outline-offset: 3px; }
+#sg-emergency-shortcut .sg-emergency-caption { margin: 6px 0 0; color: #bdc8da; font-size: 12px; }
+@media (max-width: 480px) { #sg-emergency-shortcut .sg-emergency-button { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { #sg-emergency-shortcut .sg-emergency-button { transition: none; } }
+</style>
 </head>
 <body>
 <!-- Opening cinematic: no tracking, external fonts, or screen capture modifications. -->
@@ -414,6 +456,11 @@ body.sg-movie-open{overflow:hidden}
 <p class="eyebrow">Welcome to Study Games</p>
 <h1>Pick a subject. <span class="grad">Start playing.</span></h1>
 <p>Choose Math, Science, Social Studies, ELA, or Geography to start practicing.</p>
+<div id="sg-emergency-shortcut">
+  <a class="sg-emergency-button" href="https://classroom.google.com/" aria-label="Emergency: open Google Classroom">EMERGENCY <span aria-hidden="true">↗</span></a>
+  <p class="sg-emergency-caption">Opens Google Classroom immediately when tapped.</p>
+</div>
+
 
 
 <div aria-label="Study Games features" class="home-chips"><span>🔢 Math</span><span>🔬 Science</span><span>🏛️ Social Studies</span><span>📖 ELA</span><span>🌎 Geography</span></div></div><section aria-labelledby="subjectsHeading" data-screen="home" id="subjects" tabindex="-1">
@@ -450,14 +497,30 @@ body.sg-movie-open{overflow:hidden}
 <div class="sg-panel" id="sgFreeFilmsPanel">
   <div class="sg-cinema-intro"><div><h3>🎞️ Pick a movie and watch</h3><p class="sg-muted">No searching, loading buttons, or sign-in. Choose a movie poster to open the player right here.</p></div><span class="sg-badge">Curated public-domain cinema</span></div>
   <p id="sgMovieStatus" class="sg-message" role="status">Tap any movie to play. Movies are streamed from Wikimedia Commons; playback needs an internet connection.</p>
-  <div id="sgMovieGrid" class="sg-film-grid" aria-label="Watch public-domain classic films"></div>
+  <div id="sgMovieGrid" class="sg-film-grid" aria-label="Watch public-domain classic films">
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Kid_%281921%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Kid (1921)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎩</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Kid</strong><small>1921 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_General_%281926%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The General (1926)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🚂</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The General</strong><small>1926 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Sherlock_Jr._%281924%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch Sherlock Jr. (1924)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🕵️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>Sherlock Jr.</strong><small>1924 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Le_Voyage_dans_la_Lune_%281902%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch A Trip to the Moon (1902)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🌙</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>A Trip to the Moon</strong><small>1902 · Sci-fi · Short</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:One_Week_%281920%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch One Week (1920)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🏠</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>One Week</strong><small>1920 · Comedy · Short</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Immigrant_%281917%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Immigrant (1917)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎭</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Immigrant</strong><small>1917 · Comedy · Short</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Gold_Rush_%281925%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Gold Rush (1925)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🏔️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Gold Rush</strong><small>1925 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Steamboat_Bill_Jr._%281928%29_by_Charles_Riesner.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch Steamboat Bill, Jr. (1928)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🚢</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>Steamboat Bill, Jr.</strong><small>1928 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Cabinet_of_Dr._Caligari.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Cabinet of Dr. Caligari (1920)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎞️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Cabinet of Dr. Caligari</strong><small>1920 · Mystery · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Great_Train_Robbery_%281903%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Great Train Robbery (1903)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎬</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Great Train Robbery</strong><small>1903 · Western · Short</small><small>Tap to watch · Original source available</small></span></a>
+</div>
   <p class="sg-muted sg-cinema-disclaimer" id="sgMovieCount">Classic films and short films • Source and usage rights shown in the player • Rights may differ outside the United States.</p>
 </div>
 <div class="sg-panel" id="sgPremiumFilmsPanel" hidden>
   <h3>⭐ Premium Movie Lounge</h3>
   <p>Explore hand-picked classic cinema. All films here also remain available from their original public-domain sources. Premium subscriptions are planned for extra Study Games features and curated viewing.</p>
   <div class="sg-row"><button type="button" id="sgPremiumGoToCodes" class="sg-primary">See Premium plans &amp; codes</button><span class="sg-badge" id="sgPremiumStatusLabel">Not activated</span></div>
-  <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Featured classic films"></div>
+  <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Featured classic films">
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Kid_%281921%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Kid (1921)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎩</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Kid</strong><small>1921 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_General_%281926%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The General (1926)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🚂</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The General</strong><small>1926 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Sherlock_Jr._%281924%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch Sherlock Jr. (1924)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🕵️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>Sherlock Jr.</strong><small>1924 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
+<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Le_Voyage_dans_la_Lune_%281902%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch A Trip to the Moon (1902)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🌙</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>A Trip to the Moon</strong><small>1902 · Sci-fi · Short</small><small>Tap to watch · Original source available</small></span></a>
+</div>
   <p class="sg-note">The subscription service is not connected yet. No subscription payments are taken on this page.</p>
 </div>
 <div class="sg-panel sg-player-overlay" id="sgMoviePlayerPanel" hidden role="dialog" aria-modal="true" aria-label="Movie player">
@@ -1833,7 +1896,7 @@ const CURATED_FILMS = [
   { name: 'One Week', year: '1920', kind: 'Comedy · Short', file: 'One Week (1920).webm', emoji: '🏠' },
   { name: 'The Immigrant', year: '1917', kind: 'Comedy · Short', file: 'The Immigrant (1917).webm', emoji: '🎭' },
   { name: 'The Gold Rush', year: '1925', kind: 'Comedy · Feature', file: 'The Gold Rush (1925).webm', emoji: '🏔️' },
-  { name: 'Steamboat Bill, Jr.', year: '1928', kind: 'Comedy · Feature', file: 'Steamboat Bill Jr. (1928).webm', emoji: '🚢' },
+  { name: 'Steamboat Bill, Jr.', year: '1928', kind: 'Comedy · Feature', file: 'Steamboat Bill Jr. (1928) by Charles Riesner.webm', emoji: '🚢' },
   { name: 'The Cabinet of Dr. Caligari', year: '1920', kind: 'Mystery · Feature', file: 'The Cabinet of Dr. Caligari.webm', emoji: '🎞️' },
   { name: 'The Great Train Robbery', year: '1903', kind: 'Western · Short', file: 'The Great Train Robbery (1903).webm', emoji: '🎬' }
 ];
@@ -1869,7 +1932,8 @@ async function commons(params){
   const d=await r.json();if(d.error)throw new Error(d.error.info||'Wikimedia film lookup failed.');return d;
 }
 function makeFilmCard(item){
-  const button=document.createElement('button');button.type='button';button.className='sg-film-card';
+  const button=document.createElement('a');button.className='sg-film-card';
+  button.href=commonsFilePage(item.file);button.target='_blank';button.rel='noopener noreferrer';
   button.setAttribute('aria-label','Watch '+item.name+' ('+item.year+')');
   const poster=document.createElement('span');poster.className='sg-film-poster sg-film-cover';
   const symbol=document.createElement('span');symbol.className='sg-film-symbol';symbol.textContent=item.emoji;
@@ -1880,7 +1944,7 @@ function makeFilmCard(item){
   const meta=document.createElement('small');meta.textContent=item.year+' · '+item.kind;
   const rights=document.createElement('small');rights.textContent='Public-domain classic · Watch now';
   info.append(title,meta,rights);button.append(poster,info);
-  button.addEventListener('click',()=>{void showFilm(item);});
+  button.addEventListener('click',(event)=>{event.preventDefault();void showFilm(item);});
   return button;
 }
 function renderFilmGrids(){
