@@ -348,9 +348,13 @@ header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12
 /* Study Games Movies, Support & Premium — contained styles */
 
 /* Movie cards first: keep the gallery visible above the fold on phones. */
+#sgMovies .sg-panel[hidden]{display:none!important}
 #sgMovies #sgFreeFilmsPanel{display:flex;flex-direction:column}
-#sgMovies #sgMovieGrid{order:-2;margin-top:0}
-#sgMovies #sgMovieCount{order:-1;margin:8px 0 2px}
+#sgMovies .sg-texsmith-feature{padding:23px;border:1px solid #7f5486;border-radius:19px;background:linear-gradient(140deg,#32203f,#1a1b2d);display:flex;align-items:flex-start;flex-direction:column;gap:12px}
+#sgMovies .sg-texsmith-feature h3{margin:0;font-size:clamp(26px,4vw,36px)}
+#sgMovies .sg-texsmith-feature p{margin:0;line-height:1.55}
+#sgMovies .sg-texsmith-feature .sg-texsmith-open{font-weight:800;font-size:1.02rem;padding:14px 18px;border-radius:12px;background:#e8bff5;color:#1e1128}
+#sgMovies .sg-texsmith-feature .sg-texsmith-open:hover{background:#f4d9fc}
 #sgMovies .sg-cinema-intro{margin-top:15px}
 @media(max-width:680px){
  #sgMovies .sg-head{margin-bottom:9px}
@@ -504,6 +508,40 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 #sgMovies .sg-yt-movie p{margin:12px 0 0;line-height:1.5}
 #sgMovies .sg-yt-movie a{color:#ffc6df;text-underline-offset:3px}
 </style>
+
+<style id="sg-texsmith-styles">
+#sgMovies [hidden] { display: none !important; }
+#sgMovies .sg-texsmith-heading {
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:16px; margin-bottom:16px;
+}
+#sgMovies .sg-texsmith-heading h3 { margin:10px 0 8px; font-size:1.3rem; }
+#sgMovies .sg-texsmith-heading p { margin:0; line-height:1.5; max-width:620px; }
+#sgMovies .sg-texsmith-open {
+  display:inline-flex; align-items:center; justify-content:center; min-height:42px;
+  border-radius:12px; padding:10px 16px; text-decoration:none;
+  background:linear-gradient(125deg,#c04c9c,#8956bd); color:#fff;
+  border:1px solid #cb82d0; font-weight:700;
+}
+#sgMovies .sg-texsmith-open:hover { filter:brightness(1.12); }
+#sgMovies .sg-texsmith-open:focus-visible,
+#sgMovies .sg-texsmith-help a:focus-visible { outline:3px solid #f4d386; outline-offset:3px; }
+#sgMovies .sg-texsmith-frame-wrap {
+  overflow:hidden; border-radius:15px; border:1px solid #5c466f;
+  background:#fff; height:min(68vh,720px); min-height:340px;
+}
+#sgMovies #sgTexSmithFrame { display:block; width:100%; height:100%; border:0; background:#fff; }
+#sgMovies .sg-texsmith-help {
+  margin:16px 0 0; padding:13px 15px; border-radius:12px;
+  border:1px solid #4d4267; background:#201c30; line-height:1.6;
+}
+#sgMovies .sg-texsmith-help a { color:#f4c9fa; font-weight:700; }
+@media (max-width:680px) {
+  #sgMovies .sg-texsmith-open { width:100%; }
+  #sgMovies .sg-texsmith-frame-wrap { height:64vh; min-height:350px; }
+}
+</style>
+
 </head>
 <body>
 <div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-softener"></div><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
@@ -596,32 +634,22 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </div></section>
 <section id="sgMovies" data-screen="movies" hidden class="sg-entertainment" aria-labelledby="sgMoviesTitle">
   <div class="sg-head">
-    <div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">Movie Theater</h2><p>Watch videos you choose to add, right here in the Study Games theater.</p></div>
-    <span class="sg-badge">🎞️ 1 video added</span>
+    <div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">Movie Theater</h2><p>Open TexSmith without leaving the Study Games page.</p></div>
+    <span class="sg-badge">📺 TexSmith viewer</span>
   </div>
   <div class="sg-tabs" role="tablist" aria-label="Choose movie collection">
     <button type="button" id="sgFreeFilmsTab" role="tab" aria-selected="true" aria-controls="sgFreeFilmsPanel">🍿 Movies</button>
     <button type="button" id="sgPremiumFilmsTab" role="tab" aria-selected="false" aria-controls="sgPremiumFilmsPanel">⭐ Premium movies</button>
+    <button type="button" id="sgTexSmithTab" role="tab" aria-selected="false" aria-controls="sgTexSmithPanel">📺 TexSmith</button>
   </div>
   <div class="sg-panel" id="sgFreeFilmsPanel" role="tabpanel" aria-labelledby="sgFreeFilmsTab">
-    <p id="sgMovieStatus" class="sg-muted">Your added YouTube video is below. Press Play to watch without leaving Study Games.</p>
-    <div id="sgMovieGrid" class="sg-film-grid" aria-label="Movie library, one YouTube video">
-      <article class="sg-yt-movie" aria-labelledby="sgFeaturedMovieTitle">
-        <span class="sg-badge">🎞️ Featured video</span>
-        <h3 id="sgFeaturedMovieTitle">Video added from YouTube</h3>
-        <div class="sg-yt-player-frame">
-          <iframe
-            title="Study Games featured YouTube video"
-            src="https://www.youtube-nocookie.com/embed/m8W3RXQkgGQ"
-            loading="lazy"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-            allowfullscreen></iframe>
-        </div>
-        <p class="sg-muted">Playback is provided by YouTube. If the owner has disabled embedding or the video is unavailable, <a href="https://www.youtube.com/watch?v=m8W3RXQkgGQ" target="_blank" rel="noopener noreferrer">open it on YouTube</a>.</p>
-      </article>
+    <div class="sg-texsmith-feature" aria-labelledby="sgTexSmithFeatureTitle">
+      <span class="sg-badge">📺 WEBSITE VIEWER</span>
+      <h3 id="sgTexSmithFeatureTitle">TexSmith</h3>
+      <p>Open the TexSmith website inside the Study Games Movie Theater. No new tab will open.</p>
+      <button type="button" id="sgTexSmithLaunch" class="sg-texsmith-open">▶ Open TexSmith inside Study Games</button>
+      <p class="sg-muted">The website may restrict embedded viewing; Study Games cannot override those restrictions.</p>
     </div>
-    <p id="sgMovieCount" class="sg-muted">1 video in this theater.</p>
   </div>
   <div class="sg-panel" id="sgPremiumFilmsPanel" role="tabpanel" aria-labelledby="sgPremiumFilmsTab" hidden>
     <div class="sg-cinema-empty" role="status">
@@ -633,6 +661,34 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
     <div class="sg-row" style="margin-top:16px"><button type="button" id="sgPremiumGoToCodes" class="sg-primary">See Premium plans &amp; codes</button><span class="sg-badge" id="sgPremiumStatusLabel">Not activated</span></div>
     <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Premium movie library, currently empty"></div>
     <p class="sg-note">Premium subscriptions are not active yet. No payments are taken on this page.</p>
+  </div>
+
+  <div class="sg-panel" id="sgTexSmithPanel" role="tabpanel" aria-labelledby="sgTexSmithTab" hidden>
+    <div class="sg-texsmith-heading">
+      <div>
+        <span class="sg-badge">🌐 EXTERNAL WEBSITE</span>
+        <h3>TexSmith inside Study Games</h3>
+        <p>Visit the TexSmith website in the theater. Its content is provided by TexSmith, not hosted by Study Games.</p>
+      </div>
+      <button class="sg-texsmith-open" id="sgTexSmithReload" type="button">↻ Reload TexSmith here</button>
+    </div>
+    <div class="sg-texsmith-frame-wrap">
+      <iframe
+        id="sgTexSmithFrame"
+        title="TexSmith website inside the Study Games Movie Theater"
+        src="https://texsmith-9889f.firebaseapp.com/?params=TexSmith"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <p class="sg-texsmith-help" role="note">
+      <strong>Website not showing?</strong> Some websites prevent embedded viewing.
+      If the page is blank or says “refused to connect,” the website does not permit this kind of in-page display.
+      Study Games cannot override its embedding restrictions. The Reload button only retries inside the theater.
+    </p>
   </div>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
@@ -2000,11 +2056,20 @@ function setTab(tab){
   state.active=tab;
   $('sgFreeFilmsTab').setAttribute('aria-selected',String(tab==='free'));
   $('sgPremiumFilmsTab').setAttribute('aria-selected',String(tab==='premium'));
+  $('sgTexSmithTab').setAttribute('aria-selected',String(tab==='texsmith'));
   $('sgFreeFilmsPanel').hidden=tab!=='free';
   $('sgPremiumFilmsPanel').hidden=tab!=='premium';
+  $('sgTexSmithPanel').hidden=tab!=='texsmith';
 }
 $('sgFreeFilmsTab').addEventListener('click',()=>setTab('free'));
 $('sgPremiumFilmsTab').addEventListener('click',()=>setTab('premium'));
+$('sgTexSmithTab').addEventListener('click',()=>setTab('texsmith'));
+ $('sgTexSmithLaunch').addEventListener('click',()=>setTab('texsmith'));
+ $('sgTexSmithReload').addEventListener('click',()=>{
+   const frame=$('sgTexSmithFrame');
+   frame.src='https://texsmith-9889f.firebaseapp.com/?params=TexSmith';
+   setTab('texsmith');
+ });
 $('sgPremiumGoToCodes').addEventListener('click',()=>showView('support'));
 // There are no movie cards or background film downloads in this version.
 
