@@ -111,7 +111,14 @@
     @media(max-width:820px){.popular-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.media-layout{grid-template-columns:1fr}}
     @media(max-width:440px){.discovery-panel{padding:16px}.popular-grid a{padding:10px;font-size:12px}.media-panel{padding:13px}}
 
-  </style>
+  
+/* Empty cinema layout: no preinstalled movie titles, posters, or streaming links. */
+.sg-entertainment .sg-cinema-empty{padding:42px 16px;text-align:center;border:1px dashed #9c607e;border-radius:19px;background:radial-gradient(circle at 50% 8%,rgba(202,61,111,.16),transparent 62%),linear-gradient(145deg,#1a1627,#100f1c);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.sg-entertainment .sg-cinema-empty-icon{font-size:52px;line-height:1.1;filter:drop-shadow(0 3px 12px rgba(255,95,139,.25))}
+.sg-entertainment .sg-cinema-empty h3{margin:2px 0 0;color:#fff7fb;font-size:clamp(1.1rem,3.4vw,1.6rem)}
+.sg-entertainment .sg-cinema-empty p{max-width:550px;line-height:1.6;margin:0;color:#dfd3e5}
+.sg-entertainment .sg-cinema-empty .sg-badge{margin-top:3px}
+</style>
 <style>
 /* Home first with an accessible three-line menu */
 header{margin-bottom:25px}.header-actions{display:flex;align-items:center;gap:12px}
@@ -486,6 +493,17 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 }
 @media(prefers-reduced-motion:reduce){body.sg-depth-mode .study-card,body.sg-depth-mode .game-card,body.sg-depth-mode .sg-film-card{transition:none}}
 </style>
+
+<style id="sg-youtube-feature-style">
+/* One user-chosen YouTube video; keep the original Movies and Premium tabs intact. */
+#sgMovies .sg-film-grid:has(.sg-yt-movie){display:block}
+#sgMovies .sg-yt-movie{width:100%;max-width:900px;margin:0 auto;padding:clamp(12px,2vw,22px);border:1px solid #60465b;border-radius:16px;background:linear-gradient(140deg,#251828,#131420)}
+#sgMovies .sg-yt-movie h3{font-size:clamp(1.1rem,3vw,1.55rem);margin:12px 0}
+#sgMovies .sg-yt-player-frame{width:100%;aspect-ratio:16/9;background:#050509;overflow:hidden;border-radius:12px;border:1px solid #47364b}
+#sgMovies .sg-yt-player-frame iframe{display:block;width:100%;height:100%;border:0}
+#sgMovies .sg-yt-movie p{margin:12px 0 0;line-height:1.5}
+#sgMovies .sg-yt-movie a{color:#ffc6df;text-underline-offset:3px}
+</style>
 </head>
 <body>
 <div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-softener"></div><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
@@ -577,51 +595,48 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <article class="game-card"><div class="game-icon" style="background:#324b53">⚡</div><h3>Reaction Rush</h3><p>Wait for green, then click as quickly as you can.</p><button data-game="reaction" type="button">Play Reaction Rush →</button></article>
 </div></section>
 <section id="sgMovies" data-screen="movies" hidden class="sg-entertainment" aria-labelledby="sgMoviesTitle">
-  <div class="sg-head"><div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">The Movie Library</h2><p>Tap a movie poster to open the player. Watch a selection of public-domain classics streamed from Wikimedia Commons.</p></div><span class="sg-badge">Free classic films • No search needed</span></div>
+  <div class="sg-head">
+    <div><span class="sg-badge">🎬 STUDY GAMES CINEMA</span><h2 id="sgMoviesTitle">Movie Theater</h2><p>Watch videos you choose to add, right here in the Study Games theater.</p></div>
+    <span class="sg-badge">🎞️ 1 video added</span>
+  </div>
   <div class="sg-tabs" role="tablist" aria-label="Choose movie collection">
-   <button type="button" id="sgFreeFilmsTab" role="tab" aria-selected="true" aria-controls="sgFreeFilmsPanel">🍿 Free movies</button>
-   <button type="button" id="sgPremiumFilmsTab" role="tab" aria-selected="false" aria-controls="sgPremiumFilmsPanel">⭐ Premium movies</button>
+    <button type="button" id="sgFreeFilmsTab" role="tab" aria-selected="true" aria-controls="sgFreeFilmsPanel">🍿 Movies</button>
+    <button type="button" id="sgPremiumFilmsTab" role="tab" aria-selected="false" aria-controls="sgPremiumFilmsPanel">⭐ Premium movies</button>
   </div>
-<div class="sg-panel" id="sgFreeFilmsPanel">
-  <div class="sg-cinema-intro"><div><h3>🎞️ Pick a movie and watch</h3><p class="sg-muted">No searching, loading buttons, or sign-in. Choose a movie poster to open the player right here.</p></div><span class="sg-badge">Curated public-domain cinema</span></div>
-  <p id="sgMovieStatus" class="sg-message" role="status">Tap any movie to play. Movies are streamed from Wikimedia Commons; playback needs an internet connection.</p>
-  <div id="sgMovieGrid" class="sg-film-grid" aria-label="Watch public-domain classic films">
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Kid_%281921%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Kid (1921)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎩</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Kid</strong><small>1921 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_General_%281926%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The General (1926)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🚂</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The General</strong><small>1926 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Sherlock_Jr._%281924%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch Sherlock Jr. (1924)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🕵️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>Sherlock Jr.</strong><small>1924 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Le_Voyage_dans_la_Lune_%281902%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch A Trip to the Moon (1902)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🌙</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>A Trip to the Moon</strong><small>1902 · Sci-fi · Short</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:One_Week_%281920%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch One Week (1920)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🏠</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>One Week</strong><small>1920 · Comedy · Short</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Immigrant_%281917%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Immigrant (1917)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎭</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Immigrant</strong><small>1917 · Comedy · Short</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Gold_Rush_%281925%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Gold Rush (1925)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🏔️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Gold Rush</strong><small>1925 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Steamboat_Bill_Jr._%281928%29_by_Charles_Riesner.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch Steamboat Bill, Jr. (1928)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🚢</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>Steamboat Bill, Jr.</strong><small>1928 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Cabinet_of_Dr._Caligari.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Cabinet of Dr. Caligari (1920)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎞️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Cabinet of Dr. Caligari</strong><small>1920 · Mystery · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Great_Train_Robbery_%281903%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Great Train Robbery (1903)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎬</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Great Train Robbery</strong><small>1903 · Western · Short</small><small>Tap to watch · Original source available</small></span></a>
-</div>
-  <p class="sg-muted sg-cinema-disclaimer" id="sgMovieCount">Classic films and short films • Source and usage rights shown in the player • Rights may differ outside the United States.</p>
-</div>
-<div class="sg-panel" id="sgPremiumFilmsPanel" hidden>
-  <h3>⭐ Premium Movie Lounge</h3>
-  <p>Explore hand-picked classic cinema. All films here also remain available from their original public-domain sources. Premium subscriptions are planned for extra Study Games features and curated viewing.</p>
-  <div class="sg-row"><button type="button" id="sgPremiumGoToCodes" class="sg-primary">See Premium plans &amp; codes</button><span class="sg-badge" id="sgPremiumStatusLabel">Not activated</span></div>
-  <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Featured classic films">
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_Kid_%281921%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The Kid (1921)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🎩</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The Kid</strong><small>1921 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:The_General_%281926%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch The General (1926)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🚂</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>The General</strong><small>1926 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Sherlock_Jr._%281924%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch Sherlock Jr. (1924)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🕵️</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>Sherlock Jr.</strong><small>1924 · Comedy · Feature</small><small>Tap to watch · Original source available</small></span></a>
-<a class="sg-film-card" href="https://commons.wikimedia.org/wiki/File:Le_Voyage_dans_la_Lune_%281902%29.webm" target="_blank" rel="noopener noreferrer" aria-label="Watch A Trip to the Moon (1902)"><span class="sg-film-poster sg-film-cover"><span class="sg-film-symbol">🌙</span><span class="sg-film-play" aria-hidden="true">▶</span></span><span class="sg-film-info"><strong>A Trip to the Moon</strong><small>1902 · Sci-fi · Short</small><small>Tap to watch · Original source available</small></span></a>
-</div>
-  <p class="sg-note">The subscription service is not connected yet. No subscription payments are taken on this page.</p>
-</div>
-<div class="sg-panel sg-player-overlay" id="sgMoviePlayerPanel" hidden role="dialog" aria-modal="true" aria-label="Movie player">
-  <div class="sg-player-shell">
-    <div class="sg-head"><h3 id="sgNowPlaying">Now playing</h3><button type="button" id="sgCloseMovie" aria-label="Close movie player">✕ Close</button></div>
-    <video id="sgMoviePlayer" class="sg-player" controls playsinline preload="none" crossorigin="anonymous"></video>
-    <p id="sgPlayerStatus" class="sg-message" role="status">If the film does not start, press Play in the video player.</p>
-    <div class="sg-row"><a id="sgMovieRights" class="sg-action" href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer">Original film, license &amp; credits ↗</a><span class="sg-muted" id="sgMovieAttribution"></span></div>
+  <div class="sg-panel" id="sgFreeFilmsPanel" role="tabpanel" aria-labelledby="sgFreeFilmsTab">
+    <p id="sgMovieStatus" class="sg-muted">Your added YouTube video is below. Press Play to watch without leaving Study Games.</p>
+    <div id="sgMovieGrid" class="sg-film-grid" aria-label="Movie library, one YouTube video">
+      <article class="sg-yt-movie" aria-labelledby="sgFeaturedMovieTitle">
+        <span class="sg-badge">🎞️ Featured video</span>
+        <h3 id="sgFeaturedMovieTitle">Video added from YouTube</h3>
+        <div class="sg-yt-player-frame">
+          <iframe
+            title="Study Games featured YouTube video"
+            src="https://www.youtube-nocookie.com/embed/m8W3RXQkgGQ"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+            allowfullscreen></iframe>
+        </div>
+        <p class="sg-muted">Playback is provided by YouTube. If the owner has disabled embedding or the video is unavailable, <a href="https://www.youtube.com/watch?v=m8W3RXQkgGQ" target="_blank" rel="noopener noreferrer">open it on YouTube</a>.</p>
+      </article>
+    </div>
+    <p id="sgMovieCount" class="sg-muted">1 video in this theater.</p>
   </div>
-</div>
+  <div class="sg-panel" id="sgPremiumFilmsPanel" role="tabpanel" aria-labelledby="sgPremiumFilmsTab" hidden>
+    <div class="sg-cinema-empty" role="status">
+      <div class="sg-cinema-empty-icon" aria-hidden="true">⭐</div>
+      <h3>Premium movie theater</h3>
+      <p>No Premium movies have been added. You can add films here in the future when you have permission to stream them.</p>
+      <span class="sg-badge">0 Premium movies</span>
+    </div>
+    <div class="sg-row" style="margin-top:16px"><button type="button" id="sgPremiumGoToCodes" class="sg-primary">See Premium plans &amp; codes</button><span class="sg-badge" id="sgPremiumStatusLabel">Not activated</span></div>
+    <div id="sgPremiumMovieGrid" class="sg-film-grid" aria-label="Premium movie library, currently empty"></div>
+    <p class="sg-note">Premium subscriptions are not active yet. No payments are taken on this page.</p>
+  </div>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
-  <div class="sg-head"><div><span class="sg-badge">💛 SUPPORT THE PROJECT</span><h2 id="sgSupportTitle">Donations & Premium</h2><p>Help grow Study Games and its legal movie library.</p></div><span class="sg-badge">Secure checkout required</span></div>
+  <div class="sg-head"><div><span class="sg-badge">💛 SUPPORT THE PROJECT</span><h2 id="sgSupportTitle">Donations & Premium</h2><p>Help grow Study Games and its future movie theater.</p></div><span class="sg-badge">Secure checkout required</span></div>
   <div class="sg-panels">
    <div class="sg-panel"><h3>💛 Make a donation</h3><p>Choose any amount from $1 upward. Donations are optional, with no special privileges.</p>
     <label for="sgDonateAmount">Donation amount (USD)</label><div class="sg-row"><span style="font-size:25px;font-weight:800">$</span><input style="flex:1;width:auto" id="sgDonateAmount" type="number" min="1" step="0.01" value="5"/></div>
@@ -1974,33 +1989,13 @@ void start(key);
   // Public values only. NEVER embed secret keys, raw one-use codes or payment secrets here.
   const PUBLISHED_CONFIG = { premiumApi: '', donationCheckout: '', premiumCheckout: '' };
   const $ = id => document.getElementById(id);
-// Curated full films and classic shorts. Every source points to its Commons file page.
-// Film files are resolved through the public Wikimedia Commons API; no search is required.
-const CURATED_FILMS = [
-  { name: 'The Kid', year: '1921', kind: 'Comedy · Feature', file: 'The Kid (1921).webm', emoji: '🎩' },
-  { name: 'The General', year: '1926', kind: 'Comedy · Feature', file: 'The General (1926).webm', emoji: '🚂' },
-  { name: 'Sherlock Jr.', year: '1924', kind: 'Comedy · Feature', file: 'Sherlock Jr. (1924).webm', emoji: '🕵️' },
-  { name: 'A Trip to the Moon', year: '1902', kind: 'Sci-fi · Short', file: 'Le Voyage dans la Lune (1902).webm', emoji: '🌙' },
-  { name: 'One Week', year: '1920', kind: 'Comedy · Short', file: 'One Week (1920).webm', emoji: '🏠' },
-  { name: 'The Immigrant', year: '1917', kind: 'Comedy · Short', file: 'The Immigrant (1917).webm', emoji: '🎭' },
-  { name: 'The Gold Rush', year: '1925', kind: 'Comedy · Feature', file: 'The Gold Rush (1925).webm', emoji: '🏔️' },
-  { name: 'Steamboat Bill, Jr.', year: '1928', kind: 'Comedy · Feature', file: 'Steamboat Bill Jr. (1928) by Charles Riesner.webm', emoji: '🚢' },
-  { name: 'The Cabinet of Dr. Caligari', year: '1920', kind: 'Mystery · Feature', file: 'The Cabinet of Dr. Caligari.webm', emoji: '🎞️' },
-  { name: 'The Great Train Robbery', year: '1903', kind: 'Western · Short', file: 'The Great Train Robbery (1903).webm', emoji: '🎬' }
-];
+// Movie library intentionally empty until the owner adds films.
 const state = { active: 'free', premium: false, expires: null };
-let currentPlayerToken = 0;
-let lastFocused = null;
-const $status = $('sgMovieStatus');
 function cleanUrl(raw) { try {const url=new URL(String(raw||'').trim()); return url.protocol==='https:' ? url.href.replace(/\/$/,'') : '';} catch {return '';} }
 function config(){let local={};try{local=JSON.parse(localStorage.getItem('sg-cinema-owner-preview')||'{}');}catch{}return {...PUBLISHED_CONFIG,...local};}
 function userToken(){try{return localStorage.getItem('sg-premium-entitlement')||'';}catch{return '';}}
 function setToken(v){try{localStorage.setItem('sg-premium-entitlement',v);}catch{}}
 function showView(name){if(window.studyGamesShowView)window.studyGamesShowView(name);}
-function commonsFilePage(file){return 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(file.replace(/ /g,'_'));}
-function commonsFallbackVideo(file){return 'https://commons.wikimedia.org/wiki/Special:Redirect/file/'+encodeURIComponent(file);}
-function licensingName(metadata){const raw=metadata?.LicenseShortName?.value||'';const n=document.createElement('textarea');n.innerHTML=String(raw);return (n.value||'').replace(/<[^>]*>/g,'').trim().slice(0,90) || 'See Commons file page';}
-function allowedLicense(metadata){const s=licensingName(metadata).toLowerCase();return /public domain|cc0|pdm|pd-|cc by(?:-sa)?\b/.test(s) && !/\b(?:nc|nd)\b/.test(s);}
 function setTab(tab){
   state.active=tab;
   $('sgFreeFilmsTab').setAttribute('aria-selected',String(tab==='free'));
@@ -2011,107 +2006,8 @@ function setTab(tab){
 $('sgFreeFilmsTab').addEventListener('click',()=>setTab('free'));
 $('sgPremiumFilmsTab').addEventListener('click',()=>setTab('premium'));
 $('sgPremiumGoToCodes').addEventListener('click',()=>showView('support'));
-async function commons(params){
-  const u=new URL('https://commons.wikimedia.org/w/api.php');
-  for(const [key,value] of Object.entries(params))u.searchParams.set(key,value);
-  u.searchParams.set('action','query');u.searchParams.set('format','json');u.searchParams.set('origin','*');
-  const r=await fetch(u,{mode:'cors',credentials:'omit'});
-  if(!r.ok)throw new Error('The Wikimedia film service is temporarily unavailable.');
-  const d=await r.json();if(d.error)throw new Error(d.error.info||'Wikimedia film lookup failed.');return d;
-}
-function makeFilmCard(item){
-  const button=document.createElement('a');button.className='sg-film-card';
-  button.href=commonsFilePage(item.file);button.target='_blank';button.rel='noopener noreferrer';
-  button.setAttribute('aria-label','Watch '+item.name+' ('+item.year+')');
-  const poster=document.createElement('span');poster.className='sg-film-poster sg-film-cover';
-  const symbol=document.createElement('span');symbol.className='sg-film-symbol';symbol.textContent=item.emoji;
-  const play=document.createElement('span');play.className='sg-film-play';play.setAttribute('aria-hidden','true');play.textContent='▶';
-  poster.append(symbol,play);item.posterNode=poster;
-  const info=document.createElement('span');info.className='sg-film-info';
-  const title=document.createElement('strong');title.textContent=item.name;
-  const meta=document.createElement('small');meta.textContent=item.year+' · '+item.kind;
-  const rights=document.createElement('small');rights.textContent='Public-domain classic · Watch now';
-  info.append(title,meta,rights);button.append(poster,info);
-  button.addEventListener('click',(event)=>{event.preventDefault();void showFilm(item);});
-  return button;
-}
-function renderFilmGrids(){
-  $('sgMovieGrid').replaceChildren(...CURATED_FILMS.map(makeFilmCard));
-  const featured=CURATED_FILMS.filter(f=>['The General','A Trip to the Moon','The Kid','Sherlock Jr.'].includes(f.name));
-  $('sgPremiumMovieGrid').replaceChildren(...featured.map(f=>{
-    const b=makeFilmCard(f);b.title='Free public-domain film preview';return b;
-  }));
-  $('sgMovieCount').textContent=CURATED_FILMS.length+' classics available to choose from · Full films and shorts · Rights may vary by country';
-}
-async function resolveFilm(item){
-  if(item.verified===true && item.src) return item.src;
-  if(item.verified===false) throw new Error('The file’s reuse status could not be confirmed.');
-  const result=await commons({prop:'imageinfo',titles:'File:'+item.file,iiprop:'url|mime|extmetadata',iiurlwidth:'320'});
-  const page=Object.values(result.query?.pages||{})[0];
-  const info=page?.imageinfo?.[0];
-  if(!info || !String(info.mime||'').startsWith('video/') || !allowedLicense(info.extmetadata)){
-    item.verified=false;throw new Error('This video could not be verified for reuse. Open its Commons source to check its license.');
-  }
-  item.src=info.url;item.license=licensingName(info.extmetadata);item.verified=true;
-  if(info.thumburl)decoratePoster(item,info.thumburl);
-  return info.url;
-}
-function decoratePoster(item,thumb){
-  // Both free and featured cards may be present. Keep controls accessible above the image.
-  for(const button of document.querySelectorAll('.sg-film-card')){
-    if(button.getAttribute('aria-label')!=='Watch '+item.name+' ('+item.year+')')continue;
-    const poster=button.querySelector('.sg-film-poster');if(!poster || poster.querySelector('img'))continue;
-    const img=document.createElement('img');img.loading='lazy';img.alt='';img.referrerPolicy='no-referrer';img.src=thumb;
-    img.onerror=()=>img.remove();poster.prepend(img);
-  }
-}
-async function hydratePosters(){
-  try{
-    const data=await commons({prop:'imageinfo',titles:CURATED_FILMS.map(x=>'File:'+x.file).join('|'),iiprop:'url|mime|extmetadata',iiurlwidth:'320'});
-    let licensed=0;
-    for(const p of Object.values(data.query?.pages||{})){
-      const item=CURATED_FILMS.find(x=>p.title==='File:'+x.file);if(!item)continue;
-      const info=p.imageinfo?.[0];if(!info || !String(info.mime||'').startsWith('video/'))continue;
-      if(!allowedLicense(info.extmetadata))continue;
-      item.verified=true;item.src=info.url;item.license=licensingName(info.extmetadata);
-      if(info.thumburl)decoratePoster(item,info.thumburl);
-      licensed++;
-    }
-    $status.textContent=licensed+' Wikimedia Commons film files ready. Tap a poster to play; if autoplay is blocked, tap Play in the player.';
-  }catch{
-    $status.textContent='Choose a poster to watch. Movie artwork may be unavailable on this connection; the film source will be checked when you tap.';
-  }
-}
-async function showFilm(item){
-  const token=++currentPlayerToken;
-  const panel=$('sgMoviePlayerPanel'),video=$('sgMoviePlayer');
-  lastFocused=document.activeElement;
-  $('sgNowPlaying').textContent=item.name+' ('+item.year+')';
-  $('sgMovieRights').href=commonsFilePage(item.file);
-  $('sgMovieAttribution').textContent='Video: Wikimedia Commons · '+(item.license||'Review license at source');
-  $('sgPlayerStatus').textContent='Loading the film…';
-  video.pause();video.removeAttribute('src');video.load();panel.hidden=false;
-  document.body.classList.add('sg-movie-open');
-  $('sgCloseMovie').focus();
-  try{
-    const src=await resolveFilm(item);
-    if(token!==currentPlayerToken)return;
-    video.src=src||commonsFallbackVideo(item.file);video.load();
-    $('sgMovieAttribution').textContent='Video: Wikimedia Commons · '+item.license;
-    $('sgPlayerStatus').textContent='Press Play if the video does not start automatically. Source and credits are linked below.';
-    try{await video.play();}catch{ /* iPhone Safari may require a second tap on Play. */ }
-  }catch(err){
-    if(token!==currentPlayerToken)return;
-    $('sgPlayerStatus').textContent=err.message+' Use the source link below to watch on Wikimedia Commons.';
-  }
-}
-function closeFilm(){currentPlayerToken++;const v=$('sgMoviePlayer');v.pause();v.removeAttribute('src');v.load();$('sgMoviePlayerPanel').hidden=true;document.body.classList.remove('sg-movie-open');lastFocused?.focus?.();}
-$('sgCloseMovie').addEventListener('click',closeFilm);
-$('sgMoviePlayerPanel').addEventListener('click',e=>{if(e.target.id==='sgMoviePlayerPanel')closeFilm();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sgMoviePlayerPanel').hidden)closeFilm();});
-$('sgMoviePlayer').addEventListener('error',()=>{if(!$('sgMoviePlayerPanel').hidden)$('sgPlayerStatus').textContent='This video could not be played in your browser. Use the original Wikimedia Commons link below to view it.';});
-renderFilmGrids();
-void hydratePosters();
+// There are no movie cards or background film downloads in this version.
+
   function goCheckout(kind){if(kind==='premium'){$('sgBuyStatus').textContent='The 7-day free trial and $20 every two months subscription are not active yet. The owner must connect a secure subscription checkout, cancellation handling and verified membership webhook. No trial or charge has started.';return;}const url=cleanUrl(kind==='donate'?config().donationCheckout:config().premiumCheckout);const output=$(kind==='donate'?'sgDonateStatus':'sgBuyStatus');if(kind==='donate'){const n=Number($('sgDonateAmount').value);if(!Number.isFinite(n)||n<1){output.textContent='Choose a donation amount of at least $1.';return;}output.textContent='Your requested amount is $'+n.toFixed(2)+'. Confirm the amount again on the payment provider page.';}
     if(!url){output.textContent='Checkout is not connected yet. No payment has been taken. The owner must add a hosted payment link.';return;}
     window.open(url,'_blank','noopener,noreferrer');
