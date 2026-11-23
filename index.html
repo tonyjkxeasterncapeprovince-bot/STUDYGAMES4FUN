@@ -798,7 +798,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </section>
 <section data-screen="premium" id="sgxPremiumSection" hidden aria-labelledby="sgxPremiumTitle">
  <div class="sgx-panel"><span class="sgx-eyebrow">💎 Game Pass • Beta</span><h2 class="sgx-heading" id="sgxPremiumTitle">Premium Games &amp; Music</h2>
- <p class="sgx-muted">Premium gives access to Chess, Checkers and Reversi, plus music selection, skipping, shuffle, repeat-one and personal audio previews. A secure code server is needed for verified access.</p>
+ <p class="sgx-muted">Premium gives access to Chess, Checkers and Reversi, plus music selection, skipping, shuffle, repeat-one and personal audio previews. Redeem your original code for access on this device; a secure server is needed to verify access across devices.</p>
  <p class="sgx-note" id="sgxPremiumState" role="status">🔒 Premium games require access</p>
  <div class="sgx-banner"><button id="sgxBetaPreview" class="sgx-secondary" type="button">Try Premium game beta</button><button class="sgx-primary" data-sgx-view="support" type="button">Redeem Premium code →</button></div>
  <p class="sgx-note">Beta preview is free, optional, and only lasts until you leave or reload this page. It does not grant verified Premium or bypass a paid membership.</p>
@@ -820,11 +820,11 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
     <p id="sgDonateStatus" class="sg-message" role="status">Donations will be enabled when the site owner connects a payment provider.</p>
     <p class="sg-muted">No card information is collected by Study Games. The payment provider may ask you to re-enter your amount.</p>
    </div>
-   <div class="sg-panel"><h3>⭐ Redeem free Premium</h3><p>There are <strong>five one-use invitation codes</strong>, each granting <strong>five years from redemption</strong>, plus one reusable <strong>permanent owner code</strong>. Codes become active once the private verification service is deployed.</p>
+   <div class="sg-panel"><h3>⭐ Redeem free Premium</h3><p>There are <strong>five one-use invitation codes</strong>, each granting <strong>five years from redemption</strong>, plus one reusable <strong>permanent owner code</strong>. Codes can enable Premium on this browser now. A private verification service is needed to enforce one-use codes across different devices.</p>
     <label for="sgPremiumCode">Access code</label><input type="text" id="sgPremiumCode" class="sg-codebox" spellcheck="false" autocomplete="off" maxlength="80" placeholder="SG-XXXXX-XXXXX-XXXXX" />
     <div class="sg-row" style="margin-top:12px"><button type="button" id="sgRedeemCode" class="sg-primary">Redeem code</button><button type="button" id="sgCheckPremium">Check my membership</button></div>
-    <p id="sgPremiumMessage" class="sg-message" role="status">Connect the secure redemption service to activate codes.</p>
-    <p class="sg-muted">Visitor invitation codes are one-use; the private owner code is reusable and never expires. Codes must be checked on a secure server, not inside the public HTML file. Access is stored in this browser until you clear website data.</p>
+    <p id="sgPremiumMessage" class="sg-message" role="status">Enter your original Premium code and tap Redeem.</p>
+    <p class="sg-muted">Visitor invitation codes are one-use; the private owner code is reusable and never expires. When no private server is connected, valid codes enable Premium on this browser only. One-use protection across devices requires the separate secure server. Access may be lost if browser data is cleared.</p>
    </div>
   </div>
 <div class="sg-panel sg-premium-plan" style="margin-top:18px">
@@ -2318,17 +2318,82 @@ void start(key);
   let result='';function draw(){grid.replaceChildren();const opts=selected?Array.from({length:64},(_,i)=>[Math.floor(i/8),i%8]).filter(([r,c])=>legal(b,...selected,r,c,turn,ep)):[];for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=b[r][c];const markup=p?'<span class="sgx-chess-piece '+(p.c==='w'?'white':'black')+'">'+pieces[p.c][p.t]+'</span>':'';grid.append(gridButton(r,c,markup,(r+c)%2===0,()=>click(r,c),!!selected&&selected[0]===r&&selected[1]===c,opts.some(([rr,cc])=>rr===r&&cc===c)))}status(result||((turn==='w'?'⚪ White':'⚫ Black')+' to move'+(inCheck(b,turn)?' — CHECK!':'')))}
   function click(r,c){if(done)return;const p=b[r][c];if(selected&&legal(b,...selected,r,c,turn,ep)){const [fr,fc]=selected;let newep=null;if(b[fr][fc].t==='p'&&Math.abs(r-fr)===2)newep={r:(r+fr)/2,c,color:turn};b=simulated(b,fr,fc,r,c,ep);ep=newep;turn=enemy(turn);selected=null;if(!hasMoves(turn)){done=true;result=inCheck(b,turn)?(turn==='w'?'⚫ Black':'⚪ White')+' wins by checkmate! 🎉':'Draw by stalemate!';addXP(25)}draw();return}if(p&&p.c===turn){selected=[r,c];draw();return}selected=null;draw()}
   draw();}
- // Safety: no payment or Premium membership is asserted solely from localStorage.
- let premium=false,preview=false;
+ // Local pass is browser-only; server-verified membership is a separate mode.
+ let premium=false,preview=false,localMode=false;
  function gameAllowed(){return premium||preview}
- function syncPremium(){const label=$('sgxPremiumState');if(label)label.textContent=premium?'✅ Verified Premium active':preview?'🧪 Local beta preview — not paid Premium':'🔒 Premium games & music tools require access';for(const b of document.querySelectorAll('[data-premium-game]'))b.textContent=gameAllowed()?'Play '+b.dataset.premiumGameTitle:'Preview '+b.dataset.premiumGameTitle;window.dispatchEvent(new CustomEvent('sg-premium-change',{detail:{premium,preview,active:gameAllowed()}}));}
+ function syncPremium(){const label=$('sgxPremiumState');if(label)label.textContent=premium?(localMode?'✅ Premium Enabled — on this browser':'✅ Premium Enabled — verified'):preview?'🧪 Local beta preview — not paid Premium':'🔒 Premium games & music tools require access';for(const b of document.querySelectorAll('[data-premium-game]'))b.textContent=gameAllowed()?'Play '+b.dataset.premiumGameTitle:'Preview '+b.dataset.premiumGameTitle;window.dispatchEvent(new CustomEvent('sg-premium-change',{detail:{premium,preview,active:gameAllowed()}}));}
  function openPremium(name){if(gameAllowed()){openGame(name);return}const hint=$('sgxPremiumHint');if(hint)hint.textContent='Premium is not connected yet. You can turn on beta preview for this device to test the games — this is not paid membership.';const section=$('sgxPremiumSection');if(section)window.scrollTo({top:section.getBoundingClientRect().top+scrollY-25,behavior:'smooth'})}
  const validServer=s=>{try{const u=new URL(String(s||''));return u.protocol==='https:'?u.href.replace(/\/$/,''):''}catch{return ''}};
  const CFG={premiumApi:'',donationCheckout:'',premiumCheckout:''};function config(){let local={};try{local=JSON.parse(localStorage.getItem('sg-cinema-owner-preview')||'{}')||{}}catch{}return {...CFG,...local}}
- async function premiumStatus(){const out=$('sgPremiumMessage'),api=validServer(config().premiumApi),token=(()=>{try{return localStorage.getItem('sg-premium-entitlement')||''}catch{return ''}})();premium=false;if(!api||!token){if(out)out.textContent=!api?'Verified codes need the private Premium server; the site alone cannot validate them.':'No verified Premium membership on this device.';syncPremium();return}try{const response=await fetch(api+'/status',{headers:{Authorization:'Bearer '+token},mode:'cors'});const data=await response.json();premium=!!(response.ok&&data.premium&&(data.permanent===true||(data.expiresAt&&new Date(data.expiresAt).getTime()>Date.now())));if(out)out.textContent=premium?(data.permanent?'✅ Permanent owner Premium — never expires':'✅ Verified Premium active until '+new Date(data.expiresAt).toLocaleDateString()):'No active verified membership.'}catch{if(out)out.textContent='Membership verification service unavailable.'}syncPremium()}
+ // The original secret codes are NEVER printed or published in the HTML.
+ // Their SHA-256 digests let a static GitHub Pages site recognize them locally.
+ // This is a convenience-only pass; unlike the private Worker it cannot enforce global one-use.
+ const LOCAL_OWNER_HASH='598d07864e0f6282fbfff3fabee83bb16a281a4b198d4147f1a6b1b1ad1dbf75';
+ const LOCAL_INVITE_HASHES=['a0b99809a1fc740ebf2ace04a2479e04d1ccf300c75d2f6a8937fab36e0bed28','247b5a6602bb9e86ce1a3d5d47dcb09b72d7ca461d00d7f4d948aa8ff5daeba3','8d1c581177a951c9d8004422dde74bca90e7579960614e044a72b7b40e6b30f9','3a37a6b8b769973daabbe28e4bc3d594affe1f9e9ef32ec1cc9599de00b7ed65','d9343c2025cc8b5b3af5f6f4b1259dc90377d93f15f1074a97b6c70730307cd7'];
+ const LOCAL_PASS_KEY='sg-premium-local-pass-v1';
+ const LOCAL_USED_KEY='sg-premium-local-used-v1';
+ const LOCAL_INVITE_DEADLINE=Date.parse('2031-11-22T00:00:00Z');
+ function readLocalPass(){
+  try{const pass=JSON.parse(localStorage.getItem(LOCAL_PASS_KEY)||'null');
+   if(!pass||pass.v!==1||typeof pass.digest!=='string')return null;
+   if(pass.kind==='owner'&&pass.digest===LOCAL_OWNER_HASH)return pass;
+   if(pass.kind==='invite'&&LOCAL_INVITE_HASHES.includes(pass.digest)&&Number(pass.expiresAt)>Date.now())return pass;
+  }catch{}return null;
+ }
+ async function sha256Text(t){
+  if(!globalThis.crypto?.subtle)throw Error('Please open Study Games using its HTTPS web link to redeem a code.');
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+  return Array.from(new Uint8Array(b),n=>n.toString(16).padStart(2,'0')).join('');
+ }
+ async function redeemLocal(code){
+  const digest=await sha256Text(code),isOwner=digest===LOCAL_OWNER_HASH,isInvite=LOCAL_INVITE_HASHES.includes(digest);
+  if(!isOwner&&!isInvite)throw Error('Code not recognized. Please check your original code.');
+  if(isInvite&&Date.now()>=LOCAL_INVITE_DEADLINE)throw Error('This invitation code has expired.');
+  const existing=readLocalPass();
+  if(existing&&existing.digest===digest)return existing;
+  let used=[];try{used=JSON.parse(localStorage.getItem(LOCAL_USED_KEY)||'[]')}catch{}
+  if(!Array.isArray(used))used=[];
+  if(isInvite&&used.includes(digest))throw Error('This invitation code was already redeemed in this browser.');
+  const pass={v:1,kind:isOwner?'owner':'invite',digest,expiresAt:isOwner?null:(()=>{const d=new Date();d.setFullYear(d.getFullYear()+5);return d.getTime()})(),redeemedAt:Date.now()};
+  try{localStorage.setItem(LOCAL_PASS_KEY,JSON.stringify(pass));
+   if(isInvite)localStorage.setItem(LOCAL_USED_KEY,JSON.stringify([...new Set([...used,digest])]));
+  }catch{throw Error('Browser storage is disabled; enable site data to save Premium.')}
+  return pass;
+ }
+ async function premiumStatus(){
+  const out=$('sgPremiumMessage'),api=validServer(config().premiumApi);
+  const token=(()=>{try{return localStorage.getItem('sg-premium-entitlement')||''}catch{return ''}})();
+  premium=false;localMode=false;
+  if(!api){
+   const pass=readLocalPass();premium=!!pass;localMode=!!pass;
+   if(out)out.textContent=pass?('✅ Premium Enabled — '+(pass.kind==='owner'?'Owner access never expires.':'Valid until '+new Date(pass.expiresAt).toLocaleDateString()+'.')+' Saved on this browser (not verified across devices).'):'Enter a Premium access code to unlock games and music features on this browser.';
+   syncPremium();return;
+  }
+  if(!token){if(out)out.textContent='No verified Premium membership on this device. Enter a code to unlock.';syncPremium();return}
+  try{const response=await fetch(api+'/status',{headers:{Authorization:'Bearer '+token},mode:'cors'});
+   const data=await response.json();
+   premium=!!(response.ok&&data.premium&&(data.permanent===true||(data.expiresAt&&new Date(data.expiresAt).getTime()>Date.now())));
+   if(out)out.textContent=premium?('✅ Premium Enabled — '+(data.permanent?'Permanent owner access — never expires.':'Verified until '+new Date(data.expiresAt).toLocaleDateString()+'.')):'No active verified membership.';
+  }catch{if(out)out.textContent='Membership verification service unavailable.'}
+  syncPremium();
+ }
  function initPremium(){const $id=id=>$(id);const input=$id('sgPremiumCode');const output=$id('sgPremiumMessage');const amount=$id('sgDonateAmount');
   $id('sgCheckPremium')?.addEventListener('click',premiumStatus);
-  $id('sgRedeemCode')?.addEventListener('click',async()=>{const api=validServer(config().premiumApi);if(!api){output.textContent='Redemption needs a secure code server. No code has been used.';return}const code=input.value.trim().toUpperCase();if(!/^SG-[A-Z0-9-]{12,60}$/.test(code)){output.textContent='Enter a valid invitation code in the format SG-…';return}output.textContent='Checking code…';try{const response=await fetch(api+'/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});const data=await response.json();if(!response.ok||!data.token)throw new Error('Code not accepted');localStorage.setItem('sg-premium-entitlement',data.token);input.value='';await premiumStatus()}catch(err){output.textContent='Could not redeem: '+err.message}});
+  $id('sgRedeemCode')?.addEventListener('click',async()=>{
+   const code=input.value.trim().toUpperCase(),api=validServer(config().premiumApi);
+   if(!/^SG-[A-Z0-9-]{12,60}$/.test(code)){output.textContent='Enter a valid Premium code.';return}
+   output.textContent='Checking code…';
+   try{
+    if(!api){await redeemLocal(code)}
+    else{
+     const response=await fetch(api+'/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+     const data=await response.json();
+     if(!response.ok||!data.token)throw Error(data.error||'Code not accepted');
+     localStorage.setItem('sg-premium-entitlement',data.token);
+    }
+    input.value='';await premiumStatus();
+   }catch(err){output.textContent='❌ '+(err?.message||'Could not redeem code.');}
+  });
   $id('sgDonateContinue')?.addEventListener('click',()=>{const n=Number(amount.value),out=$id('sgDonateStatus'),url=validServer(config().donationCheckout);if(!Number.isFinite(n)||n<1){out.textContent='Please enter $1 or more.';return}if(!url){out.textContent='No donation checkout is connected. No payment was taken.';return}out.textContent='Confirm your donation amount with the hosted payment provider.';window.open(url,'_blank','noopener,noreferrer')});
   $id('sgBuyPremium')?.addEventListener('click',()=>{$id('sgBuyStatus').textContent='Subscriptions and trials are not active. A secure checkout and server-side subscription verification must be connected first. No charge was made.'});
   function setup(){return {premiumApi:validServer($id('sgPremiumApiInput').value),donationCheckout:validServer($id('sgDonationLinkInput').value),premiumCheckout:validServer($id('sgPaidLinkInput').value)}}
