@@ -657,6 +657,29 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <style id="sg-red-audio-iphone-fix">
 #sgWelcomeMusicNote{font-weight:900!important;color:#100309!important;max-width:44rem!important;font-size:clamp(14px,2.7vw,19px)!important;line-height:1.5!important;text-align:center!important}
 </style>
+
+<style id="sg-added-files-styles">
+.sg-added-files-home{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 7px}.sg-added-files-home span{color:#c6d6ee;font-size:13px}
+.sg-added-files-button{border:1px solid #a5d6f8;color:#041b33;background:linear-gradient(120deg,#b8eaff,#7aaaff);border-radius:12px;padding:12px 16px;min-height:44px;font-size:14px;font-weight:850;cursor:pointer}
+.sg-added-files-button:focus-visible{outline:3px solid white;outline-offset:3px}
+.sg-added-files-button.secondary{background:#243a59;color:#edf6ff;border:1px solid #6684b6}
+.sg-shared-files{border:1px solid #456c95;background:linear-gradient(140deg,#132d4a,#101e31);border-radius:15px;padding:13px;display:grid;gap:10px;margin:9px 0 13px}
+.sg-shared-files h4{color:#fff;margin:5px 0 0;font-size:16px}
+.sg-shared-files p,.sg-shared-files label{color:#d1ddec;font-size:12px;line-height:1.5;margin:0}
+.sg-shared-files .sg-files-help{font-size:12px}
+.sg-shared-songs-list{display:grid;gap:7px}
+.sg-shared-song-button{background:#1d4569;color:#fff;border:1px solid #557ca8;border-radius:9px;padding:10px 12px;min-height:42px;cursor:pointer;text-align:left;font-size:13px;font-weight:700}
+.sg-owner-publisher{border-top:1px solid #4e6d91;padding-top:10px;display:grid;gap:8px}
+.sg-owner-publisher summary{color:#f4f8ff;font-size:13px;font-weight:800;cursor:pointer}
+.sg-owner-publisher[open]{display:grid;gap:9px}
+.sg-owner-publisher label{display:block;color:#cbdcf1;font-size:12px}
+.sg-owner-publisher input[type=password]{width:100%;min-height:43px;background:#101c2d;color:#fff;border:1px solid #7897be;border-radius:8px;padding:9px;box-sizing:border-box}
+.sg-owner-publisher .sg-rights-check{display:flex;align-items:flex-start;gap:8px}
+.sg-owner-publisher .sg-rights-check input{margin-top:3px;accent-color:#83c2f8}
+.sg-owner-publisher button{width:100%}
+@media(max-width:520px){.sg-added-files-home{align-items:stretch;flex-direction:column}.sg-added-files-home .sg-added-files-button{width:100%}}
+</style>
+
 <meta name="study-games-playlist-fix" content="local-next-previous-v4">
 <meta name="study-games-build" content="ai-helper-plus-ios-mp4-v1">
 </head>
@@ -715,6 +738,23 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
   <button id="sgShuffle" type="button" aria-pressed="false">🔀 Shuffle: Off</button>
   <button id="sgRepeat" type="button" aria-pressed="false">🔂 Repeat song: Off</button>
 </div>
+  <section class="sg-shared-files" id="sgSharedFilesArea" aria-label="Added Files and shared songs">
+   <button type="button" class="sg-added-files-button" id="sgAddedFilesButton">📂 Added Files</button>
+   <p class="sg-files-help">Opens your Files app. Imported songs play here on your device. To let <strong>everyone</strong> hear them, publish them to the shared music library below.</p>
+   <h4>🌍 Everyone's music</h4>
+   <p id="sgSharedSongsStatus" role="status">Checking published songs…</p>
+   <div id="sgSharedSongsList" class="sg-shared-songs-list"></div>
+   <details class="sg-owner-publisher" id="sgOwnerPublisher">
+    <summary>👑 Owner: publish songs for everyone</summary>
+    <p>Only publish music you own or are licensed to share. Your phone's Files picker cannot publish directly to GitHub by itself.</p>
+    <label class="sg-rights-check"><input id="sgMusicRights" type="checkbox"> I have permission to publish these recordings</label>
+    <label for="sgOwnerUploadKey">Private upload key (for configured music server)</label>
+    <input id="sgOwnerUploadKey" type="password" placeholder="Owner-only upload key" autocomplete="off" spellcheck="false"/>
+    <button id="sgPublishSharedMusic" type="button" class="sg-added-files-button">🌍 Publish selected files for everyone</button>
+    <button id="sgDownloadPublicManifest" type="button" class="sg-added-files-button secondary">📥 Prepare public playlist for GitHub</button>
+    <p id="sgMusicPublishStatus" role="status">Pick songs with Added Files first. To publish straight from this button, connect your private upload server once.</p>
+   </details>
+  </section>
   <label for="musicFile">💎 Add songs from Files to your personal playlist (MP3, M4A, WAV or MP4)</label>
   <input id="musicFile" class="music-file" type="file" multiple accept="audio/*,video/mp4,.mp3,.m4a,.wav,.mp4" aria-label="Add songs from Files to your personal playlist">
   <p id="sgPersonalMusicNote" role="status" style="font-size:12px;line-height:1.5;color:#cfdeef;margin:0">🎧 Select BOTH recordings from Files. Once added, Next and Previous cycle between them and play each song automatically. The files stay on your device.</p>
@@ -740,6 +780,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <div class="hero" data-screen="home" id="homeHero">
 <p class="eyebrow">Welcome to Study Games</p>
 <h1>Pick a subject. <span class="grad">Start playing.</span></h1>
+<div class="sg-added-files-home"><button type="button" id="sgAddedFilesHome" class="sg-added-files-button">📂 Added Files</button><span>Choose songs from your Files app • share authorized music with everyone</span></div>
 <p>Choose Math, Science, Social Studies, ELA, or Geography to start practicing.</p>
 <div id="sg-emergency-shortcut">
   <a class="sg-emergency-button" href="https://classroom.google.com/" aria-label="Emergency: open Google Classroom">EMERGENCY <span aria-hidden="true">↗</span></a>
@@ -1648,6 +1689,14 @@ let audio=$('backgroundMusic'); const dots=$('musicDots'), panel=$('musicPanel')
 const select=$('sgPlaylistSelect'), trackStatus=$('sgTrackStatus'),prev=$('sgPrevTrack'),next=$('sgNextTrack'),fileInput=$('musicFile');
 const shuffleBtn=$('sgShuffle'),repeatBtn=$('sgRepeat'),musicTier=$('sgMusicPremiumStatus');
 const personalMusicNote=$('sgPersonalMusicNote'), removePersonalSong=$('sgRemovePersonalSong');
+const addedFilesBtn=$('sgAddedFilesButton'),addedFilesHome=$('sgAddedFilesHome');
+const sharedStatus=$('sgSharedSongsStatus'),sharedList=$('sgSharedSongsList');
+const ownerUploadKey=$('sgOwnerUploadKey'),rightsCheck=$('sgMusicRights');
+const publishSharedBtn=$('sgPublishSharedMusic'),publishStatus=$('sgMusicPublishStatus'),manifestBtn=$('sgDownloadPublicManifest');
+// Replace this URL with the URL of your own deployed upload Worker. Never put its secret key here.
+const PUBLIC_MUSIC_API_URL='';
+let selectedFilesForPublishing=[];
+let publicSongsPublished=[];
 let premiumMusic=false, shuffleSongs=false, repeatSong=false;
 function syncMusicTier(){
  select.disabled=!premiumMusic;prev.disabled=!premiumMusic;next.disabled=!premiumMusic;fileInput.disabled=!premiumMusic;
@@ -1702,6 +1751,51 @@ const tracks=[
  {label:'Original Study Games soundtrack',src:defaultAudioSrc}
 ];
 
+// Public songs are safe to play on everyone's browser once the owner publishes them.
+// Support either a deployed, admin-protected music server OR a GitHub Pages JSON manifest.
+function addSharedTrack(item){
+ const label=String(item.title||item.label||'Shared song').slice(0,90);
+ const url=String(item.url||'');
+ let absolute;
+ try{absolute=new URL(url,location.href);}catch(e){return -1;}
+ if(!['http:','https:'].includes(absolute.protocol)||!url)return -1;
+ const source=absolute.href;
+ const found=tracks.findIndex(t=>t.shared&&t.src===source);
+ if(found>=0)return found;
+ const idx=tracks.length;
+ const mime=String(item.type||'').toLowerCase();
+ const isVideo=mime.startsWith('video/')||/\.mp4(?:[?#]|$)/i.test(absolute.pathname);
+ tracks.push({label:'🌍 '+label,src:source,shared:true,isVideo});
+ const option=document.createElement('option');option.value=String(idx);option.textContent='🌍 '+label+' (Everyone)';select.appendChild(option);
+ const button=document.createElement('button');button.type='button';button.className='sg-shared-song-button';button.textContent='▶ '+label;
+ button.addEventListener('click',()=>{failures.delete(idx);setTrack(idx,false,true);panel.hidden=false;updateControls();});
+ sharedList.appendChild(button);
+ return idx;
+}
+async function loadSharedSongs(){
+ const endpoint=PUBLIC_MUSIC_API_URL.trim();
+ const url=endpoint?endpoint.replace(/\/$/,'')+'/songs':'music/public-playlist.json';
+ try{
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw new Error('No shared playlist published yet');
+  const data=await response.json();const songs=Array.isArray(data)?data:Array.isArray(data.songs)?data.songs:[];
+  // Server IDs are never pasted directly into markup. Construct song links from the configured origin.
+  publicSongsPublished=[];
+  for(const song of songs.slice(0,100)){
+   let item;
+   if(endpoint){
+    const id=String(song.id||'');if(!/^[0-9a-f-]{30,50}$/i.test(id))continue;
+    item={title:song.title||song.name,type:song.type,url:endpoint.replace(/\/$/,'')+'/songs/'+encodeURIComponent(id)};
+   }else{
+    const relative=String(song.path||song.url||'');
+    if(!/^music\/[\w.() %+-]+\.(?:mp3|m4a|wav|mp4)$/i.test(relative))continue;
+    item={title:song.title||song.name,type:song.type,url:relative};
+   }
+   if(addSharedTrack(item)>=0)publicSongsPublished.push(song);
+  }
+  sharedStatus.textContent=publicSongsPublished.length?'✅ '+publicSongsPublished.length+' song(s) published for everyone. Tap a song to play.':'No public songs yet. The owner can publish music here.';
+ }catch(e){sharedStatus.textContent='No public songs yet. Choose Added Files to preview your own, or set up the shared library.';}
+}
 // Personal, device-local playlist. Media is not redistributed or published by this site.
 const PERSONAL_DB='study-games-personal-music-v1', PERSONAL_STORE='tracks';
 let dbPromise;
@@ -1830,7 +1924,7 @@ function setTrack(index,fromError=false,forcePlay=false){
  select.value=String(selected);
  const track=tracks[selected];
  const src=track.src;
- const selectedPlayer=track.personal&&track.isVideo?importedVideo:baseAudio;
+ const selectedPlayer=(track.personal||track.shared)&&track.isVideo?importedVideo:baseAudio;
  if(audio!==selectedPlayer){audio.pause();audio=selectedPlayer;currentSrc='';}
  if(currentSrc!==src){currentSrc=src;audio.pause();audio.src=src;audio.load();}
  audio.muted=false;
@@ -2015,6 +2109,8 @@ for(const media of [baseAudio,importedVideo])media.addEventListener('stalled',()
   if(!premiumMusic)return;
   const files=Array.from(fileInput.files||[]);
   if(!files.length)return;
+  selectedFilesForPublishing=files.filter(f=>f.type.startsWith('audio/')||f.type==='video/mp4'||/\.(mp3|m4a|wav|mp4)$/i.test(f.name));
+  publishStatus.textContent=selectedFilesForPublishing.length+' file(s) selected. These are private until you publish them using an authorized method.';
   let added=0,saved=0,firstIndex=-1;
   for(const f of files){
    if(!(f.type.startsWith('audio/')||f.type==='video/mp4'||/\.(mp3|m4a|wav|mp4)$/i.test(f.name)))continue;
@@ -2043,6 +2139,60 @@ for(const media of [baseAudio,importedVideo])media.addEventListener('stalled',()
   failures.clear();setTrack(Math.min(index,tracks.length-1));
   personalMusicNote.textContent='Removed '+removed.label+' from your personal playlist.';
  });
+
+function openAddedFiles(){
+ if(!premiumMusic){
+  panel.hidden=false;dots.setAttribute('aria-expanded','true');
+  publishStatus.textContent='💎 Activate Premium/Owner access first to add your own music from Files.';
+  document.getElementById('sgSharedFilesArea')?.scrollIntoView({block:'nearest',behavior:'smooth'});
+  return;
+ }
+ panel.hidden=false;dots.setAttribute('aria-expanded','true');
+ // iPhone requires input.click() synchronously during a real tap.
+ fileInput.click();
+}
+addedFilesBtn.addEventListener('click',openAddedFiles);
+addedFilesHome.addEventListener('click',openAddedFiles);
+publishSharedBtn.addEventListener('click',async()=>{
+ if(!premiumMusic){publishStatus.textContent='Unlock owner Premium to publish music.';return;}
+ if(!selectedFilesForPublishing.length){publishStatus.textContent='First press Added Files and choose the tracks you want to publish.';return;}
+ if(!rightsCheck.checked){publishStatus.textContent='Confirm you have permission to publish these recordings first.';return;}
+ const api=PUBLIC_MUSIC_API_URL.trim().replace(/\/$/,'');
+ if(!api){publishStatus.textContent='Public uploader is not connected yet. Use Prepare public playlist for GitHub, or follow the upload-server setup in the ZIP.';return;}
+ const key=ownerUploadKey.value;
+ if(!key){publishStatus.textContent='Enter your private upload key. Do not use your public Premium redeem code.';return;}
+ publishSharedBtn.disabled=true;
+ try{
+  let finished=0;
+  for(const file of selectedFilesForPublishing){
+   if(file.size>90*1024*1024)throw new Error(file.name+' is larger than the 90 MB upload limit.');
+   publishStatus.textContent='Uploading '+(finished+1)+'/'+selectedFilesForPublishing.length+': '+file.name;
+   const response=await fetch(api+'/upload',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':file.type||'application/octet-stream','X-Song-Name':encodeURIComponent(file.name)},body:file});
+   const result=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(result.error||('Upload failed ('+response.status+')'));
+   finished++;
+  }
+  selectedFilesForPublishing=[];
+  ownerUploadKey.value=''; // Never save this key in browser storage.
+  publishStatus.textContent='✅ Published '+finished+' song(s) for everyone!';
+  await loadSharedSongs();
+ }catch(e){publishStatus.textContent='Upload did not finish: '+e.message+' (existing songs are unchanged).';}
+ finally{publishSharedBtn.disabled=false;}
+});
+manifestBtn.addEventListener('click',()=>{
+ if(!selectedFilesForPublishing.length){publishStatus.textContent='Choose songs with Added Files first.';return;}
+ if(!rightsCheck.checked){publishStatus.textContent='Confirm you have permission to publish these songs first.';return;}
+ const existing=publicSongsPublished.map(song=>({title:String(song.title||song.name||'Song'),path:String(song.path||song.url||''),type:String(song.type||'audio/mpeg')})).filter(song=>song.path.startsWith('music/'));
+ const additions=selectedFilesForPublishing.map(f=>({title:f.name.replace(/\.[^.]+$/,''),path:'music/'+f.name,type:f.type||'audio/mpeg'}));
+ const merged=[...existing];
+ for(const item of additions){if(!merged.some(x=>x.path===item.path))merged.push(item);}
+ const blob=new Blob([JSON.stringify({songs:merged},null,2)],{type:'application/json'});
+ const objectUrl=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=objectUrl;a.download='public-playlist.json';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(objectUrl),5000);
+ publishStatus.textContent='📥 Manifest ready. In your GitHub repo, upload these songs to music/ and upload public-playlist.json to music/ too. Commit both before everyone can hear them.';
+});
+void loadSharedSongs();
 window.addEventListener('pagehide',()=>{localUrls.forEach(URL.revokeObjectURL);if(redScreenBlobUrl)URL.revokeObjectURL(redScreenBlobUrl);});
 setTrack(tracks.length-1);updateControls();
 void checkPublishedSongs();
