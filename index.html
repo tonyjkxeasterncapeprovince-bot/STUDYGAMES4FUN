@@ -658,6 +658,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 #sgWelcomeMusicNote{font-weight:900!important;color:#100309!important;max-width:44rem!important;font-size:clamp(14px,2.7vw,19px)!important;line-height:1.5!important;text-align:center!important}
 </style>
 <meta name="study-games-playlist-fix" content="local-next-previous-v4">
+<meta name="study-games-build" content="ai-helper-plus-ios-mp4-v1">
 </head>
 <body>
 <div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-softener"></div><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
@@ -706,6 +707,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
   <div class="sg-playlist-actions">
     <button id="sgPrevTrack" type="button" aria-label="Previous song">⏮ Previous</button>
     <button id="sgNextTrack" type="button" aria-label="Next song">Next ⏭</button>
+    <button id="sgPlaySelected" type="button" aria-label="Play selected song">▶ Play selected</button>
   </div>
   <p id="sgTrackStatus" role="status">Checking the uploaded music files…</p>
 <p class="sg-music-tier" id="sgMusicPremiumStatus" role="status">💎 Premium unlocks song selection, skip, shuffle, repeat-one and personal audio previews. Regular playback is free.</p>
@@ -1642,7 +1644,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 const $=id=>document.getElementById(id);
 const welcome=$('sgWelcomeScreen'), welcomeAudio=$('sgWelcomeAudio'),welcomeNote=$('sgWelcomeMusicNote');
 const openSite=$('sgOpenSite'), intro=$('cinematicIntro'), video=$('openingVideo'),skip=$('introSkip'),introSound=$('introSound'), prompt=$('musicPrompt');
-const audio=$('backgroundMusic'), dots=$('musicDots'), panel=$('musicPanel'),toggle=$('musicToggle'),status=$('musicStatus'),slider=$('musicVolume');
+let audio=$('backgroundMusic'); const dots=$('musicDots'), panel=$('musicPanel'),toggle=$('musicToggle'),status=$('musicStatus'),slider=$('musicVolume');
 const select=$('sgPlaylistSelect'), trackStatus=$('sgTrackStatus'),prev=$('sgPrevTrack'),next=$('sgNextTrack'),fileInput=$('musicFile');
 const shuffleBtn=$('sgShuffle'),repeatBtn=$('sgRepeat'),musicTier=$('sgMusicPremiumStatus');
 const personalMusicNote=$('sgPersonalMusicNote'), removePersonalSong=$('sgRemovePersonalSong');
@@ -1655,6 +1657,19 @@ function syncMusicTier(){
 }
 const reducedMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const defaultAudioSrc=audio.getAttribute('src');
+// Full iPhone screen recordings contain video as well as AAC audio.
+// Prefer native video playback for imported MP4s; it is more compatible with Safari.
+const baseAudio=audio;
+const importedVideo=document.createElement('video');
+importedVideo.id='sgImportedVideo';
+importedVideo.playsInline=true;
+importedVideo.setAttribute('playsinline','');
+importedVideo.setAttribute('webkit-playsinline','');
+importedVideo.preload='auto';
+importedVideo.controls=false;
+importedVideo.style.cssText='position:fixed;left:-2px;bottom:0;width:1px;height:1px;opacity:0.01;pointer-events:none;';
+importedVideo.setAttribute('aria-hidden','true');
+document.body.appendChild(importedVideo);
 // The same uploaded recording plays in the red-screen player AND in the playlist.
 // Safari can have trouble seeking/playing a long base64 data: URL, so make a
 // local Blob URL once, without downloading anything or changing the audio.
@@ -1718,7 +1733,7 @@ function addPersonalTrack(record){
  const url=URL.createObjectURL(record.file);localUrls.push(url);
  const idx=tracks.length;
  const friendlyName=/17-29-55/.test(record.name)?'Song 1 — your recording (1:51)':/22-49-46/.test(record.name)?'Song 2 — your recording (3:26)':record.name;
- tracks.push({label:'🎧 '+friendlyName,src:url,personal:true,id:record.id});
+ tracks.push({label:'🎧 '+friendlyName,src:url,personal:true,id:record.id,isVideo:record.file.type==='video/mp4'||/\.mp4$/i.test(record.name),originalName:record.name,fileSize:record.file.size});
  const option=document.createElement('option');option.value=String(idx);option.textContent='🎧 '+friendlyName+' (Files)';select.append(option);
  return idx;
 }
@@ -1802,7 +1817,7 @@ function reportPlaybackFailure(err,requestId,fromError=false){
  if(name==='NotAllowedError'){
   trackStatus.textContent='🔊 iPhone blocked sound. Tap Play Music once, then Next again.';
  } else if(audio.error){
-  trackStatus.textContent='This recording could not be decoded on this device. Try an MP3 or M4A from your Files app.';
+  trackStatus.textContent='This recording did not decode on your device. Try opening it from Files again or use an M4A copy you have permission to play.';
   if(!fromError)handleTrackError();
  } else {
   trackStatus.textContent='Could not start '+tracks[selected].label+' ('+name+'). Tap Play Music and try again.';
@@ -1813,8 +1828,14 @@ function setTrack(index,fromError=false,forcePlay=false){
  const myRequest=++trackRequestId;
  selected=((index%tracks.length)+tracks.length)%tracks.length;
  select.value=String(selected);
- const src=tracks[selected].src;
+ const track=tracks[selected];
+ const src=track.src;
+ const selectedPlayer=track.personal&&track.isVideo?importedVideo:baseAudio;
+ if(audio!==selectedPlayer){audio.pause();audio=selectedPlayer;currentSrc='';}
  if(currentSrc!==src){currentSrc=src;audio.pause();audio.src=src;audio.load();}
+ audio.muted=false;
+ // Safari ignores programmatic volume changes but still accepts the play tap.
+ audio.volume=volumeTarget>0?volumeTarget:1;
  updateControls();
  if(playlistStarted||forcePlay)playSelectedNow(myRequest,fromError);
 }
@@ -1881,7 +1902,7 @@ async function checkPublishedSongs(){
  }
 }
 
-audio.addEventListener('error',handleTrackError);
+for(const media of [baseAudio,importedVideo])media.addEventListener('error',()=>{if(media===audio)handleTrackError();});
 function startPlaylist(userGesture=false){
  // Synchronous play() is critical for gesture-required playback on iPhones.
  initGain();
@@ -1958,6 +1979,7 @@ slider.addEventListener('input',()=>{volumeTarget=Number(slider.value)/100;if(!m
 select.addEventListener('change',()=>{if(!premiumMusic){select.value=String(selected);return;}failures.delete(Number(select.value));setTrack(Number(select.value),false,true);});
 prev.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(-1);if(target>=0){failures.delete(target);setTrack(target,false,true);}});
 next.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(1);if(target>=0){failures.delete(target);setTrack(target,false,true);}});
+$('sgPlaySelected').addEventListener('click',()=>{if(!premiumMusic)return;setTrack(selected,false,true);});
 shuffleBtn.addEventListener('click',()=>{if(!premiumMusic)return;shuffleSongs=!shuffleSongs;shuffleBtn.textContent='🔀 Shuffle: '+(shuffleSongs?'On':'Off');shuffleBtn.setAttribute('aria-pressed',String(shuffleSongs));});
 repeatBtn.addEventListener('click',()=>{if(!premiumMusic)return;repeatSong=!repeatSong;repeatBtn.textContent='🔂 Repeat song: '+(repeatSong?'On':'Off');repeatBtn.setAttribute('aria-pressed',String(repeatSong));});
 window.addEventListener('sg-premium-change',event=>{
@@ -1965,7 +1987,8 @@ window.addEventListener('sg-premium-change',event=>{
  if(!premiumMusic){shuffleSongs=false;repeatSong=false;shuffleBtn.textContent='🔀 Shuffle: Off';repeatBtn.textContent='🔂 Repeat song: Off';shuffleBtn.setAttribute('aria-pressed','false');repeatBtn.setAttribute('aria-pressed','false');}
  syncMusicTier();
 });
-audio.addEventListener('ended',()=>{
+const onTrackEnded=(event)=>{
+ if(event.currentTarget!==audio)return;
  if(!playlistStarted)return;
  if(premiumMusic&&repeatSong){audio.currentTime=0;void audio.play().catch(()=>handleTrackError());return;}
  const personal=personalSongIndexes();
@@ -1979,13 +2002,14 @@ audio.addEventListener('ended',()=>{
   const n=nextPlayable(selected);
   if(n<0){playlistStarted=false;updateControls();}else setTrack(n);
  }
+};
+for(const media of [baseAudio,importedVideo]){media.addEventListener('ended',onTrackEnded);media.addEventListener('play',updateControls);media.addEventListener('pause',updateControls);}
+for(const media of [baseAudio,importedVideo])media.addEventListener('playing',()=>{
+ if(media!==audio)return;
+ trackStatus.textContent='▶ Playing with sound: '+tracks[selected].label;
 });
-audio.addEventListener('play',updateControls);audio.addEventListener('pause',updateControls);
-audio.addEventListener('playing',()=>{
- trackStatus.textContent='▶ Playing: '+tracks[selected].label;
-});
-audio.addEventListener('stalled',()=>{
- if(playlistStarted&&tracks[selected]?.personal)trackStatus.textContent='Loading recording from Files… If sound does not begin, tap Next again.';
+for(const media of [baseAudio,importedVideo])media.addEventListener('stalled',()=>{
+ if(media===audio&&playlistStarted&&tracks[selected]?.personal)trackStatus.textContent='Loading your recording… Tap Play selected if needed.';
 });
  fileInput.addEventListener('change',async()=>{
   if(!premiumMusic)return;
@@ -1998,7 +2022,7 @@ audio.addEventListener('stalled',()=>{
    const record={id,name:f.name,file:f,created:Date.now()+added};
    const index=addPersonalTrack(record);
    if(index<0)continue;
-   if(firstIndex<0){firstIndex=index;failures.delete(index);setTrack(index);if(!playlistStarted)void startPlaylist(true);}
+   if(firstIndex<0){firstIndex=index;failures.delete(index);setTrack(index,false,true);}
    added++;
    try{await savePersonal(record);saved++;}catch(e){/* temporary session playback remains usable */}
   }
@@ -2740,6 +2764,111 @@ void start(key);
       wait2=setTimeout(close,shortMotion?3700:9700);
     });
   };
+})();
+</script>
+<!-- Study Games helper: offline help immediately; optional secured AI Worker. -->
+<style id="sg-ai-style">
+#sgAiLaunch{position:fixed;right:18px;bottom:18px;z-index:240000;background:linear-gradient(115deg,#6b6af3,#a37eff);color:#fff;border:1px solid #d6c5ff;border-radius:100px;padding:12px 18px;font-size:14px;font-weight:850;box-shadow:0 8px 30px #0009;cursor:pointer}
+#sgAiLaunch[hidden],#sgAiPanel[hidden]{display:none!important}
+#sgAiPanel{position:fixed;right:16px;bottom:76px;z-index:240000;width:min(370px,calc(100vw - 32px));height:min(530px,calc(100dvh - 110px));display:flex;flex-direction:column;border:1px solid #7c83c9;border-radius:18px;background:#111c32;color:#eef3ff;box-shadow:0 20px 80px #000c;overflow:hidden;font:15px/1.45 system-ui,-apple-system,sans-serif}
+#sgAiHead{padding:14px 14px 10px;background:linear-gradient(110deg,#25244d,#1a3357);display:flex;justify-content:space-between;align-items:center;gap:10px}
+#sgAiHead strong{display:block;font-size:17px;color:#fff}
+#sgAiHead small{display:block;color:#c4d8f9;font-size:11px}
+#sgAiClose{background:#283e66;color:#fff;font-weight:900;border:1px solid #586fa0;border-radius:9px;padding:6px 10px;cursor:pointer}
+#sgAiMessages{overflow-y:auto;flex:1;padding:14px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.sg-ai-bubble{padding:10px 12px;border-radius:13px;white-space:pre-wrap;word-break:break-word;font-size:14px;max-width:94%;margin:0}
+.sg-ai-bubble.bot{background:#273a5c;align-self:flex-start;border-bottom-left-radius:3px}
+.sg-ai-bubble.user{background:#5b5be1;align-self:flex-end;border-bottom-right-radius:3px}
+#sgAiForm{display:flex;gap:7px;padding:11px;border-top:1px solid #2b4264}
+#sgAiInput{flex:1;min-width:0;max-width:100%;background:#0d1628;color:#fff;border:1px solid #53678d;border-radius:10px;padding:9px;font:inherit}
+#sgAiSend{background:#7a7df0;color:#fff;border:0;border-radius:10px;padding:9px 13px;font-weight:800;cursor:pointer}
+#sgAiForm button:disabled{opacity:.55;cursor:wait}
+#sgAiSettings{border-top:1px solid #2b4264;padding:7px 12px;color:#cbd5e9;font-size:11px}
+#sgAiSettings summary{cursor:pointer}
+#sgAiEndpoint{width:100%;max-width:100%;box-sizing:border-box;background:#0d1628;color:#fff;border:1px solid #53678d;border-radius:8px;padding:9px;margin-top:6px;font:inherit}
+#sgAiNotice{color:#a9bfdc;padding:0 13px 8px;font-size:11px}
+@media(max-width:480px){#sgAiLaunch{right:12px;bottom:11px}#sgAiPanel{right:6px;bottom:63px;width:calc(100vw - 12px);height:min(520px,calc(100dvh - 85px))}}
+</style>
+<button id="sgAiLaunch" type="button" hidden aria-controls="sgAiPanel" aria-expanded="false">🤖 Study Helper</button>
+<section id="sgAiPanel" role="dialog" aria-modal="false" aria-label="Study Games assistant" hidden>
+  <div id="sgAiHead"><div><strong>🤖 Study Games Assistant</strong><small id="sgAiMode">Built-in helper · AI server optional</small></div><button id="sgAiClose" aria-label="Close assistant" type="button">✕</button></div>
+  <div id="sgAiMessages" role="log" aria-live="polite" aria-relevant="additions"><p class="sg-ai-bubble bot">Hey! 🎮 I can explain Study Games features, help with simple math, and share study tips. For open-ended AI answers, the site owner can connect a secure AI service.</p></div>
+  <form id="sgAiForm"><input id="sgAiInput" type="text" maxlength="500" placeholder="Ask about games, math, science…" aria-label="Message Study Games assistant" autocomplete="off" required/><button id="sgAiSend" type="submit">Send</button></form>
+  <div id="sgAiNotice">Never send passwords, personal information, or access codes in chat.</div>
+  <details id="sgAiSettings"><summary>⚙️ Site owner: connect real AI</summary><div>Set the public AI Worker URL here for a preview on this device. To activate it for everyone, set <code>SG_PUBLIC_AI_URL</code> in the website code. Never paste an API key here.</div><input id="sgAiEndpoint" type="url" placeholder="https://your-worker.workers.dev" aria-label="AI server URL"/></details>
+</section>
+<script id="sg-ai-script">
+(()=>{
+ 'use strict';
+ // To turn on full AI for every visitor, deploy the included Cloudflare Worker,
+ // then paste its URL below. KEEP THE API KEY ONLY IN THE WORKER SECRET.
+ const SG_PUBLIC_AI_URL='';
+ const launch=document.getElementById('sgAiLaunch');
+ const panel=document.getElementById('sgAiPanel');
+ const close=document.getElementById('sgAiClose');
+ const form=document.getElementById('sgAiForm');
+ const input=document.getElementById('sgAiInput');
+ const send=document.getElementById('sgAiSend');
+ const log=document.getElementById('sgAiMessages');
+ const endpointInput=document.getElementById('sgAiEndpoint');
+ const mode=document.getElementById('sgAiMode');
+ const history=[];
+ let busy=false;
+ let endpoint=SG_PUBLIC_AI_URL;
+ try{endpoint=localStorage.getItem('sg-ai-endpoint-preview')||endpoint;}catch(e){}
+ endpointInput.value=endpoint;
+ function updateMode(){mode.textContent=endpoint?'AI mode · secure server':'Built-in helper · AI server optional';}
+ updateMode();
+ document.getElementById('sgOpenSite').addEventListener('click',()=>{launch.hidden=false;});
+ launch.addEventListener('click',()=>{panel.hidden=false;launch.setAttribute('aria-expanded','true');input.focus();});
+ close.addEventListener('click',()=>{panel.hidden=true;launch.setAttribute('aria-expanded','false');launch.focus();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){panel.hidden=true;launch.setAttribute('aria-expanded','false');}});
+ endpointInput.addEventListener('change',()=>{
+  const raw=endpointInput.value.trim();
+  if(raw&&!/^https:\/\/[a-z0-9.-]+(?::\d+)?(?:\/.*)?$/i.test(raw)){endpointInput.setCustomValidity('Enter an HTTPS URL');endpointInput.reportValidity();return;}
+  endpointInput.setCustomValidity('');endpoint=raw;
+  try{if(raw)localStorage.setItem('sg-ai-endpoint-preview',raw);else localStorage.removeItem('sg-ai-endpoint-preview');}catch(e){}
+  updateMode();
+ });
+ function bubble(text,who){const p=document.createElement('p');p.className='sg-ai-bubble '+who;p.textContent=text;log.append(p);log.scrollTop=log.scrollHeight;return p;}
+ function localHelp(q){
+  const s=q.toLowerCase();
+  const m=s.match(/(-?\d{1,6})\s*([+\-*×÷/])\s*(-?\d{1,6})/);
+  if(m){let a=Number(m[1]),b=Number(m[3]);let ans=({'+' :()=>a+b,'-':()=>a-b,'*':()=>a*b,'×':()=>a*b,'/':()=>b? a/b:null,'÷':()=>b?a/b:null})[m[2]]();return ans===null?'You cannot divide by zero.':`${a} ${m[2]} ${b} = ${Number.isInteger(ans)?ans:Number(ans.toFixed(6))}`;}
+  if(/song|music|playlist|audio|next/.test(s))return '🎵 Open ••• in the top bar, unlock Premium, and tap Add Songs from Files. Select your two recordings, then tap ▶ Play selected or Next. On iPhone, sound needs a tap.';
+  if(/premium|redeem|access code/.test(s))return '👑 Open the Premium section and use Redeem Code. Never share your owner code in this chat. If access fails, confirm the latest index.html was published.';
+  if(/game|chess|checkers|math game|2048/.test(s))return '🎮 Pick a subject or open the Games/Arcade menu. Premium unlocks more games, including chess and checkers.';
+  if(/photosynthesis/.test(s))return '🌱 Photosynthesis is how plants use sunlight, water, and carbon dioxide to make sugars, releasing oxygen as a byproduct.';
+  if(/fraction/.test(s))return '🔢 A fraction is part of a whole. To add fractions with different denominators, first find a common denominator.';
+  if(/study|homework|quiz|learn/.test(s))return '📚 Try short study sessions: explain a topic from memory, check what you missed, then practice again. Ask me a basic math question like 8 × 7.';
+  if(/hello|hey|hi\b/.test(s))return 'Heyyyy! 😎 Welcome to Study Games! Ask about the music player, games, Premium, or a simple math problem.';
+  return '🤖 I can answer basic site questions and simple math offline. To ask a full AI model anything, the site owner needs to connect the secure AI Worker (⚙️ below).';
+ }
+ async function realAnswer(question){
+  const nextHistory=[...history,{role:'user',content:question}].slice(-8);
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),18000);
+  try{
+   const res=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({messages:nextHistory}),signal:controller.signal});
+   if(!res.ok)throw new Error('AI server returned '+res.status);
+   const data=await res.json();
+   if(typeof data.reply!=='string'||!data.reply.trim())throw new Error('No AI response');
+   return data.reply.trim().slice(0,3500);
+  }finally{clearTimeout(timeout);}
+ }
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();if(busy)return;
+  const q=input.value.trim();if(!q)return;
+  input.value='';bubble(q,'user');busy=true;send.disabled=true;
+  const pending=bubble('Thinking…','bot');
+  let reply;
+  if(endpoint){try{reply=await realAnswer(q);}catch(err){reply='AI server unavailable ('+(err?.name==='AbortError'?'timed out':'connection error')+'). '+localHelp(q);}}
+  else reply=localHelp(q);
+  pending.textContent=reply;
+  history.push({role:'user',content:q},{role:'assistant',content:reply});
+  if(history.length>12)history.splice(0,history.length-12);
+  busy=false;send.disabled=false;input.focus();log.scrollTop=log.scrollHeight;
+ });
 })();
 </script>
 </body>
