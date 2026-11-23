@@ -823,7 +823,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
    <div class="sg-panel"><h3>⭐ Redeem free Premium</h3><p>There are <strong>five one-use invitation codes</strong>, each granting <strong>five years from redemption</strong>, plus one reusable <strong>permanent owner code</strong>. Codes can enable Premium on this browser now. A private verification service is needed to enforce one-use codes across different devices.</p>
     <label for="sgPremiumCode">Access code</label><input type="text" id="sgPremiumCode" class="sg-codebox" spellcheck="false" autocomplete="off" maxlength="80" placeholder="SG-XXXXX-XXXXX-XXXXX" />
     <div class="sg-row" style="margin-top:12px"><button type="button" id="sgRedeemCode" class="sg-primary">Redeem code</button><button type="button" id="sgCheckPremium">Check my membership</button></div>
-    <p id="sgPremiumMessage" class="sg-message" role="status">Enter your original Premium code and tap Redeem.</p>
+    <p id="sgPremiumMessage" class="sg-message" role="status">Enter your original Premium code and tap Redeem.</p><p class="sg-muted" style="font-size:12px">Premium redemption fix v3 · Original codes unchanged</p>
     <p class="sg-muted">Visitor invitation codes are one-use; the private owner code is reusable and never expires. When no private server is connected, valid codes enable Premium on this browser only. One-use protection across devices requires the separate secure server. Access may be lost if browser data is cleared.</p>
    </div>
   </div>
@@ -2340,10 +2340,36 @@ void start(key);
    if(pass.kind==='invite'&&LOCAL_INVITE_HASHES.includes(pass.digest)&&Number(pass.expiresAt)>Date.now())return pass;
   }catch{}return null;
  }
+ // WebCrypto on HTTPS; pure-JS SHA-256 fallback lets local HTML previews validate too.
+ function sha256LocalAscii(txt){
+  const rr=(v,n)=>(v>>>n)|(v<<(32-n)),K=[],initial=[];
+  let n=2;
+  while(K.length<64){let prime=true;for(let d=2;d*d<=n;d++)if(n%d===0){prime=false;break}
+   if(prime){if(initial.length<8)initial.push((Math.sqrt(n)*4294967296)|0);
+    K.push((Math.cbrt(n)*4294967296)|0)}n++}
+  const bytes=Array.from(txt,c=>c.charCodeAt(0)),bitLength=bytes.length*8;
+  bytes.push(128);while(bytes.length%64!==56)bytes.push(0);
+  for(let i=7;i>=0;i--)bytes.push(Math.floor(bitLength/(2**(i*8)))&255);
+  const H=initial.slice();
+  for(let off=0;off<bytes.length;off+=64){
+   const w=new Array(64);
+   for(let i=0;i<16;i++){let j=off+i*4;w[i]=((bytes[j]<<24)|(bytes[j+1]<<16)|(bytes[j+2]<<8)|bytes[j+3])|0}
+   for(let i=16;i<64;i++){const a=w[i-15],b=w[i-2],s0=rr(a,7)^rr(a,18)^(a>>>3),s1=rr(b,17)^rr(b,19)^(b>>>10);
+    w[i]=(w[i-16]+s0+w[i-7]+s1)|0}
+   let [a,b,c,d,e,f,g,h]=H;
+   for(let i=0;i<64;i++){const S1=rr(e,6)^rr(e,11)^rr(e,25),ch=(e&f)^(~e&g),t1=(h+S1+ch+K[i]+w[i])|0;
+    const S0=rr(a,2)^rr(a,13)^rr(a,22),maj=(a&b)^(a&c)^(b&c),t2=(S0+maj)|0;
+    h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0}
+   const vals=[a,b,c,d,e,f,g,h];for(let i=0;i<8;i++)H[i]=(H[i]+vals[i])|0
+  }
+  return H.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');
+ }
  async function sha256Text(t){
-  if(!globalThis.crypto?.subtle)throw Error('Please open Study Games using its HTTPS web link to redeem a code.');
-  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
-  return Array.from(new Uint8Array(b),n=>n.toString(16).padStart(2,'0')).join('');
+  if(globalThis.crypto?.subtle){
+   const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+   return Array.from(new Uint8Array(b),n=>n.toString(16).padStart(2,'0')).join('');
+  }
+  return sha256LocalAscii(t);
  }
  async function redeemLocal(code){
   const digest=await sha256Text(code),isOwner=digest===LOCAL_OWNER_HASH,isInvite=LOCAL_INVITE_HASHES.includes(digest);
@@ -2364,8 +2390,11 @@ void start(key);
   const out=$('sgPremiumMessage'),api=validServer(config().premiumApi);
   const token=(()=>{try{return localStorage.getItem('sg-premium-entitlement')||''}catch{return ''}})();
   premium=false;localMode=false;
-  if(!api){
-   const pass=readLocalPass();premium=!!pass;localMode=!!pass;
+  const localPass=readLocalPass();
+  // An original locally redeemed access code is never blocked by a stale saved API URL.
+  // Only a configured, correctly deployed server can enforce global single-use.
+  if(localPass || !api){
+   const pass=localPass;premium=!!pass;localMode=!!pass;
    if(out)out.textContent=pass?('✅ Premium Enabled — '+(pass.kind==='owner'?'Owner access never expires.':'Valid until '+new Date(pass.expiresAt).toLocaleDateString()+'.')+' Saved on this browser (not verified across devices).'):'Enter a Premium access code to unlock games and music features on this browser.';
    syncPremium();return;
   }
@@ -2384,7 +2413,11 @@ void start(key);
    if(!/^SG-[A-Z0-9-]{12,60}$/.test(code)){output.textContent='Enter a valid Premium code.';return}
    output.textContent='Checking code…';
    try{
-    if(!api){await redeemLocal(code)}
+    // Recognize original owner + five invitation codes locally first,
+    // regardless of an old/incorrect saved Premium API server address.
+    const originalDigest=await sha256Text(code);
+    const originalCode=originalDigest===LOCAL_OWNER_HASH||LOCAL_INVITE_HASHES.includes(originalDigest);
+    if(originalCode || !api){await redeemLocal(code)}
     else{
      const response=await fetch(api+'/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
      const data=await response.json();
