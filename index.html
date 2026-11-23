@@ -669,25 +669,26 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <div class="sg-playlist-widget" id="sgPlaylistWidget">
   <label for="sgPlaylistSelect">🎧 Study Games playlist • plays until you leave</label>
   <select id="sgPlaylistSelect" aria-label="Choose a track">
-    <option value="0">MONTAGEM-RITMADA</option>
-    <option value="1">Digger Funk</option>
-    <option value="2">Shape of You Hardtekk — GoldZoro</option>
-    <option value="3">Thank-you invite song ❤️</option>
-    <option value="4">Original Study Games soundtrack</option>
+    <option value="0">🎵 My main-screen song</option>
+    <option value="1">MONTAGEM-RITMADA</option>
+    <option value="2">Digger Funk</option>
+    <option value="3">Shape of You Hardtekk — GoldZoro</option>
+    <option value="4">Thank-you invite song ❤️</option>
+    <option value="5">Original Study Games soundtrack</option>
   </select>
   <div class="sg-playlist-actions">
     <button id="sgPrevTrack" type="button" aria-label="Previous song">⏮ Previous</button>
     <button id="sgNextTrack" type="button" aria-label="Next song">Next ⏭</button>
   </div>
-  <p id="sgTrackStatus" role="status">Songs automatically rotate during your visit.</p>
+  <p id="sgTrackStatus" role="status">Checking the uploaded music files…</p>
 <p class="sg-music-tier" id="sgMusicPremiumStatus" role="status">💎 Premium unlocks song selection, skip, shuffle, repeat-one and personal audio previews. Regular playback is free.</p>
 <div class="sg-playlist-actions">
   <button id="sgShuffle" type="button" aria-pressed="false">🔀 Shuffle: Off</button>
   <button id="sgRepeat" type="button" aria-pressed="false">🔂 Repeat song: Off</button>
 </div>
-  <label for="musicFile">Premium: choose your own audio file (local preview)</label>
-  <input id="musicFile" class="music-file" type="file" accept="audio/*" aria-label="Choose an audio file for selected song">
-  <p class="music-custom-note">Files chosen here only play in this browser. To publish the songs for everyone, add audio files that you are licensed to share to the music/ folder in your GitHub repository.</p>
+  <label for="musicFile">Premium: preview your main-screen song (audio or MP4 recording)</label>
+  <input id="musicFile" class="music-file" type="file" accept="audio/*,video/mp4,.mp3,.m4a,.wav,.mp4" aria-label="Choose your own main-screen audio file">
+  <p class="music-custom-note">This previews your song in this browser. To make it play for all visitors, upload audio you have permission to share as music/main-screen-song.mp3 to GitHub. Phones may require a tap before sound can play.</p>
 </div>
 </div></div></div></div></header><div class="menu-backdrop" hidden="" id="menuBackdrop"></div><nav aria-label="Study Games navigation" class="site-menu" hidden="" id="siteMenu"><div class="menu-head"><strong>Explore Study Games</strong><button aria-label="Close menu" class="menu-close" id="menuClose" type="button">✕</button></div><button class="menu-link" data-nav="home" type="button"><span aria-hidden="true" class="menu-link-icon">⌂</span> Home — Learning &amp; progress</button><button class="menu-link" type="button" data-nav="arcade">🎮 Arcade &amp; multiplayer</button>
 <button class="menu-link" type="button" data-nav="challenges">🏆 Daily challenges &amp; XP</button>
@@ -1624,14 +1625,17 @@ function syncMusicTier(){
 const reducedMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const defaultAudioSrc=audio.getAttribute('src');
 // No third-party recordings are bundled: publish only music for which you have rights.
+// The main-screen song loads automatically when music/main-screen-song.mp3 exists.
+// Otherwise the built-in original soundtrack really plays (no broken 404 placeholder).
 const tracks=[
+ {label:'My main-screen song 🎵',src:'music/main-screen-song.mp3'},
  {label:'MONTAGEM-RITMADA',src:'music/montagem-ritmada.mp3'},
  {label:'Digger Funk',src:'music/digger-funk.mp3'},
  {label:'Shape of You Hardtekk — GoldZoro',src:'music/shape-of-you-hardtekk.mp3'},
  {label:'Thank-you invite song ❤️',src:'music/thank-you-invite.mp3'},
  {label:'Original Study Games soundtrack',src:defaultAudioSrc}
 ];
-let opening=false,introFinished=false,playlistStarted=false,musicMuted=false,selected=0,playlistAudible=false;
+let opening=false,introFinished=false,playlistStarted=false,musicMuted=false,selected=tracks.length-1,playlistAudible=false;
 let volumeTarget=Number(slider.value)/100;
 let gainCtx=null,gain=null,fadeFrame=0, welcomeFadeFrame=0,failures=new Set(),localUrls=[];
 let currentSrc=''; let playlistFallbackTimer=0;
@@ -1665,7 +1669,7 @@ async function tryWelcomeAudio(userGesture=false){
 // If the licensed welcome track has not been published, use the site's existing soundtrack as a clearly identified demo.
 let demoWelcome=false;
 welcomeAudio.addEventListener('error',()=>{
- if(!demoWelcome && defaultAudioSrc){demoWelcome=true;welcomeAudio.src=defaultAudioSrc;showNote('The invite song file is missing, so the original site soundtrack is the demo.');void tryWelcomeAudio(false);}
+ if(!demoWelcome && defaultAudioSrc){demoWelcome=true;welcomeAudio.src=defaultAudioSrc;showNote('Your invite song has not been uploaded. Using the original soundtrack instead.');void tryWelcomeAudio(false);}
  else showNote('Invite song unavailable. You can still open Study Games.');
 });
 // No extra Play Invite Music button: automatically attempt audible playback on load.
@@ -1689,13 +1693,46 @@ function setTrack(index,fromError=false){
  updateControls();
  if(playlistStarted){const p=audio.play();if(p&&p.catch)p.catch(()=>{if(!fromError)handleTrackError();});}
 }
+function nextPlayable(start){
+ for(let step=1;step<=tracks.length;step++){
+  const candidate=(start+step)%tracks.length;
+  if(!failures.has(candidate))return candidate;
+ }
+ return -1;
+}
 function handleTrackError(){
  if(!playlistStarted)return;
- failures.add(selected);
- const nextValid=tracks.findIndex((t,i)=>!failures.has(i));
- if(nextValid<0){playlistStarted=false;status.textContent='No working soundtrack. Add licensed audio or choose a file.';return;}
+ const failedIndex=selected;
+ failures.add(failedIndex);
+ const nextValid=nextPlayable(failedIndex);
+ if(nextValid<0){
+  playlistStarted=false;
+  trackStatus.textContent='No playable audio. Upload a working audio file or check your published music/ folder.';
+  status.textContent='The music could not play.';
+  return;
+ }
  setTrack(nextValid,true);
+ trackStatus.textContent='Skipped missing file: '+tracks[failedIndex].label+' • now trying '+tracks[nextValid].label;
 }
+// Check the real song files BEFORE trying to play them, so an absent GitHub upload
+// cannot silence the whole site or cause an endless 404 rotation.
+async function checkPublishedSongs(){
+ const remote=tracks.map((track,index)=>({track,index})).filter(x=>!x.track.src.startsWith('data:')&&!x.track.src.startsWith('blob:'));
+ await Promise.all(remote.map(async({track,index})=>{
+  try{
+   const response=await fetch(track.src,{method:'HEAD',cache:'no-store'});
+   const type=(response.headers.get('content-type')||'').toLowerCase();
+   if(!response.ok||type.includes('text/html'))failures.add(index);
+   else failures.delete(index);
+  }catch(err){failures.add(index);}
+ }));
+ // Keep any manual song selection, including an owner's local file preview.
+ if(!opening&&selected===tracks.length-1){
+   if(!failures.has(0))setTrack(0);
+   else {setTrack(tracks.length-1);trackStatus.textContent='The recorded song is not uploaded yet. Playing the built-in soundtrack until you add music/main-screen-song.mp3.';}
+ }
+}
+
 audio.addEventListener('error',handleTrackError);
 async function startPlaylist(userGesture=false){
  if(userGesture){initGain();if(gainCtx&&gainCtx.state!=='running')await gainCtx.resume().catch(()=>{});}
@@ -1765,18 +1802,20 @@ audio.addEventListener('ended',()=>{
  if(!playlistStarted)return;failures.clear();
  if(premiumMusic&&repeatSong){audio.currentTime=0;void audio.play().catch(()=>handleTrackError());return;}
  if(premiumMusic&&shuffleSongs){let n=Math.floor(Math.random()*tracks.length);if(n===selected)n=(n+1)%tracks.length;setTrack(n);}
- else setTrack(selected+1);
+ else {const n=nextPlayable(selected);if(n<0){playlistStarted=false;updateControls();}else setTrack(n);}
 });
 audio.addEventListener('play',updateControls);audio.addEventListener('pause',updateControls);
 fileInput.addEventListener('change',()=>{
  if(!premiumMusic)return;const f=fileInput.files&&fileInput.files[0];if(!f)return;
- if(!f.type.startsWith('audio/')){trackStatus.textContent='Please choose an audio file.';return;}
- const url=URL.createObjectURL(f);localUrls.push(url);tracks[selected].src=url;failures.delete(selected);currentSrc='';setTrack(selected);
+ if(!(f.type.startsWith('audio/')||f.type==='video/mp4'||/\.(mp3|m4a|wav|mp4)$/i.test(f.name))){trackStatus.textContent='Please choose an MP3/M4A/WAV file or an MP4 recording.';return;}
+ const url=URL.createObjectURL(f);localUrls.push(url);
+ tracks[0].src=url;failures.delete(0);currentSrc='';setTrack(0);
  if(!playlistStarted){void startPlaylist(true)}
- trackStatus.textContent='Local preview: '+f.name+' • only on this device until you publish a licensed track.';
+ trackStatus.textContent='Playing your main-screen song preview: '+f.name+' • only on this device until you publish an authorized audio file.';
 });
 window.addEventListener('pagehide',()=>{localUrls.forEach(URL.revokeObjectURL);});
-setTrack(0);updateControls();
+setTrack(tracks.length-1);updateControls();
+void checkPublishedSongs();
 window.setTimeout(()=>{if(!opening)welcome.focus({preventScroll:true});},100);
 })();
 </script>
