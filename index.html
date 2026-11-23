@@ -657,6 +657,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <style id="sg-red-audio-iphone-fix">
 #sgWelcomeMusicNote{font-weight:900!important;color:#100309!important;max-width:44rem!important;font-size:clamp(14px,2.7vw,19px)!important;line-height:1.5!important;text-align:center!important}
 </style>
+<meta name="study-games-playlist-fix" content="local-next-previous-v4">
 </head>
 <body>
 <div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-softener"></div><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
@@ -714,7 +715,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </div>
   <label for="musicFile">💎 Add songs from Files to your personal playlist (MP3, M4A, WAV or MP4)</label>
   <input id="musicFile" class="music-file" type="file" multiple accept="audio/*,video/mp4,.mp3,.m4a,.wav,.mp4" aria-label="Add songs from Files to your personal playlist">
-  <p id="sgPersonalMusicNote" role="status" style="font-size:12px;line-height:1.5;color:#cfdeef;margin:0">Choose both of your screen recordings together. These personal songs stay in this browser and are not uploaded to the public website.</p>
+  <p id="sgPersonalMusicNote" role="status" style="font-size:12px;line-height:1.5;color:#cfdeef;margin:0">🎧 Select BOTH recordings from Files. Once added, Next and Previous cycle between them and play each song automatically. The files stay on your device.</p>
   <button id="sgRemovePersonalSong" type="button" style="border:1px solid #5473a0;color:#fff;background:#1a3556;min-height:40px;border-radius:10px;font-weight:800;cursor:pointer" disabled>Remove selected personal song</button>
   <p class="music-custom-note">This previews your song in this browser. To make it play for all visitors, upload audio you have permission to share as music/main-screen-song.mp3 to GitHub. Phones may require a tap before sound can play.</p>
 </div>
@@ -1716,13 +1717,14 @@ function addPersonalTrack(record){
  if(tracks.some(t=>t.personal&&t.id===record.id))return tracks.findIndex(t=>t.personal&&t.id===record.id);
  const url=URL.createObjectURL(record.file);localUrls.push(url);
  const idx=tracks.length;
- tracks.push({label:'📁 '+record.name,src:url,personal:true,id:record.id});
- const option=document.createElement('option');option.value=String(idx);option.textContent='📁 '+record.name+' (Files)';select.append(option);
+ const friendlyName=/17-29-55/.test(record.name)?'Song 1 — your recording (1:51)':/22-49-46/.test(record.name)?'Song 2 — your recording (3:26)':record.name;
+ tracks.push({label:'🎧 '+friendlyName,src:url,personal:true,id:record.id});
+ const option=document.createElement('option');option.value=String(idx);option.textContent='🎧 '+friendlyName+' (Files)';select.append(option);
  return idx;
 }
 async function restorePersonalTracks(){
  try{const records=await personalRecords();for(const r of records.sort((a,b)=>a.created-b.created))addPersonalTrack(r);
-  if(records.length)personalMusicNote.textContent=records.length+' personal song(s) restored from this browser. Use the playlist menu to play them.';
+  if(records.length)personalMusicNote.textContent=records.length+' saved recording(s) loaded. The Next and Previous buttons now cycle through your Files songs.';
  }catch(e){personalMusicNote.textContent='Personal songs play for this visit, but saving is unavailable in this browser.';}
  updateControls();
 }
@@ -1777,15 +1779,50 @@ function updateControls(){
  prompt.hidden=!introFinished||!audio.paused;
  introSound.hidden=true;
 }
+let trackRequestId=0;
 function setTrack(index,fromError=false){
+ if(!tracks.length)return;
+ const myRequest=++trackRequestId;
  selected=((index%tracks.length)+tracks.length)%tracks.length;
  select.value=String(selected);
  const src=tracks[selected].src;
  if(currentSrc!==src){currentSrc=src;audio.pause();audio.src=src;audio.load();}
  updateControls();
- if(playlistStarted){const p=audio.play();if(p&&p.catch)p.catch(()=>{if(!fromError)handleTrackError();});}
+ if(playlistStarted){
+  const p=audio.play();
+  if(p&&p.catch)p.catch(err=>{
+   if(myRequest!==trackRequestId)return; // Next was tapped again before this finished.
+   if(err?.name==='NotAllowedError'){
+    trackStatus.textContent='Tap Play music to enable sound on this device.';
+   } else if(!fromError && audio.error){handleTrackError();}
+   else if(!fromError){trackStatus.textContent='Tap Play music if this recording did not start.';}
+  });
+ }
+}
+// If recordings from Files exist, Previous/Next always navigate THOSE songs,
+// instead of visiting empty placeholder tracks listed elsewhere in the playlist.
+function personalSongIndexes(){
+ return tracks.map((track,index)=>track.personal&&!failures.has(index)?index:-1).filter(index=>index>=0);
+}
+function relativeTrack(direction){
+ const personal=personalSongIndexes();
+ if(personal.length){
+  const pos=personal.indexOf(selected);
+  if(pos<0)return direction>0?personal[0]:personal[personal.length-1];
+  return personal[(pos+direction+personal.length)%personal.length];
+ }
+ for(let step=1;step<=tracks.length;step++){
+  const index=((selected+direction*step)%tracks.length+tracks.length)%tracks.length;
+  if(!failures.has(index))return index;
+ }
+ return -1;
 }
 function nextPlayable(start){
+ const personal=personalSongIndexes();
+ if(personal.length){
+  const pos=personal.indexOf(start);
+  return pos<0?personal[0]:personal[(pos+1)%personal.length];
+ }
  for(let step=1;step<=tracks.length;step++){
   const candidate=(start+step)%tracks.length;
   if(!failures.has(candidate))return candidate;
@@ -1819,7 +1856,7 @@ async function checkPublishedSongs(){
   }catch(err){failures.add(index);}
  }));
  // Keep any manual song selection, including an owner's local file preview.
- if(!opening&&selected===tracks.length-1){
+ if(!opening&&tracks[selected]?.label==='Original Study Games soundtrack'){
    if(!failures.has(0))setTrack(0);
    else {setTrack(tracks.length-1);trackStatus.textContent='The recorded song is not uploaded yet. Playing the built-in soundtrack until you add music/main-screen-song.mp3.';}
  }
@@ -1900,8 +1937,8 @@ toggle.addEventListener('click',()=>{
 });
 slider.addEventListener('input',()=>{volumeTarget=Number(slider.value)/100;if(!musicMuted&&!audio.paused)fadeMusic(playlistAudible?volumeTarget:0,300)});
 select.addEventListener('change',()=>{if(!premiumMusic){select.value=String(selected);return;}failures.delete(Number(select.value));setTrack(Number(select.value));});
-prev.addEventListener('click',()=>{if(!premiumMusic)return;failures.clear();setTrack(selected-1);});
-next.addEventListener('click',()=>{if(!premiumMusic)return;failures.clear();setTrack(selected+1);});
+prev.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(-1);if(target>=0){failures.delete(target);setTrack(target);}});
+next.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(1);if(target>=0){failures.delete(target);setTrack(target);}});
 shuffleBtn.addEventListener('click',()=>{if(!premiumMusic)return;shuffleSongs=!shuffleSongs;shuffleBtn.textContent='🔀 Shuffle: '+(shuffleSongs?'On':'Off');shuffleBtn.setAttribute('aria-pressed',String(shuffleSongs));});
 repeatBtn.addEventListener('click',()=>{if(!premiumMusic)return;repeatSong=!repeatSong;repeatBtn.textContent='🔂 Repeat song: '+(repeatSong?'On':'Off');repeatBtn.setAttribute('aria-pressed',String(repeatSong));});
 window.addEventListener('sg-premium-change',event=>{
@@ -1910,10 +1947,19 @@ window.addEventListener('sg-premium-change',event=>{
  syncMusicTier();
 });
 audio.addEventListener('ended',()=>{
- if(!playlistStarted)return;failures.clear();
+ if(!playlistStarted)return;
  if(premiumMusic&&repeatSong){audio.currentTime=0;void audio.play().catch(()=>handleTrackError());return;}
- if(premiumMusic&&shuffleSongs){let n=Math.floor(Math.random()*tracks.length);if(n===selected)n=(n+1)%tracks.length;setTrack(n);}
- else {const n=nextPlayable(selected);if(n<0){playlistStarted=false;updateControls();}else setTrack(n);}
+ const personal=personalSongIndexes();
+ if(premiumMusic&&shuffleSongs){
+  const eligible=personal.length?personal:tracks.map((t,i)=>!failures.has(i)?i:-1).filter(i=>i>=0);
+  const others=eligible.filter(i=>i!==selected);
+  const candidates=others.length?others:eligible;
+  if(candidates.length)setTrack(candidates[Math.floor(Math.random()*candidates.length)]);
+  else {playlistStarted=false;updateControls();}
+ } else {
+  const n=nextPlayable(selected);
+  if(n<0){playlistStarted=false;updateControls();}else setTrack(n);
+ }
 });
 audio.addEventListener('play',updateControls);audio.addEventListener('pause',updateControls);
  fileInput.addEventListener('change',async()=>{
@@ -1933,8 +1979,8 @@ audio.addEventListener('play',updateControls);audio.addEventListener('pause',upd
   }
   fileInput.value='';
   if(!added){personalMusicNote.textContent='Choose MP3, M4A, WAV or MP4 audio recordings.';return;}
-  personalMusicNote.textContent=added+' song(s) added to your playlist. '+saved+' saved for return visits on this browser. Files are not uploaded to the website.';
-  trackStatus.textContent='🎵 Added '+added+' personal song(s). Choose them from the playlist dropdown.';
+  personalMusicNote.textContent='🎧 '+added+' recording(s) added. Next ▶▶ and Previous ◀◀ will now switch between your Files songs; '+saved+' saved for future visits on this device.';
+  trackStatus.textContent='🎵 Your Files playlist is ready. Press Next to hear the other recording.';
  });
  removePersonalSong.addEventListener('click',async()=>{
   if(!premiumMusic||!tracks[selected]?.personal)return;
