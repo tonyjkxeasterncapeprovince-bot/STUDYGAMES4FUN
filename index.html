@@ -706,17 +706,43 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </style>
 
 <style id="sg-yt-song-style">
-#sgYTEmbedZone{background:#0b1e30;border:1px solid #395d89;padding:18px;border-radius:18px;margin:0 0 24px}
-#sgYTEmbedZone h3{font-size:1.25rem;color:#f2f6ff;margin:0 0 8px}
-#sgYTEmbedZone .sg-yt-detail,#sgYTEmbedZone .sg-yt-fallback{font-size:14px;line-height:1.6;color:#cfdeee}
-#sgYTEmbedZone .sg-yt-controls{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-#sgYTEmbedZone .sg-yt-controls button{padding:10px 12px;min-height:44px;background:#1e3557;color:#f2f7ff;border:1px solid #53779e;border-radius:12px;font:inherit;font-weight:750;cursor:pointer}
-#sgYTEmbedZone .sg-yt-controls button.sg-yt-selected{color:#092333;background:#91eadc;border-color:#91eadc}
-#sgYTEmbedZone .sg-yt-now-playing{font-weight:750;color:#e8f8ff;margin:0 0 10px}
-#sgYTEmbedZone .sg-yt-frame-wrap{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:13px;background:#000;}
-#sgYTEmbedZone iframe{border:0;display:block;width:100%;height:100%;}
-#sgYTEmbedZone a{color:#9beaff;text-decoration:underline}
-@media(max-width:540px){#sgYTEmbedZone{padding:12px}#sgYTEmbedZone .sg-yt-controls button{flex:1 1 45%}}
+/* Official YouTube music view: source remains visible and controlled by YouTube. */
+#sgYTEmbedZone{--sg-accent:#79f1d5;--sg-sub:#acbad6;color:#f6f8ff;background:radial-gradient(circle at 94% 4%,#16415a 0,transparent 36%),linear-gradient(153deg,#101d32,#07101e);border:1px solid #395772;border-radius:24px;padding:clamp(16px,3.5vw,30px);margin:0 0 25px;box-shadow:0 16px 44px #0005}
+#sgYTEmbedZone *{box-sizing:border-box}
+#sgYTEmbedZone .sg-music-kicker{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:#98f5db;font-weight:900;margin:0 0 7px}
+#sgYTEmbedZone .sg-music-title{font-size:clamp(26px,4.2vw,42px);line-height:1.13;letter-spacing:-.04em;color:#fff;font-weight:900;margin:0 0 8px}
+#sgYTEmbedZone .sg-music-subtitle{color:#bfccdf;max-width:64ch;margin:0 0 22px;font-size:14px;line-height:1.65}
+#sgYTEmbedZone .sg-music-layout{display:grid;grid-template-columns:minmax(240px,.85fr) minmax(300px,1.3fr);gap:18px;align-items:stretch}
+#sgYTEmbedZone .sg-music-sidebar,#sgYTEmbedZone .sg-music-player{border:1px solid #36516b;border-radius:18px;background:#0f1d30;padding:17px;min-width:0}
+#sgYTEmbedZone .sg-music-current{display:flex;align-items:center;gap:15px;margin-bottom:18px}
+#sgYTEmbedZone .sg-music-cover{display:grid;place-items:center;flex:none;width:94px;height:94px;border-radius:13px;background:radial-gradient(circle,#385b75 0 10%,#081827 11% 15%,#467a9b 16% 17%,#17263c 18% 38%,#253c59 39% 42%,#111b2d 43% 100%);border:1px solid #5c8caa;color:#96ebd8;font-size:37px;text-shadow:0 2px 10px #6affee;box-shadow:0 7px 22px #0008}
+#sgYTEmbedZone .sg-music-track-name{font-size:clamp(17px,2.6vw,23px);line-height:1.15;font-weight:900;margin:5px 0 6px;color:#fff;overflow-wrap:anywhere}
+#sgYTEmbedZone .sg-music-meta{font-size:12px;color:#a9bed3;line-height:1.45;margin:0}
+#sgYTEmbedZone .sg-music-current-label{font-size:11px;font-weight:800;color:#8ef5d2;letter-spacing:.13em;text-transform:uppercase}
+#sgYTEmbedZone .sg-music-track-list{display:grid;gap:9px}
+#sgYTEmbedZone .sg-music-track{width:100%;display:flex;text-align:left;align-items:center;gap:10px;border:1px solid #37536c;border-radius:12px;padding:10px 12px;background:#152842;color:#f0f7ff;cursor:pointer;min-height:61px;font:inherit;transition:background .15s,border .15s}
+#sgYTEmbedZone .sg-music-track[aria-pressed="true"]{border-color:#84e6cc;background:#153947}
+#sgYTEmbedZone .sg-music-track:focus-visible,#sgYTEmbedZone .sg-music-nav button:focus-visible{outline:3px solid #a6f6df;outline-offset:3px}
+#sgYTEmbedZone .sg-music-number{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#214260;color:#bdf6e8;flex:none;font-weight:900;font-size:13px}
+#sgYTEmbedZone .sg-music-track-label{font-weight:850;font-size:14px;line-height:1.3}
+#sgYTEmbedZone .sg-music-track-desc{font-size:11px;color:#aac0d5;display:block;margin-top:2px}
+#sgYTEmbedZone .sg-music-active-mark{margin-left:auto;color:#a9f4d7;font-size:18px}
+#sgYTEmbedZone .sg-music-nav{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+#sgYTEmbedZone .sg-music-nav button{flex:1 1 100px;background:#203c5c;border:1px solid #5e819e;color:#fff;border-radius:12px;padding:12px 10px;cursor:pointer;min-height:45px;font:inherit;font-weight:850;font-size:13px}
+#sgYTEmbedZone .sg-music-nav button.sg-music-play{background:linear-gradient(115deg,#80ead2,#64c8db);border-color:#9af5db;color:#082335}
+#sgYTEmbedZone .sg-music-player-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+#sgYTEmbedZone .sg-music-player-heading{font-size:14px;font-weight:900;color:#f0fbff;margin:0}
+#sgYTEmbedZone .sg-music-youtube-tag{font-size:11px;font-weight:750;color:#fcd5d5;background:#5a1b27;border-radius:100px;padding:6px 10px;white-space:nowrap}
+#sgYTEmbedZone .sg-yt-frame-wrap{aspect-ratio:16/9;width:100%;background:#000;border-radius:12px;overflow:hidden;border:1px solid #365269}
+#sgYTEmbedZone .sg-yt-frame-wrap iframe{border:0;width:100%;height:100%;display:block}
+#sgYTEmbedZone .sg-music-player-foot{color:#b9cce3;font-size:13px;line-height:1.6;margin:12px 0 0}
+#sgYTEmbedZone .sg-music-status{font-size:12px;color:#91e6cc;line-height:1.5;margin:12px 0 0;min-height:18px}
+#sgYTEmbedZone a{color:#9de5ff;text-decoration:underline;text-underline-offset:2px}
+#sgRecoveredSongs details.sg-archive-files{background:#111e32;border:1px solid #38516b;border-radius:16px;padding:14px 16px;margin-top:20px}
+#sgRecoveredSongs details.sg-archive-files summary{cursor:pointer;font-size:14px;font-weight:850;color:#b6e8f0;padding:5px}
+#sgRecoveredSongs details.sg-archive-files[open] summary{margin-bottom:12px}
+@media(max-width:770px){#sgYTEmbedZone .sg-music-layout{grid-template-columns:1fr}#sgYTEmbedZone .sg-music-sidebar,#sgYTEmbedZone .sg-music-player{padding:14px}}
+@media(max-width:420px){#sgYTEmbedZone .sg-music-cover{height:79px;width:79px}#sgYTEmbedZone .sg-music-nav button{min-width:0;flex:1 1 30%;font-size:12px;padding:11px 7px}}
 </style>
 
 </head>
@@ -801,7 +827,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </div></div></div></div></header><div class="menu-backdrop" hidden="" id="menuBackdrop"></div><nav aria-label="Study Games navigation" class="site-menu" hidden="" id="siteMenu"><div class="menu-head"><strong>Explore Study Games</strong><button aria-label="Close menu" class="menu-close" id="menuClose" type="button">✕</button></div><button class="menu-link" data-nav="home" type="button"><span aria-hidden="true" class="menu-link-icon">⌂</span> Home — Learning &amp; progress</button><button class="menu-link" type="button" data-nav="arcade">🎮 Arcade &amp; multiplayer</button>
 <button class="menu-link" type="button" data-nav="challenges">🏆 Daily challenges &amp; XP</button>
 <button class="menu-link" type="button" data-nav="premium">💎 Premium: Games &amp; Music</button>
-<button class="menu-link" type="button" data-nav="recovered">🎧 Songs That Didn’t Work on the Music Page</button>
+<button class="menu-link" type="button" data-nav="recovered">🎧 YouTube Music · Digger Funk + Shape of You</button>
 <button class="menu-link" data-nav="videos" type="button"><span aria-hidden="true" class="menu-link-icon">▶</span> Video Library</button><button class="menu-link channel-link" data-nav="channel" type="button"><span aria-hidden="true" class="menu-link-icon">📺</span><span>TonyJKX Eastern Cape Province <strong class="sub-tag">pls sub</strong></span><span aria-hidden="true">›</span></button><button class="menu-link" data-nav="support" type="button"><span aria-hidden="true" class="menu-link-icon">💛</span> Donate &amp; Redeem Premium</button><button class="menu-link" data-nav="tabs" type="button"><span aria-hidden="true" class="menu-link-icon">▣</span> Website tabs</button><button class="menu-link" data-nav="popular" type="button"><span aria-hidden="true" class="menu-link-icon">🌐</span> Popular website links</button><button class="menu-link" data-nav="saved" type="button"><span aria-hidden="true" class="menu-link-icon">☆</span> My saved links</button><button class="menu-link" data-nav="lab" type="button"><span aria-hidden="true" class="menu-link-icon">▧</span> Screen Capture Lab</button><p class="menu-footnote">Websites follow their own embedding rules and your device’s normal network restrictions.</p></nav>
 <main>
 
@@ -925,26 +951,46 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 
 <section id="sgRecoveredSongs" data-screen="recovered" hidden aria-labelledby="sgRecoveredHeading" tabindex="-1">
  <p style="margin:0 0 10px;font-size:12px;font-weight:900;letter-spacing:.14em;color:#92efde">🎧 STUDY GAMES • REBUILT PLAYBACK</p>
- <h2 class="sg-recover-title" id="sgRecoveredHeading">Songs That Didn’t Work on the Music Page</h2>
- <p class="sg-recover-intro">A fresh player for your two screen recordings. To listen privately, choose the two MP4 recordings from Files. If you publish authorized tracks at the two preset website paths, they load for everyone automatically. Each recording has its own player—no broken playlist links or Premium requirement.</p>
+ <h2 class="sg-recover-title" id="sgRecoveredHeading">🎵 Study Games Music</h2>
+ <p class="sg-recover-intro">Digger Funk and Shape of You Hardtekk, in one music player with official visible YouTube videos. No Files import required for these YouTube links.</p>
 
-<!-- Official YouTube players: video/audio is streamed by YouTube, not copied to Study Games. -->
-<div id="sgYTEmbedZone" class="sg-yt-zone" aria-label="Two YouTube songs">
-  <h3>▶️ YouTube songs — ready to try</h3>
-  <p class="sg-yt-detail">Choose a song below and press play in the YouTube player. These are the original YouTube links you sent; no local Files import is needed. Video owners may block playback on other websites.</p>
-  <div class="sg-yt-controls" aria-label="YouTube song selection">
-    <button type="button" id="sgYTChoose0" class="sg-yt-selected" aria-pressed="true">🎵 Digger Funk</button>
-    <button type="button" id="sgYTChoose1" aria-pressed="false">🎵 Shape of You Hardtekk</button>
-    <button type="button" id="sgYTPrev">⏮ Previous video</button>
-    <button type="button" id="sgYTNext">Next video ⏭</button>
+<!-- Official YouTube player: publicly accessible music is streamed by YouTube. -->
+<div id="sgYTEmbedZone" aria-label="Study Games custom YouTube music player">
+ <p class="sg-music-kicker">🎧 Study Games Radio · Two-track collection</p>
+ <h3 class="sg-music-title">Your music. Your vibe.</h3>
+ <p class="sg-music-subtitle">Pick a song, skip tracks, and enjoy the video right here in Study Games. The visible YouTube player handles playback, so you never need to import recordings from Files.</p>
+ <div class="sg-music-layout">
+  <div class="sg-music-sidebar">
+   <div class="sg-music-current">
+    <span id="sgYTArtwork" class="sg-music-cover" role="img" aria-label="Music record artwork">♫</span>
+    <div>
+     <span class="sg-music-current-label">Now selected</span>
+     <h4 id="sgYTNowPlaying" class="sg-music-track-name" aria-live="polite">Digger Funk</h4>
+     <p id="sgYTNowMeta" class="sg-music-meta">YouTube · Song 1 of 2</p>
+    </div>
+   </div>
+   <div class="sg-music-track-list" aria-label="Choose a YouTube song">
+    <button type="button" id="sgYTChoose0" class="sg-music-track" aria-pressed="true"><span class="sg-music-number">01</span><span><span class="sg-music-track-label">Digger Funk</span><span class="sg-music-track-desc">YouTube music video</span></span><span class="sg-music-active-mark" aria-hidden="true">♫</span></button>
+    <button type="button" id="sgYTChoose1" class="sg-music-track" aria-pressed="false"><span class="sg-music-number">02</span><span><span class="sg-music-track-label">Shape of You Hardtekk</span><span class="sg-music-track-desc">GoldZoro · YouTube</span></span><span class="sg-music-active-mark" aria-hidden="true" hidden>♫</span></button>
+   </div>
+   <div class="sg-music-nav" aria-label="Music track navigation">
+    <button type="button" id="sgYTPrev" aria-label="Previous song">⏮ Previous</button>
+    <button type="button" class="sg-music-play" id="sgYTPlay" aria-label="Start selected song in YouTube player">▶ Play</button>
+    <button type="button" id="sgYTNext" aria-label="Next song">Next ⏭</button>
+   </div>
+   <p id="sgYTStatus" class="sg-music-status" role="status" aria-live="polite">Ready · Tap ▶ inside the YouTube video to listen.</p>
   </div>
-  <p id="sgYTNowPlaying" class="sg-yt-now-playing" aria-live="polite">Selected: Digger Funk</p>
-  <div class="sg-yt-frame-wrap">
-    <iframe id="sgYTPlayer" src="https://www.youtube-nocookie.com/embed/LwZ0IbDcIac?playsinline=1&amp;rel=0" title="Digger Funk YouTube player" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <div class="sg-music-player">
+   <div class="sg-music-player-top"><p class="sg-music-player-heading">Official YouTube player</p><span class="sg-music-youtube-tag">▶ YouTube</span></div>
+   <div class="sg-yt-frame-wrap">
+    <iframe id="sgYTPlayer" src="https://www.youtube-nocookie.com/embed/LwZ0IbDcIac?playsinline=1&amp;rel=0" title="Digger Funk — official YouTube video player" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+   </div>
+   <p class="sg-music-player-foot">Use the ▶ and volume controls inside the video if your phone blocks autoplay. If YouTube says the video can't be embedded, <a id="sgYTWatchLink" href="https://www.youtube.com/watch?v=LwZ0IbDcIac" target="_blank" rel="noopener noreferrer">watch this song on YouTube</a>.</p>
   </div>
-  <p class="sg-yt-fallback">If the player says video unavailable or embedding is disabled, use <a id="sgYTWatchLink" href="https://www.youtube.com/watch?v=LwZ0IbDcIac" target="_blank" rel="noopener noreferrer">Watch this song on YouTube</a>.</p>
+ </div>
 </div>
 
+ <details class="sg-archive-files"><summary>📂 Optional: Your personal Files recordings</summary><p class="sg-recover-intro">These local players are separate from the official YouTube music above.</p>
  <div class="sg-recover-tools">
   <button id="sgRecoverBothBtn" type="button" class="sg-recover-primary">📂 Add both recordings from Files</button>
   <button id="sgRecoverPrev" type="button" class="sg-recover-secondary">⏮ Previous</button>
@@ -969,6 +1015,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
  </div>
  <p id="sgRecoverStatus" class="sg-recover-status" role="status" aria-live="polite">Choose both recordings to start. After that, use the Play or Next buttons.</p>
  <p class="sg-recover-foot"><strong>On your device:</strong> Files you pick are played privately in your browser. The site tries to remember them on this device; if Safari clears storage, pick them again. Playing the recording is supported without publishing it to everyone. To share a song publicly, you need permission to distribute it and a public upload on your website.</p>
+ </details>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
   <div class="sg-head"><div><span class="sg-badge">💛 SUPPORT THE PROJECT</span><h2 id="sgSupportTitle">Donations & Premium</h2><p>Help us build more games, challenges, and new multiplayer features.</p></div><span class="sg-badge">Secure checkout required</span></div>
@@ -3282,34 +3329,42 @@ void start(key);
 
 <script id="sg-yt-song-switcher">
 (() => {
-  const tracks=[
-    {name:'Digger Funk',id:'LwZ0IbDcIac'},
-    {name:'Shape of You Hardtekk',id:'1J01N9hv_GY'}
-  ];
-  const player=document.getElementById('sgYTPlayer');
-  const watch=document.getElementById('sgYTWatchLink');
-  const label=document.getElementById('sgYTNowPlaying');
-  const choices=[document.getElementById('sgYTChoose0'),document.getElementById('sgYTChoose1')];
-  if(!player||!watch||!label||choices.some(x=>!x))return;
-  let index=0;
-  function choose(next) {
-    index=(next+tracks.length)%tracks.length;
-    const track=tracks[index];
-    // Avoid playing two audio sources at once; local Files recordings are separate from this panel.
-    for(const p of document.querySelectorAll('#sgRecoveredSongs video')){try{p.pause();}catch(e){}}
-    player.title=track.name+' YouTube player';
-    player.src='https://www.youtube-nocookie.com/embed/'+track.id+'?playsinline=1&rel=0&autoplay=1';
-    watch.href='https://www.youtube.com/watch?v='+track.id;
-    label.textContent='Selected: '+track.name+' — if autoplay is blocked, tap Play in the YouTube player';
-    choices.forEach((button,i)=>{
-      const selected=(i===index);
-      button.classList.toggle('sg-yt-selected',selected);
-      button.setAttribute('aria-pressed',String(selected));
-    });
-  }
-  choices.forEach((button,i)=>button.addEventListener('click',()=>choose(i)));
-  document.getElementById('sgYTPrev').addEventListener('click',()=>choose(index-1));
-  document.getElementById('sgYTNext').addEventListener('click',()=>choose(index+1));
+ const tracks=[
+  {name:'Digger Funk',id:'LwZ0IbDcIac',note:'YouTube · Song 1 of 2'},
+  {name:'Shape of You Hardtekk',id:'1J01N9hv_GY',note:'GoldZoro · Song 2 of 2'}
+ ];
+ const get=id=>document.getElementById(id);
+ const player=get('sgYTPlayer'), watch=get('sgYTWatchLink'), artwork=get('sgYTArtwork');
+ const label=get('sgYTNowPlaying'), meta=get('sgYTNowMeta'),status=get('sgYTStatus');
+ const choices=[get('sgYTChoose0'),get('sgYTChoose1')];
+ const prev=get('sgYTPrev'),next=get('sgYTNext'),play=get('sgYTPlay');
+ if(!player||!watch||!artwork||!label||!meta||!status||!prev||!next||!play||choices.some(x=>!x)) return;
+ let index=0;
+ function showSong(i,attemptAutoplay=false){
+  index=((i%tracks.length)+tracks.length)%tracks.length;
+  const song=tracks[index];
+  // Stop privately imported local recordings if a YouTube track is chosen.
+  document.querySelectorAll('#sgRecoveredSongs video').forEach(el=>{try{el.pause()}catch(e){}});
+  label.textContent=song.name;
+  meta.textContent=song.note;
+  artwork.textContent=index===0?'♫':'♪';
+  artwork.setAttribute('aria-label','Artwork for '+song.name);
+  watch.href='https://www.youtube.com/watch?v='+song.id;
+  player.title=song.name+' — official YouTube video player';
+  // Replacing the iframe stops the previous video; autoplay may be blocked by iOS.
+  player.src='https://www.youtube-nocookie.com/embed/'+song.id+'?playsinline=1&rel=0'+(attemptAutoplay?'&autoplay=1':'');
+  choices.forEach((button,n)=>{
+   const selected=n===index;
+   button.setAttribute('aria-pressed',String(selected));
+   const mark=button.querySelector('.sg-music-active-mark');
+   if(mark)mark.hidden=!selected;
+  });
+  status.textContent=attemptAutoplay?('Loaded '+song.name+'. If sound does not begin, tap ▶ inside the YouTube video.'):('Ready: '+song.name+'. Tap ▶ inside the YouTube video.');
+ }
+ choices.forEach((b,n)=>b.addEventListener('click',()=>showSong(n,true)));
+ prev.addEventListener('click',()=>showSong(index-1,true));
+ next.addEventListener('click',()=>showSong(index+1,true));
+ play.addEventListener('click',()=>showSong(index,true));
 })();
 </script>
 
