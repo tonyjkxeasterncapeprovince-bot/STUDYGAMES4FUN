@@ -682,6 +682,43 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 
 <meta name="study-games-playlist-fix" content="local-next-previous-v4">
 <meta name="study-games-build" content="ai-helper-plus-ios-mp4-v1">
+
+<style id="sg-recovered-songs-style">
+#sgRecoveredSongs{max-width:980px;margin:18px auto 70px;color:#e9f1ff;padding:clamp(16px,3vw,26px);border-radius:24px;background:linear-gradient(145deg,#152744,#0c1528);border:1px solid #395375;box-shadow:0 10px 40px #0004}
+#sgRecoveredSongs[hidden]{display:none!important}
+#sgRecoveredSongs .sg-recover-title{font-size:clamp(24px,4vw,36px);margin:0 0 8px;line-height:1.15;color:#fff}
+#sgRecoveredSongs .sg-recover-intro{color:#b9cbeb;line-height:1.6;margin:0 0 20px}
+#sgRecoveredSongs .sg-recover-primary,#sgRecoveredSongs .sg-recover-secondary{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-weight:800;padding:12px 15px;min-height:46px;border-radius:13px;color:#071b2b;background:#89ecdf;border:0}
+#sgRecoveredSongs .sg-recover-secondary{background:#1d3251;border:1px solid #567ba6;color:#eff6ff}
+#sgRecoveredSongs button:focus-visible{outline:3px solid #ffe67b;outline-offset:3px}
+#sgRecoveredSongs .sg-recover-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+#sgRecoveredSongs .sg-recover-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:15px 0}
+#sgRecoveredSongs .sg-recover-card{border:1px solid #395d89;border-radius:18px;padding:16px;background:#111f36;min-width:0}
+#sgRecoveredSongs .sg-recover-card.active{border-color:#82ead3;box-shadow:0 0 0 2px #82ead334}
+#sgRecoveredSongs h3{margin:0 0 8px;color:#effaff}
+#sgRecoveredSongs .sg-recover-file{color:#b7c8df;font-size:13px;word-break:break-word;min-height:40px}
+#sgRecoveredSongs video{display:block;width:100%;aspect-ratio:16/9;max-height:200px;background:#030912;border:1px solid #496c9d;border-radius:12px;margin:12px 0}
+#sgRecoveredSongs .sg-recover-controls{display:flex;gap:8px;flex-wrap:wrap}
+#sgRecoveredSongs .sg-recover-status{background:#091527;padding:13px 15px;border-radius:11px;border:1px solid #304d70;color:#bfffea;margin-top:12px;min-height:48px;line-height:1.5}
+#sgRecoveredSongs .sg-recover-foot{font-size:13px;color:#b9c7db;line-height:1.6;margin-top:15px}
+#sgRecoveredSongs .sg-recover-foot strong{color:#fff}
+@media(max-width:730px){#sgRecoveredSongs .sg-recover-grid{grid-template-columns:1fr}#sgRecoveredSongs .sg-recover-tools button{flex:1}}
+</style>
+
+<style id="sg-yt-song-style">
+#sgYTEmbedZone{background:#0b1e30;border:1px solid #395d89;padding:18px;border-radius:18px;margin:0 0 24px}
+#sgYTEmbedZone h3{font-size:1.25rem;color:#f2f6ff;margin:0 0 8px}
+#sgYTEmbedZone .sg-yt-detail,#sgYTEmbedZone .sg-yt-fallback{font-size:14px;line-height:1.6;color:#cfdeee}
+#sgYTEmbedZone .sg-yt-controls{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+#sgYTEmbedZone .sg-yt-controls button{padding:10px 12px;min-height:44px;background:#1e3557;color:#f2f7ff;border:1px solid #53779e;border-radius:12px;font:inherit;font-weight:750;cursor:pointer}
+#sgYTEmbedZone .sg-yt-controls button.sg-yt-selected{color:#092333;background:#91eadc;border-color:#91eadc}
+#sgYTEmbedZone .sg-yt-now-playing{font-weight:750;color:#e8f8ff;margin:0 0 10px}
+#sgYTEmbedZone .sg-yt-frame-wrap{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:13px;background:#000;}
+#sgYTEmbedZone iframe{border:0;display:block;width:100%;height:100%;}
+#sgYTEmbedZone a{color:#9beaff;text-decoration:underline}
+@media(max-width:540px){#sgYTEmbedZone{padding:12px}#sgYTEmbedZone .sg-yt-controls button{flex:1 1 45%}}
+</style>
+
 </head>
 <body>
 <div id="sg-depth-overlay" aria-hidden="true"><div id="sg-depth-softener"></div><div id="sg-depth-vignette"></div><div id="sg-depth-slats"></div><div id="sg-depth-frame"></div></div>
@@ -764,6 +801,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </div></div></div></div></header><div class="menu-backdrop" hidden="" id="menuBackdrop"></div><nav aria-label="Study Games navigation" class="site-menu" hidden="" id="siteMenu"><div class="menu-head"><strong>Explore Study Games</strong><button aria-label="Close menu" class="menu-close" id="menuClose" type="button">✕</button></div><button class="menu-link" data-nav="home" type="button"><span aria-hidden="true" class="menu-link-icon">⌂</span> Home — Learning &amp; progress</button><button class="menu-link" type="button" data-nav="arcade">🎮 Arcade &amp; multiplayer</button>
 <button class="menu-link" type="button" data-nav="challenges">🏆 Daily challenges &amp; XP</button>
 <button class="menu-link" type="button" data-nav="premium">💎 Premium: Games &amp; Music</button>
+<button class="menu-link" type="button" data-nav="recovered">🎧 Songs That Didn’t Work on the Music Page</button>
 <button class="menu-link" data-nav="videos" type="button"><span aria-hidden="true" class="menu-link-icon">▶</span> Video Library</button><button class="menu-link channel-link" data-nav="channel" type="button"><span aria-hidden="true" class="menu-link-icon">📺</span><span>TonyJKX Eastern Cape Province <strong class="sub-tag">pls sub</strong></span><span aria-hidden="true">›</span></button><button class="menu-link" data-nav="support" type="button"><span aria-hidden="true" class="menu-link-icon">💛</span> Donate &amp; Redeem Premium</button><button class="menu-link" data-nav="tabs" type="button"><span aria-hidden="true" class="menu-link-icon">▣</span> Website tabs</button><button class="menu-link" data-nav="popular" type="button"><span aria-hidden="true" class="menu-link-icon">🌐</span> Popular website links</button><button class="menu-link" data-nav="saved" type="button"><span aria-hidden="true" class="menu-link-icon">☆</span> My saved links</button><button class="menu-link" data-nav="lab" type="button"><span aria-hidden="true" class="menu-link-icon">▧</span> Screen Capture Lab</button><p class="menu-footnote">Websites follow their own embedding rules and your device’s normal network restrictions.</p></nav>
 <main>
 
@@ -883,6 +921,54 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
  </div>
  <div class="sgx-panel" style="margin-top:16px;padding:17px"><h3 style="margin:0 0 8px">🌐 Online multiplayer — connection needed</h3><p class="sgx-muted" style="margin:0">Games above work with two players sharing one phone or computer. Real-time matches across separate devices need a hosted room/signaling server, moderation and privacy controls. Room codes and remote syncing are not enabled yet; this page does not pretend they work.</p></div>
  </div>
+</section>
+
+<section id="sgRecoveredSongs" data-screen="recovered" hidden aria-labelledby="sgRecoveredHeading" tabindex="-1">
+ <p style="margin:0 0 10px;font-size:12px;font-weight:900;letter-spacing:.14em;color:#92efde">🎧 STUDY GAMES • REBUILT PLAYBACK</p>
+ <h2 class="sg-recover-title" id="sgRecoveredHeading">Songs That Didn’t Work on the Music Page</h2>
+ <p class="sg-recover-intro">A fresh player for your two screen recordings. To listen privately, choose the two MP4 recordings from Files. If you publish authorized tracks at the two preset website paths, they load for everyone automatically. Each recording has its own player—no broken playlist links or Premium requirement.</p>
+
+<!-- Official YouTube players: video/audio is streamed by YouTube, not copied to Study Games. -->
+<div id="sgYTEmbedZone" class="sg-yt-zone" aria-label="Two YouTube songs">
+  <h3>▶️ YouTube songs — ready to try</h3>
+  <p class="sg-yt-detail">Choose a song below and press play in the YouTube player. These are the original YouTube links you sent; no local Files import is needed. Video owners may block playback on other websites.</p>
+  <div class="sg-yt-controls" aria-label="YouTube song selection">
+    <button type="button" id="sgYTChoose0" class="sg-yt-selected" aria-pressed="true">🎵 Digger Funk</button>
+    <button type="button" id="sgYTChoose1" aria-pressed="false">🎵 Shape of You Hardtekk</button>
+    <button type="button" id="sgYTPrev">⏮ Previous video</button>
+    <button type="button" id="sgYTNext">Next video ⏭</button>
+  </div>
+  <p id="sgYTNowPlaying" class="sg-yt-now-playing" aria-live="polite">Selected: Digger Funk</p>
+  <div class="sg-yt-frame-wrap">
+    <iframe id="sgYTPlayer" src="https://www.youtube-nocookie.com/embed/LwZ0IbDcIac?playsinline=1&amp;rel=0" title="Digger Funk YouTube player" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  </div>
+  <p class="sg-yt-fallback">If the player says video unavailable or embedding is disabled, use <a id="sgYTWatchLink" href="https://www.youtube.com/watch?v=LwZ0IbDcIac" target="_blank" rel="noopener noreferrer">Watch this song on YouTube</a>.</p>
+</div>
+
+ <div class="sg-recover-tools">
+  <button id="sgRecoverBothBtn" type="button" class="sg-recover-primary">📂 Add both recordings from Files</button>
+  <button id="sgRecoverPrev" type="button" class="sg-recover-secondary">⏮ Previous</button>
+  <button id="sgRecoverNext" type="button" class="sg-recover-secondary">Next ⏭</button>
+ </div>
+ <input id="sgRecoverBothInput" type="file" accept="audio/*,video/mp4,.mp4,.mp3,.m4a,.wav,.aac" multiple hidden aria-label="Select two audio or MP4 recordings">
+ <div class="sg-recover-grid">
+   <article class="sg-recover-card" id="sgRecoverCard0">
+    <h3>🎵 Recording 1</h3>
+    <p id="sgRecoverName0" class="sg-recover-file">No file selected yet</p>
+    <video id="sgRecoverPlayer0" playsinline webkit-playsinline controls preload="metadata" aria-label="Recording 1 player"></video>
+    <div class="sg-recover-controls"><button id="sgRecoverPick0" type="button" class="sg-recover-secondary">📂 Choose recording 1</button><button id="sgRecoverPlay0" type="button" class="sg-recover-primary">▶ Play 1</button></div>
+    <input id="sgRecoverInput0" type="file" accept="audio/*,video/mp4,.mp4,.mp3,.m4a,.wav,.aac" hidden aria-label="Choose recording one">
+   </article>
+   <article class="sg-recover-card" id="sgRecoverCard1">
+    <h3>🎵 Recording 2</h3>
+    <p id="sgRecoverName1" class="sg-recover-file">No file selected yet</p>
+    <video id="sgRecoverPlayer1" playsinline webkit-playsinline controls preload="metadata" aria-label="Recording 2 player"></video>
+    <div class="sg-recover-controls"><button id="sgRecoverPick1" type="button" class="sg-recover-secondary">📂 Choose recording 2</button><button id="sgRecoverPlay1" type="button" class="sg-recover-primary">▶ Play 2</button></div>
+    <input id="sgRecoverInput1" type="file" accept="audio/*,video/mp4,.mp4,.mp3,.m4a,.wav,.aac" hidden aria-label="Choose recording two">
+   </article>
+ </div>
+ <p id="sgRecoverStatus" class="sg-recover-status" role="status" aria-live="polite">Choose both recordings to start. After that, use the Play or Next buttons.</p>
+ <p class="sg-recover-foot"><strong>On your device:</strong> Files you pick are played privately in your browser. The site tries to remember them on this device; if Safari clears storage, pick them again. Playing the recording is supported without publishing it to everyone. To share a song publicly, you need permission to distribute it and a public upload on your website.</p>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
   <div class="sg-head"><div><span class="sg-badge">💛 SUPPORT THE PROJECT</span><h2 id="sgSupportTitle">Donations & Premium</h2><p>Help us build more games, challenges, and new multiplayer features.</p></div><span class="sg-badge">Secure checkout required</span></div>
@@ -1357,7 +1443,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 <script>
 (()=>{
  'use strict';
- const views={home:['homeHero','sgxHomeDashboard','subjects'],arcade:['arcade','sgxFreeGames'],challenges:['sgxChallenges'],premium:['sgxPremiumSection'],support:['sgSupport'],videos:['mediaCenter'],channel:['creatorChannel'],tabs:['webViewer'],popular:['quickLinks'],saved:['savedLinksSection'],lab:['captureLab']};
+ const views={home:['homeHero','sgxHomeDashboard','subjects'],arcade:['arcade','sgxFreeGames'],challenges:['sgxChallenges'],premium:['sgxPremiumSection'],recovered:['sgRecoveredSongs'],support:['sgSupport'],videos:['mediaCenter'],channel:['creatorChannel'],tabs:['webViewer'],popular:['quickLinks'],saved:['savedLinksSection'],lab:['captureLab']};
  const star=document.getElementById('arcadeStar');
  const menu=document.getElementById('siteMenu'),shade=document.getElementById('menuBackdrop'),trigger=document.getElementById('menuButton'),close=document.getElementById('menuClose');
  const all=new Set(Object.values(views).flat());
@@ -3054,4 +3140,177 @@ void start(key);
  });
 })();
 </script>
+
+<script id="sg-recovered-songs-script">
+(() => {
+ 'use strict';
+ const get = id => document.getElementById(id);
+ const players = [get('sgRecoverPlayer0'), get('sgRecoverPlayer1')];
+ const cards = [get('sgRecoverCard0'), get('sgRecoverCard1')];
+ const names = [get('sgRecoverName0'), get('sgRecoverName1')];
+ const slots = [{file:null,url:null},{file:null,url:null}];
+ const status = get('sgRecoverStatus');
+ const bothPicker = get('sgRecoverBothInput');
+ let active = 0;
+ const message = value => {status.textContent=value;};
+ function pauseOther(index) {
+   players.forEach((player,i)=>{if (i!==index) player.pause();});
+   const oldMusic=get('backgroundMusic');
+   if(oldMusic) oldMusic.pause();
+ }
+ function showActive(index) {
+   active=index;
+   cards.forEach((card,i)=>card.classList.toggle('active',i===active));
+ }
+ function applyFile(index,file) {
+   if(!file) return;
+   const good=/^(audio\/|video\/mp4)/i.test(file.type)||/\.(mp3|mp4|m4a|wav|aac|ogg)$/i.test(file.name);
+   if(!good){message('Choose an audio file or MP4 recording.');return;}
+   const slot=slots[index], player=players[index];
+   player.pause();
+   player.removeAttribute('src'); player.load();
+   if(slot.url && slot.url.startsWith('blob:')) URL.revokeObjectURL(slot.url);
+   slot.file=file;slot.url=URL.createObjectURL(file);
+   player.src=slot.url;
+   player.muted=false;player.defaultMuted=false;player.volume=1;
+   player.load();
+   names[index].textContent=file.name;
+   showActive(index);
+   message('✅ '+file.name+' is loaded in Recording '+(index+1)+'. Tap Play to listen.');
+   saveFile(index,file);
+ }
+ function play(index) {
+   const slot=slots[index];
+   if(!slot.url){message('📂 Recording '+(index+1)+' needs a file first. Tap Choose recording '+(index+1)+'.');return;}
+   showActive(index);
+   pauseOther(index);
+   const player=players[index];
+   player.muted=false;player.defaultMuted=false;player.volume=1;
+   // Call play() in the same button-click event for Safari's media gesture policy.
+   let result;
+   try {result=player.play();} catch(e){message('Playback failed: '+e.message);return;}
+   message('▶ Starting Recording '+(index+1)+'…');
+   if(result&&typeof result.then==='function') result.then(()=>message('🎵 Playing Recording '+(index+1)+' — '+slot.file.name)).catch(e=>message('⚠️ Could not start audio: '+e.message+'. Tap the ▶ control on the video player to try again.'));
+ }
+ function next(delta) {
+   const index=(active+delta+2)%2;
+   if(!slots[index].url){message('📂 Add Recording '+(index+1)+' from Files first, then press Next.');showActive(index);return;}
+   players[active].pause();
+   const nextPlayer=players[index];
+   try {nextPlayer.currentTime=0;}catch(e){}
+   play(index);
+ }
+ get('sgRecoverBothBtn').addEventListener('click',()=>bothPicker.click());
+ bothPicker.addEventListener('change',()=>{
+   const files=Array.from(bothPicker.files||[]).slice(0,2);
+   files.forEach((file,index)=>applyFile(index,file));
+   bothPicker.value='';
+   if(files.length===2) message('✅ Both recordings loaded. Tap ▶ Play 1 or Next ⏭ to hear them.');
+ });
+ for(let i=0;i<2;i++) {
+   const picker=get('sgRecoverInput'+i);
+   get('sgRecoverPick'+i).addEventListener('click',()=>picker.click());
+   picker.addEventListener('change',()=>{const file=picker.files&&picker.files[0];if(file)applyFile(i,file);picker.value='';});
+   get('sgRecoverPlay'+i).addEventListener('click',()=>play(i));
+   players[i].addEventListener('play',()=>{pauseOther(i);showActive(i);});
+   players[i].addEventListener('error',()=>{
+     const p=players[i];const code=p.error&&p.error.code;
+     message('⚠️ Recording '+(i+1)+' could not play (media error '+String(code||'unknown')+'). Try the original MP4 or M4A file.');
+   });
+   players[i].addEventListener('ended',()=>{message('Recording '+(i+1)+' finished. Tap Next ⏭ for the other song.');});
+ }
+ // Automatically load authorized songs placed in the published site's songs folder.
+ // No music is shipped with this page; visitors only see these when the actual files exist.
+ async function loadPublished(index) {
+   const path='songs/recovered-'+(index+1)+'.mp4';
+   try {
+     const response=await fetch(path,{method:'HEAD',cache:'no-store'});
+     if(!response.ok || slots[index].url) return;
+     const player=players[index], source=new URL(path,document.baseURI).href;
+     slots[index].url=source;
+     slots[index].file={name:'Published recording '+(index+1)};
+     player.src=source;player.load();
+     names[index].textContent='🌍 Published recording '+(index+1)+' — ready to play';
+     message('✅ A published recording is available. Tap Play or Next to listen.');
+   } catch(e) { /* Not published: private Files picker remains available. */ }
+ }
+ loadPublished(0);loadPublished(1);
+ get('sgRecoverNext').addEventListener('click',()=>next(1));
+ get('sgRecoverPrev').addEventListener('click',()=>next(-1));
+ // IndexedDB is optional: failure should never stop immediate playback.
+ function dbOpen() {
+   return new Promise((resolve,reject)=>{
+     if(!window.indexedDB){reject(Error('Storage unavailable'));return;}
+     const req=indexedDB.open('sg-recovered-tracks',1);
+     req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('recordings'))req.result.createObjectStore('recordings');};
+     req.onerror=()=>reject(req.error||Error('Storage unavailable'));
+     req.onsuccess=()=>resolve(req.result);
+   });
+ }
+ async function saveFile(index,file) {
+   try {
+     const db=await dbOpen();
+     await new Promise((resolve,reject)=>{
+       const tx=db.transaction('recordings','readwrite');
+       tx.objectStore('recordings').put({name:file.name,file:file},String(index));
+       tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);
+     });
+     db.close();
+   }catch(e){ /* Browser storage can fail for large MP4s. Current-session playback still works. */ }
+ }
+ async function restore() {
+   try {
+     const db=await dbOpen();
+     const saved=await Promise.all([0,1].map(index=>new Promise((resolve,reject)=>{
+       const tx=db.transaction('recordings','readonly'),req=tx.objectStore('recordings').get(String(index));
+       req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);
+     })));
+     db.close();
+     let count=0;
+     saved.forEach((entry,index)=>{
+       if(!entry||!entry.file||slots[index].url)return;
+       const blob=entry.file;
+       const file=blob instanceof File?blob:new File([blob],entry.name||'Recording '+(index+1)+'.mp4',{type:blob.type||'video/mp4'});
+       applyFile(index,file);count++;
+     });
+     if(count) message('✅ Restored '+count+' recording(s) saved on this device. Tap Play to listen.');
+   }catch(e){}
+ }
+ restore();
+})();
+</script>
+
+<script id="sg-yt-song-switcher">
+(() => {
+  const tracks=[
+    {name:'Digger Funk',id:'LwZ0IbDcIac'},
+    {name:'Shape of You Hardtekk',id:'1J01N9hv_GY'}
+  ];
+  const player=document.getElementById('sgYTPlayer');
+  const watch=document.getElementById('sgYTWatchLink');
+  const label=document.getElementById('sgYTNowPlaying');
+  const choices=[document.getElementById('sgYTChoose0'),document.getElementById('sgYTChoose1')];
+  if(!player||!watch||!label||choices.some(x=>!x))return;
+  let index=0;
+  function choose(next) {
+    index=(next+tracks.length)%tracks.length;
+    const track=tracks[index];
+    // Avoid playing two audio sources at once; local Files recordings are separate from this panel.
+    for(const p of document.querySelectorAll('#sgRecoveredSongs video')){try{p.pause();}catch(e){}}
+    player.title=track.name+' YouTube player';
+    player.src='https://www.youtube-nocookie.com/embed/'+track.id+'?playsinline=1&rel=0&autoplay=1';
+    watch.href='https://www.youtube.com/watch?v='+track.id;
+    label.textContent='Selected: '+track.name+' — if autoplay is blocked, tap Play in the YouTube player';
+    choices.forEach((button,i)=>{
+      const selected=(i===index);
+      button.classList.toggle('sg-yt-selected',selected);
+      button.setAttribute('aria-pressed',String(selected));
+    });
+  }
+  choices.forEach((button,i)=>button.addEventListener('click',()=>choose(i)));
+  document.getElementById('sgYTPrev').addEventListener('click',()=>choose(index-1));
+  document.getElementById('sgYTNext').addEventListener('click',()=>choose(index+1));
+})();
+</script>
+
 </body>
