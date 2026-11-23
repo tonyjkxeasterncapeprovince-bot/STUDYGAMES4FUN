@@ -1734,13 +1734,10 @@ let volumeTarget=Number(slider.value)/100;
 let gainCtx=null,gain=null,fadeFrame=0, welcomeFadeFrame=0,failures=new Set(),localUrls=[];
 let currentSrc=''; let playlistFallbackTimer=0;
 function showNote(t){welcomeNote.textContent=t;}
-function initGain(){
- if(gainCtx)return;
- const AC=window.AudioContext||window.webkitAudioContext;
- if(!AC)return;
- try{gainCtx=new AC();const source=gainCtx.createMediaElementSource(audio);gain=gainCtx.createGain();source.connect(gain);gain.connect(gainCtx.destination);gain.gain.value=0;audio.volume=1;}
- catch(e){gainCtx=null;gain=null;}
-}
+// Never pipe this HTMLMediaElement through a separate WebAudio GainNode.
+// On iOS a suspended AudioContext can make the track advance with NO SOUND.
+// The native <audio> element is the most reliable path for Files recordings.
+function initGain(){return;}
 function fadeMusic(to,ms=650){
  to=Math.max(0,Math.min(1,to));cancelAnimationFrame(fadeFrame);
  if(gain&&gainCtx){const t=gainCtx.currentTime;gain.gain.cancelScheduledValues(t);gain.gain.setValueAtTime(gain.gain.value,t);gain.gain.linearRampToValueAtTime(to,t+ms/1000);return;}
@@ -1780,7 +1777,38 @@ function updateControls(){
  introSound.hidden=true;
 }
 let trackRequestId=0;
-function setTrack(index,fromError=false){
+// Begin playback synchronously inside the tap/click handler. Do not await
+// an AudioContext before play(): iOS can discard its user-activation token.
+function playSelectedNow(requestId,fromError=false){
+ playlistStarted=true;
+ musicMuted=false;
+ audio.muted=false;
+ audio.defaultMuted=false;
+ if(playlistAudible){
+  // Clear any leftover zero-volume intro fade. iOS manages hardware volume.
+  cancelAnimationFrame(fadeFrame);
+  audio.volume=volumeTarget>0?volumeTarget:1;
+ }
+ let p;
+ try{p=audio.play();}
+ catch(err){reportPlaybackFailure(err,requestId,fromError);return;}
+ if(p&&p.catch)p.catch(err=>reportPlaybackFailure(err,requestId,fromError));
+ updateControls();
+}
+function reportPlaybackFailure(err,requestId,fromError=false){
+ if(requestId!==trackRequestId)return;
+ const name=err?.name||'PlaybackError';
+ if(name==='AbortError')return; // superseded by another song or fast double-tap
+ if(name==='NotAllowedError'){
+  trackStatus.textContent='🔊 iPhone blocked sound. Tap Play Music once, then Next again.';
+ } else if(audio.error){
+  trackStatus.textContent='This recording could not be decoded on this device. Try an MP3 or M4A from your Files app.';
+  if(!fromError)handleTrackError();
+ } else {
+  trackStatus.textContent='Could not start '+tracks[selected].label+' ('+name+'). Tap Play Music and try again.';
+ }
+}
+function setTrack(index,fromError=false,forcePlay=false){
  if(!tracks.length)return;
  const myRequest=++trackRequestId;
  selected=((index%tracks.length)+tracks.length)%tracks.length;
@@ -1788,16 +1816,7 @@ function setTrack(index,fromError=false){
  const src=tracks[selected].src;
  if(currentSrc!==src){currentSrc=src;audio.pause();audio.src=src;audio.load();}
  updateControls();
- if(playlistStarted){
-  const p=audio.play();
-  if(p&&p.catch)p.catch(err=>{
-   if(myRequest!==trackRequestId)return; // Next was tapped again before this finished.
-   if(err?.name==='NotAllowedError'){
-    trackStatus.textContent='Tap Play music to enable sound on this device.';
-   } else if(!fromError && audio.error){handleTrackError();}
-   else if(!fromError){trackStatus.textContent='Tap Play music if this recording did not start.';}
-  });
- }
+ if(playlistStarted||forcePlay)playSelectedNow(myRequest,fromError);
 }
 // If recordings from Files exist, Previous/Next always navigate THOSE songs,
 // instead of visiting empty placeholder tracks listed elsewhere in the playlist.
@@ -1863,12 +1882,12 @@ async function checkPublishedSongs(){
 }
 
 audio.addEventListener('error',handleTrackError);
-async function startPlaylist(userGesture=false){
- if(userGesture){initGain();if(gainCtx&&gainCtx.state!=='running')await gainCtx.resume().catch(()=>{});}
- musicMuted=false;audio.muted=false;playlistStarted=true;
- if(!currentSrc)setTrack(selected);
- try{await audio.play();if(playlistAudible)fadeMusic(volumeTarget,700);else fadeMusic(0,60);}
- catch(e){if(audio.error)handleTrackError();}
+function startPlaylist(userGesture=false){
+ // Synchronous play() is critical for gesture-required playback on iPhones.
+ initGain();
+ if(!currentSrc){currentSrc=tracks[selected].src;audio.src=currentSrc;audio.load();}
+ playSelectedNow(++trackRequestId,false);
+ if(!playlistAudible)fadeMusic(0,60);
  updateControls();
 }
 function beginCutscene(){
@@ -1936,9 +1955,9 @@ toggle.addEventListener('click',()=>{
  updateControls();
 });
 slider.addEventListener('input',()=>{volumeTarget=Number(slider.value)/100;if(!musicMuted&&!audio.paused)fadeMusic(playlistAudible?volumeTarget:0,300)});
-select.addEventListener('change',()=>{if(!premiumMusic){select.value=String(selected);return;}failures.delete(Number(select.value));setTrack(Number(select.value));});
-prev.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(-1);if(target>=0){failures.delete(target);setTrack(target);}});
-next.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(1);if(target>=0){failures.delete(target);setTrack(target);}});
+select.addEventListener('change',()=>{if(!premiumMusic){select.value=String(selected);return;}failures.delete(Number(select.value));setTrack(Number(select.value),false,true);});
+prev.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(-1);if(target>=0){failures.delete(target);setTrack(target,false,true);}});
+next.addEventListener('click',()=>{if(!premiumMusic)return;const target=relativeTrack(1);if(target>=0){failures.delete(target);setTrack(target,false,true);}});
 shuffleBtn.addEventListener('click',()=>{if(!premiumMusic)return;shuffleSongs=!shuffleSongs;shuffleBtn.textContent='🔀 Shuffle: '+(shuffleSongs?'On':'Off');shuffleBtn.setAttribute('aria-pressed',String(shuffleSongs));});
 repeatBtn.addEventListener('click',()=>{if(!premiumMusic)return;repeatSong=!repeatSong;repeatBtn.textContent='🔂 Repeat song: '+(repeatSong?'On':'Off');repeatBtn.setAttribute('aria-pressed',String(repeatSong));});
 window.addEventListener('sg-premium-change',event=>{
@@ -1962,6 +1981,12 @@ audio.addEventListener('ended',()=>{
  }
 });
 audio.addEventListener('play',updateControls);audio.addEventListener('pause',updateControls);
+audio.addEventListener('playing',()=>{
+ trackStatus.textContent='▶ Playing: '+tracks[selected].label;
+});
+audio.addEventListener('stalled',()=>{
+ if(playlistStarted&&tracks[selected]?.personal)trackStatus.textContent='Loading recording from Files… If sound does not begin, tap Next again.';
+});
  fileInput.addEventListener('change',async()=>{
   if(!premiumMusic)return;
   const files=Array.from(fileInput.files||[]);
@@ -1980,7 +2005,7 @@ audio.addEventListener('play',updateControls);audio.addEventListener('pause',upd
   fileInput.value='';
   if(!added){personalMusicNote.textContent='Choose MP3, M4A, WAV or MP4 audio recordings.';return;}
   personalMusicNote.textContent='🎧 '+added+' recording(s) added. Next ▶▶ and Previous ◀◀ will now switch between your Files songs; '+saved+' saved for future visits on this device.';
-  trackStatus.textContent='🎵 Your Files playlist is ready. Press Next to hear the other recording.';
+  trackStatus.textContent='🎵 Your Files songs are ready. Tap Next to play the other recording with sound.';
  });
  removePersonalSong.addEventListener('click',async()=>{
   if(!premiumMusic||!tracks[selected]?.personal)return;
