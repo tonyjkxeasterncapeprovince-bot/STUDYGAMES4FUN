@@ -1027,7 +1027,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
     <p class="sg-muted">Visitor invitation codes are one-use; the private owner code is reusable and never expires. When no private server is connected, valid codes enable Premium on this browser only. One-use protection across devices requires the separate secure server. Access may be lost if browser data is cleared.</p>
    </div>
   </div>
-  <details id="sgOwnerSetup"><summary>⚙ Site owner setup (Premium games and codes)</summary>
+  <details id="sgOwnerSetup" hidden inert style="display:none!important"><summary>⚙ Site owner setup (Premium games and codes)</summary>
    <p class="sg-muted">Do not put secret redemption codes into this public HTML. For optional cross-device verification, deploy the separate secure backend and set its server URL below.</p>
    <label for="sgPremiumApiInput">Premium redemption server URL (HTTPS)</label><input type="url" id="sgPremiumApiInput" placeholder="https://your-premium-worker.example.workers.dev" autocomplete="off" />
    <div class="sg-row" style="margin-top:14px"><button id="sgPreviewSetup" type="button">Preview settings on this device</button><button id="sgExportSetup" type="button" class="sg-primary">Download configured index.html</button></div>
