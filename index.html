@@ -706,17 +706,43 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </style>
 
 <style id="sg-yt-song-style">
-#sgYTEmbedZone{background:#0b1e30;border:1px solid #395d89;padding:18px;border-radius:18px;margin:0 0 24px}
-#sgYTEmbedZone h3{font-size:1.25rem;color:#f2f6ff;margin:0 0 8px}
-#sgYTEmbedZone .sg-yt-detail,#sgYTEmbedZone .sg-yt-fallback{font-size:14px;line-height:1.6;color:#cfdeee}
-#sgYTEmbedZone .sg-yt-controls{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-#sgYTEmbedZone .sg-yt-controls button{padding:10px 12px;min-height:44px;background:#1e3557;color:#f2f7ff;border:1px solid #53779e;border-radius:12px;font:inherit;font-weight:750;cursor:pointer}
-#sgYTEmbedZone .sg-yt-controls button.sg-yt-selected{color:#092333;background:#91eadc;border-color:#91eadc}
-#sgYTEmbedZone .sg-yt-now-playing{font-weight:750;color:#e8f8ff;margin:0 0 10px}
-#sgYTEmbedZone .sg-yt-frame-wrap{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:13px;background:#000;}
-#sgYTEmbedZone iframe{border:0;display:block;width:100%;height:100%;}
-#sgYTEmbedZone a{color:#9beaff;text-decoration:underline}
-@media(max-width:540px){#sgYTEmbedZone{padding:12px}#sgYTEmbedZone .sg-yt-controls button{flex:1 1 45%}}
+/* Official YouTube music view: source remains visible and controlled by YouTube. */
+#sgYTEmbedZone{--sg-accent:#79f1d5;--sg-sub:#acbad6;color:#f6f8ff;background:radial-gradient(circle at 94% 4%,#16415a 0,transparent 36%),linear-gradient(153deg,#101d32,#07101e);border:1px solid #395772;border-radius:24px;padding:clamp(16px,3.5vw,30px);margin:0 0 25px;box-shadow:0 16px 44px #0005}
+#sgYTEmbedZone *{box-sizing:border-box}
+#sgYTEmbedZone .sg-music-kicker{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:#98f5db;font-weight:900;margin:0 0 7px}
+#sgYTEmbedZone .sg-music-title{font-size:clamp(26px,4.2vw,42px);line-height:1.13;letter-spacing:-.04em;color:#fff;font-weight:900;margin:0 0 8px}
+#sgYTEmbedZone .sg-music-subtitle{color:#bfccdf;max-width:64ch;margin:0 0 22px;font-size:14px;line-height:1.65}
+#sgYTEmbedZone .sg-music-layout{display:grid;grid-template-columns:minmax(240px,.85fr) minmax(300px,1.3fr);gap:18px;align-items:stretch}
+#sgYTEmbedZone .sg-music-sidebar,#sgYTEmbedZone .sg-music-player{border:1px solid #36516b;border-radius:18px;background:#0f1d30;padding:17px;min-width:0}
+#sgYTEmbedZone .sg-music-current{display:flex;align-items:center;gap:15px;margin-bottom:18px}
+#sgYTEmbedZone .sg-music-cover{display:grid;place-items:center;flex:none;width:94px;height:94px;border-radius:13px;background:radial-gradient(circle,#385b75 0 10%,#081827 11% 15%,#467a9b 16% 17%,#17263c 18% 38%,#253c59 39% 42%,#111b2d 43% 100%);border:1px solid #5c8caa;color:#96ebd8;font-size:37px;text-shadow:0 2px 10px #6affee;box-shadow:0 7px 22px #0008}
+#sgYTEmbedZone .sg-music-track-name{font-size:clamp(17px,2.6vw,23px);line-height:1.15;font-weight:900;margin:5px 0 6px;color:#fff;overflow-wrap:anywhere}
+#sgYTEmbedZone .sg-music-meta{font-size:12px;color:#a9bed3;line-height:1.45;margin:0}
+#sgYTEmbedZone .sg-music-current-label{font-size:11px;font-weight:800;color:#8ef5d2;letter-spacing:.13em;text-transform:uppercase}
+#sgYTEmbedZone .sg-music-track-list{display:grid;gap:9px}
+#sgYTEmbedZone .sg-music-track{width:100%;display:flex;text-align:left;align-items:center;gap:10px;border:1px solid #37536c;border-radius:12px;padding:10px 12px;background:#152842;color:#f0f7ff;cursor:pointer;min-height:61px;font:inherit;transition:background .15s,border .15s}
+#sgYTEmbedZone .sg-music-track[aria-pressed="true"]{border-color:#84e6cc;background:#153947}
+#sgYTEmbedZone .sg-music-track:focus-visible,#sgYTEmbedZone .sg-music-nav button:focus-visible{outline:3px solid #a6f6df;outline-offset:3px}
+#sgYTEmbedZone .sg-music-number{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#214260;color:#bdf6e8;flex:none;font-weight:900;font-size:13px}
+#sgYTEmbedZone .sg-music-track-label{font-weight:850;font-size:14px;line-height:1.3}
+#sgYTEmbedZone .sg-music-track-desc{font-size:11px;color:#aac0d5;display:block;margin-top:2px}
+#sgYTEmbedZone .sg-music-active-mark{margin-left:auto;color:#a9f4d7;font-size:18px}
+#sgYTEmbedZone .sg-music-nav{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+#sgYTEmbedZone .sg-music-nav button{flex:1 1 100px;background:#203c5c;border:1px solid #5e819e;color:#fff;border-radius:12px;padding:12px 10px;cursor:pointer;min-height:45px;font:inherit;font-weight:850;font-size:13px}
+#sgYTEmbedZone .sg-music-nav button.sg-music-play{background:linear-gradient(115deg,#80ead2,#64c8db);border-color:#9af5db;color:#082335}
+#sgYTEmbedZone .sg-music-player-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+#sgYTEmbedZone .sg-music-player-heading{font-size:14px;font-weight:900;color:#f0fbff;margin:0}
+#sgYTEmbedZone .sg-music-youtube-tag{font-size:11px;font-weight:750;color:#fcd5d5;background:#5a1b27;border-radius:100px;padding:6px 10px;white-space:nowrap}
+#sgYTEmbedZone .sg-yt-frame-wrap{aspect-ratio:16/9;width:100%;background:#000;border-radius:12px;overflow:hidden;border:1px solid #365269}
+#sgYTEmbedZone .sg-yt-frame-wrap iframe{border:0;width:100%;height:100%;display:block}
+#sgYTEmbedZone .sg-music-player-foot{color:#b9cce3;font-size:13px;line-height:1.6;margin:12px 0 0}
+#sgYTEmbedZone .sg-music-status{font-size:12px;color:#91e6cc;line-height:1.5;margin:12px 0 0;min-height:18px}
+#sgYTEmbedZone a{color:#9de5ff;text-decoration:underline;text-underline-offset:2px}
+#sgRecoveredSongs details.sg-archive-files{background:#111e32;border:1px solid #38516b;border-radius:16px;padding:14px 16px;margin-top:20px}
+#sgRecoveredSongs details.sg-archive-files summary{cursor:pointer;font-size:14px;font-weight:850;color:#b6e8f0;padding:5px}
+#sgRecoveredSongs details.sg-archive-files[open] summary{margin-bottom:12px}
+@media(max-width:770px){#sgYTEmbedZone .sg-music-layout{grid-template-columns:1fr}#sgYTEmbedZone .sg-music-sidebar,#sgYTEmbedZone .sg-music-player{padding:14px}}
+@media(max-width:420px){#sgYTEmbedZone .sg-music-cover{height:79px;width:79px}#sgYTEmbedZone .sg-music-nav button{min-width:0;flex:1 1 30%;font-size:12px;padding:11px 7px}}
 </style>
 
 </head>
@@ -801,7 +827,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </div></div></div></div></header><div class="menu-backdrop" hidden="" id="menuBackdrop"></div><nav aria-label="Study Games navigation" class="site-menu" hidden="" id="siteMenu"><div class="menu-head"><strong>Explore Study Games</strong><button aria-label="Close menu" class="menu-close" id="menuClose" type="button">✕</button></div><button class="menu-link" data-nav="home" type="button"><span aria-hidden="true" class="menu-link-icon">⌂</span> Home — Learning &amp; progress</button><button class="menu-link" type="button" data-nav="arcade">🎮 Arcade &amp; multiplayer</button>
 <button class="menu-link" type="button" data-nav="challenges">🏆 Daily challenges &amp; XP</button>
 <button class="menu-link" type="button" data-nav="premium">💎 Premium: Games &amp; Music</button>
-<button class="menu-link" type="button" data-nav="recovered">🎧 Songs That Didn’t Work on the Music Page</button>
+<button class="menu-link" type="button" data-nav="recovered">🎧 YouTube Music · Digger Funk + Shape of You</button>
 <button class="menu-link" data-nav="videos" type="button"><span aria-hidden="true" class="menu-link-icon">▶</span> Video Library</button><button class="menu-link channel-link" data-nav="channel" type="button"><span aria-hidden="true" class="menu-link-icon">📺</span><span>TonyJKX Eastern Cape Province <strong class="sub-tag">pls sub</strong></span><span aria-hidden="true">›</span></button><button class="menu-link" data-nav="support" type="button"><span aria-hidden="true" class="menu-link-icon">💛</span> Donate &amp; Redeem Premium</button><button class="menu-link" data-nav="tabs" type="button"><span aria-hidden="true" class="menu-link-icon">▣</span> Website tabs</button><button class="menu-link" data-nav="popular" type="button"><span aria-hidden="true" class="menu-link-icon">🌐</span> Popular website links</button><button class="menu-link" data-nav="saved" type="button"><span aria-hidden="true" class="menu-link-icon">☆</span> My saved links</button><button class="menu-link" data-nav="lab" type="button"><span aria-hidden="true" class="menu-link-icon">▧</span> Screen Capture Lab</button><p class="menu-footnote">Websites follow their own embedding rules and your device’s normal network restrictions.</p></nav>
 <main>
 
@@ -886,13 +912,13 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
 </div>
 </section><section data-screen="arcade" hidden="" id="arcade" tabindex="-1"><div class="sec-head"><h2>★ Arcade games</h2><span>Play instantly • No installation</span></div><div class="grid">
 <article class="game-card"><div class="game-icon" style="background:#214638">🐍</div><h3>Neon Snake</h3><p>Collect the glowing snacks. Don't run into the walls or yourself.</p><button data-game="snake" type="button">Play Snake →</button></article>
-<article class="game-card"><div class="game-icon" style="background:#31366b">⭕</div><h3>Tic-Tac-Toe</h3><p>Take turns with a friend on the same device. Get three in a row.</p><button data-game="ttt" type="button">Play Tic-Tac-Toe →</button></article>
+<article class="game-card"><div class="game-icon" style="background:#31366b">⭕</div><h3>Tic-Tac-Toe</h3><p>Play on one device, challenge the bot, or invite a friend by room code. Get three in a row.</p><button data-game="ttt" type="button">Play Tic-Tac-Toe →</button></article>
 <article class="game-card"><div class="game-icon" style="background:#4c304c">🃏</div><h3>Memory Flip</h3><p>Reveal the cards and find all eight matching pairs.</p><button data-game="memory" type="button">Play Memory →</button></article>
 <article class="game-card"><div class="game-icon" style="background:#324b53">⚡</div><h3>Reaction Rush</h3><p>Wait for green, then click as quickly as you can.</p><button data-game="reaction" type="button">Play Reaction Rush →</button></article>
 </div></section>
 
 <section data-screen="arcade" id="sgxFreeGames" hidden aria-labelledby="sgxArcadeTitle">
- <div class="sgx-panel"><span class="sgx-eyebrow">✨ New &amp; playable</span><h2 class="sgx-heading" id="sgxArcadeTitle">The upgraded Arcade</h2><p class="sgx-muted">Play free games, challenge a friend on one device, or practice solo.</p>
+ <div class="sgx-panel"><span class="sgx-eyebrow">✨ New &amp; playable</span><h2 class="sgx-heading" id="sgxArcadeTitle">The upgraded Arcade</h2><p class="sgx-muted">Play with someone on one device, challenge bots, or invite a friend using a room code.</p>
  <div class="sgx-feature-grid">
    <article class="sgx-game"><div class="sgx-emoji">🔴🟡</div><span class="sgx-tag">FREE • 2 PLAYERS</span><h3>Connect Four</h3><p>Drop discs and connect four before your friend does.</p><button class="sgx-primary" data-sgx-game="connect4" type="button">Play Connect Four</button></article>
    <article class="sgx-game"><div class="sgx-emoji">🔢</div><span class="sgx-tag">FREE • SOLO</span><h3>2048</h3><p>Merge matching tiles and work your way up to 2048.</p><button class="sgx-primary" data-sgx-game="numbers" type="button">Play 2048</button></article>
@@ -919,32 +945,52 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
    <article class="sgx-game"><div class="sgx-emoji">⚫🔴</div><span class="sgx-tag sgx-lock">PREMIUM • 2 PLAYERS</span><h3>Checkers</h3><p>Capture the pieces, chain your jumps, and crown your kings.</p><button class="sgx-primary" data-premium-game="checkers" data-premium-game-title="Checkers" type="button">Preview Checkers</button></article>
    <article class="sgx-game"><div class="sgx-emoji">⚪⚫</div><span class="sgx-tag sgx-lock">PREMIUM • 2 PLAYERS</span><h3>Reversi</h3><p>Flip your rival's discs and control the board.</p><button class="sgx-primary" data-premium-game="reversi" data-premium-game-title="Reversi" type="button">Preview Reversi</button></article>
  </div>
- <div class="sgx-panel" style="margin-top:16px;padding:17px"><h3 style="margin:0 0 8px">🌐 Online multiplayer — connection needed</h3><p class="sgx-muted" style="margin:0">Games above work with two players sharing one phone or computer. Real-time matches across separate devices need a hosted room/signaling server, moderation and privacy controls. Room codes and remote syncing are not enabled yet; this page does not pretend they work.</p></div>
+ <div class="sgx-panel" style="margin-top:16px;padding:17px"><h3 style="margin:0 0 8px">🌐 Online multiplayer — friend room codes</h3><p class="sgx-muted" style="margin:0">All five two-player games now offer Play Together, Play vs Bot, and Generate Code / Join Friend. Remote matches use a free third-party browser connection service (internet required), and may be unavailable on restricted networks. Only share room codes with friends.</p></div>
  </div>
 </section>
 
 <section id="sgRecoveredSongs" data-screen="recovered" hidden aria-labelledby="sgRecoveredHeading" tabindex="-1">
  <p style="margin:0 0 10px;font-size:12px;font-weight:900;letter-spacing:.14em;color:#92efde">🎧 STUDY GAMES • REBUILT PLAYBACK</p>
- <h2 class="sg-recover-title" id="sgRecoveredHeading">Songs That Didn’t Work on the Music Page</h2>
- <p class="sg-recover-intro">A fresh player for your two screen recordings. To listen privately, choose the two MP4 recordings from Files. If you publish authorized tracks at the two preset website paths, they load for everyone automatically. Each recording has its own player—no broken playlist links or Premium requirement.</p>
+ <h2 class="sg-recover-title" id="sgRecoveredHeading">🎵 Study Games Music</h2>
+ <p class="sg-recover-intro">Digger Funk and Shape of You Hardtekk, in one music player with official visible YouTube videos. No Files import required for these YouTube links.</p>
 
-<!-- Official YouTube players: video/audio is streamed by YouTube, not copied to Study Games. -->
-<div id="sgYTEmbedZone" class="sg-yt-zone" aria-label="Two YouTube songs">
-  <h3>▶️ YouTube songs — ready to try</h3>
-  <p class="sg-yt-detail">Choose a song below and press play in the YouTube player. These are the original YouTube links you sent; no local Files import is needed. Video owners may block playback on other websites.</p>
-  <div class="sg-yt-controls" aria-label="YouTube song selection">
-    <button type="button" id="sgYTChoose0" class="sg-yt-selected" aria-pressed="true">🎵 Digger Funk</button>
-    <button type="button" id="sgYTChoose1" aria-pressed="false">🎵 Shape of You Hardtekk</button>
-    <button type="button" id="sgYTPrev">⏮ Previous video</button>
-    <button type="button" id="sgYTNext">Next video ⏭</button>
+<!-- Official YouTube player: publicly accessible music is streamed by YouTube. -->
+<div id="sgYTEmbedZone" aria-label="Study Games custom YouTube music player">
+ <p class="sg-music-kicker">🎧 Study Games Radio · Two-track collection</p>
+ <h3 class="sg-music-title">Your music. Your vibe.</h3>
+ <p class="sg-music-subtitle">Pick a song, skip tracks, and enjoy the video right here in Study Games. The visible YouTube player handles playback, so you never need to import recordings from Files.</p>
+ <div class="sg-music-layout">
+  <div class="sg-music-sidebar">
+   <div class="sg-music-current">
+    <span id="sgYTArtwork" class="sg-music-cover" role="img" aria-label="Music record artwork">♫</span>
+    <div>
+     <span class="sg-music-current-label">Now selected</span>
+     <h4 id="sgYTNowPlaying" class="sg-music-track-name" aria-live="polite">Digger Funk</h4>
+     <p id="sgYTNowMeta" class="sg-music-meta">YouTube · Song 1 of 2</p>
+    </div>
+   </div>
+   <div class="sg-music-track-list" aria-label="Choose a YouTube song">
+    <button type="button" id="sgYTChoose0" class="sg-music-track" aria-pressed="true"><span class="sg-music-number">01</span><span><span class="sg-music-track-label">Digger Funk</span><span class="sg-music-track-desc">YouTube music video</span></span><span class="sg-music-active-mark" aria-hidden="true">♫</span></button>
+    <button type="button" id="sgYTChoose1" class="sg-music-track" aria-pressed="false"><span class="sg-music-number">02</span><span><span class="sg-music-track-label">Shape of You Hardtekk</span><span class="sg-music-track-desc">GoldZoro · YouTube</span></span><span class="sg-music-active-mark" aria-hidden="true" hidden>♫</span></button>
+   </div>
+   <div class="sg-music-nav" aria-label="Music track navigation">
+    <button type="button" id="sgYTPrev" aria-label="Previous song">⏮ Previous</button>
+    <button type="button" class="sg-music-play" id="sgYTPlay" aria-label="Start selected song in YouTube player">▶ Play</button>
+    <button type="button" id="sgYTNext" aria-label="Next song">Next ⏭</button>
+   </div>
+   <p id="sgYTStatus" class="sg-music-status" role="status" aria-live="polite">Ready · Tap ▶ inside the YouTube video to listen.</p>
   </div>
-  <p id="sgYTNowPlaying" class="sg-yt-now-playing" aria-live="polite">Selected: Digger Funk</p>
-  <div class="sg-yt-frame-wrap">
-    <iframe id="sgYTPlayer" src="https://www.youtube-nocookie.com/embed/LwZ0IbDcIac?playsinline=1&amp;rel=0" title="Digger Funk YouTube player" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <div class="sg-music-player">
+   <div class="sg-music-player-top"><p class="sg-music-player-heading">Official YouTube player</p><span class="sg-music-youtube-tag">▶ YouTube</span></div>
+   <div class="sg-yt-frame-wrap">
+    <iframe id="sgYTPlayer" src="https://www.youtube-nocookie.com/embed/LwZ0IbDcIac?playsinline=1&amp;rel=0" title="Digger Funk — official YouTube video player" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+   </div>
+   <p class="sg-music-player-foot">Use the ▶ and volume controls inside the video if your phone blocks autoplay. If YouTube says the video can't be embedded, <a id="sgYTWatchLink" href="https://www.youtube.com/watch?v=LwZ0IbDcIac" target="_blank" rel="noopener noreferrer">watch this song on YouTube</a>.</p>
   </div>
-  <p class="sg-yt-fallback">If the player says video unavailable or embedding is disabled, use <a id="sgYTWatchLink" href="https://www.youtube.com/watch?v=LwZ0IbDcIac" target="_blank" rel="noopener noreferrer">Watch this song on YouTube</a>.</p>
+ </div>
 </div>
 
+ <details class="sg-archive-files"><summary>📂 Optional: Your personal Files recordings</summary><p class="sg-recover-intro">These local players are separate from the official YouTube music above.</p>
  <div class="sg-recover-tools">
   <button id="sgRecoverBothBtn" type="button" class="sg-recover-primary">📂 Add both recordings from Files</button>
   <button id="sgRecoverPrev" type="button" class="sg-recover-secondary">⏮ Previous</button>
@@ -969,6 +1015,7 @@ body.sg-depth-mode #sg-depth-quick-exit{display:block}
  </div>
  <p id="sgRecoverStatus" class="sg-recover-status" role="status" aria-live="polite">Choose both recordings to start. After that, use the Play or Next buttons.</p>
  <p class="sg-recover-foot"><strong>On your device:</strong> Files you pick are played privately in your browser. The site tries to remember them on this device; if Safari clears storage, pick them again. Playing the recording is supported without publishing it to everyone. To share a song publicly, you need permission to distribute it and a public upload on your website.</p>
+ </details>
 </section>
 <section id="sgSupport" data-screen="support" hidden class="sg-entertainment" aria-labelledby="sgSupportTitle">
   <div class="sg-head"><div><span class="sg-badge">💛 SUPPORT THE PROJECT</span><h2 id="sgSupportTitle">Donations & Premium</h2><p>Help us build more games, challenges, and new multiplayer features.</p></div><span class="sg-badge">Secure checkout required</span></div>
@@ -2772,10 +2819,29 @@ void start(key);
 })();
 </script>
 <dialog id="sgxGameDialog" aria-labelledby="sgxGameTitle"><div class="sgx-game-head"><h2 id="sgxGameTitle">Game</h2><button type="button" class="sgx-close" id="sgxCloseGame" aria-label="Close game">✕</button></div><div id="sgxGameArea"></div></dialog><div id="sgxToast" role="status" aria-live="polite" hidden style="position:fixed;z-index:999999;bottom:20px;left:50%;transform:translateX(-50%);background:#20385c;color:#fff;padding:12px 18px;border:1px solid #5a83ad;border-radius:12px;box-shadow:0 12px 32px #0008;font-weight:800;max-width:90vw;text-align:center"></div>
+<style id="sgx-multiplayer-modes-styles">
+#sgxGameDialog{max-width:min(94vw,760px);max-height:93vh;overflow:auto}
+.sgx-match-menu{padding:10px 2px 18px;color:#f2f6ff}
+.sgx-match-sub{margin:0 0 16px;color:#c6d8ff;font-size:1.05rem;font-weight:750}
+.sgx-match-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.sgx-match-options button{min-height:104px;border:1px solid #647bac;color:#f8fbff;border-radius:15px;background:#16294e;font-weight:800;padding:15px;cursor:pointer;text-align:left;font-size:1rem}
+.sgx-match-options button:hover,.sgx-match-options button:focus-visible{background:#284577;outline:2px solid #8db1ff}
+.sgx-match-options button small{display:block;font-size:.76rem;font-weight:500;line-height:1.6;color:#c4d5ec;margin-top:8px}
+.sgx-match-join{margin-top:19px;border:1px solid #425c82;padding:15px;border-radius:14px;background:#121e35}
+.sgx-match-join label{display:block;font-weight:750;margin-bottom:8px}
+.sgx-match-row{display:flex;gap:7px;flex-wrap:wrap}.sgx-match-row input{flex:2;min-width:150px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;border-radius:10px;border:1px solid #8097ad;background:#f6faff;color:#142039;padding:12px}
+.sgx-match-row button,.sgx-room-token+button{padding:10px 14px;border-radius:9px;background:#7797f6;color:#142039;border:0;font-weight:800;cursor:pointer}
+.sgx-match-message{font-size:.84rem;color:#cee2ff;background:#203052;border-radius:10px;padding:12px;margin:12px 0;line-height:1.55}
+.sgx-room-token{display:block;font-size:clamp(1.7rem,6vw,2.3rem);letter-spacing:.12em;margin:8px 0;color:#a6e9c5;user-select:all}
+#sgxRoomMessage small{display:block;margin-top:10px}
+.sgx-ttt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:360px;margin:12px auto}
+.sgx-ttt-board button{aspect-ratio:1;background:#213657;color:#fff;border:1px solid #7393b1;border-radius:11px;font-size:clamp(2rem,9vw,4rem);font-weight:850;cursor:pointer}
+.sgx-ttt-board button:disabled{cursor:default}
+</style>
 <script id="sgx-play-more-2026-script">
-/* STUDY GAMES — XP, daily challenges, and new offline multiplayer games.
- * Local progress is browser-specific. Real-time remote online play and secure paid
- * entitlements require a separately deployed backend. No pretend security here.
+/* STUDY GAMES — XP, daily challenges, two-player bots, and peer-to-peer friend rooms.
+ * Local progress is browser-specific. Remote rooms depend on a free signaling service.
+ * Premium entitlements remain browser-specific without a secure backend.
  */
 (()=>{
  'use strict';
@@ -2802,17 +2868,160 @@ void start(key);
  function wonConnect(){ensureDay();user.daily.c4win=true;user.c4wins++;achievement('c4','Connect Four Win');save();addXP(20)}
  function tileReached(num){ensureDay();user.daily.tile=Math.max(user.daily.tile,num);user.bestTile=Math.max(user.bestTile,num);if(num>=64)achievement('tile64','64 Tile');save()}
  const dialog=$('sgxGameDialog'),area=$('sgxGameArea'),title=$('sgxGameTitle');let currentGame='',cleanup=()=>{};
- function openGame(name){if(!dialog||!area)return;cleanup();cleanup=()=>{};area.replaceChildren();currentGame=name;title.textContent=({connect4:'Connect Four',numbers:'2048',chess:'Chess',checkers:'Checkers',reversi:'Reversi'})[name]||name;played();if(!dialog.open)dialog.showModal();if(name==='connect4')startConnect4();if(name==='numbers')start2048();if(name==='chess')startChess();if(name==='checkers')startCheckers();if(name==='reversi')startReversi()}
+ 
+ // Five arcade games share these modes: local friends, bot, and real online rooms.
+ const twoPlayerGames=new Set(['ttt','connect4','chess','checkers','reversi']);
+ const gamesNames={ttt:'Tic-Tac-Toe',connect4:'Connect Four',chess:'Chess',checkers:'Checkers',reversi:'Reversi',numbers:'2048'};
+ let matchMode='local',matchGame='',botTimeout=null,onlineClick=null,botActing=false,live=null;
+ const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
+ const safeCode=s=>String(s||'').replace(/[^A-Z0-9]/gi,'').toUpperCase().slice(0,8);
+ function cancelBot(){if(botTimeout){clearTimeout(botTimeout);botTimeout=null}}
+ function botLater(fn){if(matchMode!=='bot')return;cancelBot();botTimeout=setTimeout(()=>{botTimeout=null;botActing=true;try{fn()}finally{botActing=false}},400)}
+ function closeRoom(){if(live){try{live.conn?.close()}catch{}try{live.peer?.destroy()}catch{}live=null}}
+ function canTap(player,positions,remote=false){
+  if(remote)return matchMode==='online'&&!!live?.connected&&live.side!==player;
+  if(matchMode==='bot')return botActing?player===2:player===1;
+  if(matchMode==='online'){
+   if(!live?.connected||live.side!==player)return false;
+   try{live.conn.send({t:'tap',game:matchGame,p:positions})}catch{return false}
+  }
+  return true;
+ }
+ function gameNotice(msg){let e=document.getElementById('sgxRoomStatus');if(!e){e=document.createElement('p');e.id='sgxRoomStatus';e.className='sgx-match-message';area.prepend(e)}e.textContent=msg}
+ function renderChoices(name){
+  cancelBot();closeRoom();cleanup();cleanup=()=>{};onlineClick=null;matchGame=name;currentGame=name;
+  area.replaceChildren();title.textContent=gamesNames[name]||name;if(!dialog.open)dialog.showModal();
+  const section=document.createElement('section');section.className='sgx-match-menu';section.innerHTML=`<p class="sgx-match-sub">Choose your match for ${gamesNames[name]}</p>
+   <div class="sgx-match-options"><button type="button" id="sgxModeLocal">👥 Play together <small>Same phone or computer</small></button>
+   <button type="button" id="sgxModeBot">🤖 Play vs bot <small>Challenge the computer</small></button>
+   <button type="button" id="sgxModeHost">🔗 Generate room code <small>Invite a friend on another device</small></button></div>
+   <div class="sgx-match-join"><label for="sgxJoinCode">Already have a code?</label><div class="sgx-match-row"><input id="sgxJoinCode" placeholder="8-character code" maxlength="8" autocapitalize="characters" autocomplete="off" spellcheck="false"/><button type="button" id="sgxModeJoin">Join Friend</button></div></div>
+   <p class="sgx-match-message" id="sgxRoomMessage" role="status">Online rooms connect directly between two browsers and require internet access. Don’t share room codes publicly.</p>`;
+  area.append(section);
+  const note=msg=>{const el=document.getElementById('sgxRoomMessage');if(el)el.textContent=msg};
+  document.getElementById('sgxModeLocal').onclick=()=>{matchMode='local';startMatch(name)};
+  document.getElementById('sgxModeBot').onclick=()=>{matchMode='bot';startMatch(name)};
+  document.getElementById('sgxModeHost').onclick=()=>void createRoom(name,note);
+  document.getElementById('sgxModeJoin').onclick=()=>void joinRoom(name,document.getElementById('sgxJoinCode').value,note);
+  document.getElementById('sgxJoinCode').onkeydown=e=>{if(e.key==='Enter')document.getElementById('sgxModeJoin').click()};
+ }
+ // PeerJS uses its free signaling service. The actual game data moves browser-to-browser.
+ let peerLibraryPromise;
+ function loadPeerLibrary(){
+  if(window.Peer)return Promise.resolve(window.Peer);
+  if(peerLibraryPromise)return peerLibraryPromise;
+  peerLibraryPromise=new Promise((resolve,reject)=>{
+   const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.5/peerjs.min.js';s.async=true;
+   s.onload=()=>window.Peer?resolve(window.Peer):reject(Error('Room library did not load.'));
+   s.onerror=()=>reject(Error('Room connection library is blocked or offline.'));
+   document.head.append(s);
+  }).catch(e=>{peerLibraryPromise=null;throw e});
+  return peerLibraryPromise;
+ }
+ function newRoomCode(){let b=new Uint8Array(8);crypto.getRandomValues(b);const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from(b,n=>alphabet[n%alphabet.length]).join('')}
+ function roomPeerId(game,code){return 'sgarcade2026-'+game+'-'+safeCode(code)}
+ function attachConnection(conn,host,note){
+  if(!live){conn.close();return}
+  if(live.conn&&live.conn!==conn){conn.close();return}
+  live.conn=conn;
+  conn.on('open',()=>{
+   if(!live||live.conn!==conn)return;
+   live.connected=true;
+   if(host){conn.send({t:'start',game:matchGame});startMatch(matchGame);gameNotice('🌐 Connected! You play first. Your friend plays second.');}
+   else note('Connected. Loading the game…');
+  });
+  conn.on('data',data=>{
+   if(!data||typeof data!=='object'||!live||live.conn!==conn)return;
+   if(data.t==='start'&&!host&&data.game===matchGame){startMatch(matchGame);gameNotice('🌐 Connected! Your friend goes first. You play second.');}
+   else if(data.t==='tap'&&data.game===matchGame&&live.connected&&Array.isArray(data.p)&&data.p.length===(matchGame==='ttt'||matchGame==='connect4'?1:2)&&data.p.every(n=>Number.isInteger(n)&&n>=0&&n<=(matchGame==='ttt'?8:7))){
+    if(typeof onlineClick==='function')onlineClick(data.p);
+   }else if(data.t==='restart'&&data.game===matchGame){startMatch(matchGame);gameNotice('🌐 New round started by your friend.');}
+  });
+  conn.on('close',()=>{if(live?.conn!==conn)return;live.connected=false;gameNotice('Friend disconnected. Close this game and generate a new room to reconnect.');});
+  conn.on('error',e=>note('Connection issue: '+(e?.message||'Unable to connect.')));
+ }
+ async function createRoom(game,note){
+  closeRoom();matchMode='online';matchGame=game;
+  note('Connecting to the room service…');
+  try{
+   const Peer=await loadPeerLibrary();const code=newRoomCode();const peer=new Peer(roomPeerId(game,code));
+   live={peer,code,side:1,conn:null,connected:false};
+   peer.on('open',()=>{
+    if(!live||live.peer!==peer)return;
+    const el=document.getElementById('sgxRoomMessage');if(!el)return;
+    el.replaceChildren();
+    const label=document.createElement('span');label.textContent='Give this room code to your friend:';
+    const token=document.createElement('strong');token.className='sgx-room-token';token.textContent=code;
+    const btn=document.createElement('button');btn.type='button';btn.textContent='📋 Copy Code';btn.className='sgx-secondary';btn.onclick=async()=>{try{await navigator.clipboard.writeText(code);btn.textContent='✓ Copied!'}catch{btn.textContent='Select the code above to copy'}};
+    const waitText=document.createElement('small');waitText.textContent='Keep this page open while your friend joins the same game.';
+    el.append(label,token,btn,waitText);
+   });
+   peer.on('connection',conn=>attachConnection(conn,true,note));
+   peer.on('error',e=>note('Could not open room: '+(e?.message||'Network error. Try another code.')));
+  }catch(e){note(e.message||'Could not create room. Check internet connection.');}
+ }
+ async function joinRoom(game,raw,note){
+  const code=safeCode(raw);if(code.length!==8){note('Enter the 8-character code from your friend.');return}
+  closeRoom();matchMode='online';matchGame=game;note('Joining '+code+'…');
+  try{
+   const Peer=await loadPeerLibrary();const peer=new Peer();live={peer,code,side:2,conn:null,connected:false};
+   peer.on('open',()=>{
+    if(!live||live.peer!==peer)return;
+    const conn=peer.connect(roomPeerId(game,code),{reliable:true});attachConnection(conn,false,note);
+    setTimeout(()=>{if(live?.peer===peer&&!live.connected)note('No response yet. Make sure your friend has this room open, both chose '+gamesNames[game]+', and the code matches.');},13000);
+   });
+   peer.on('error',e=>note('Could not join: '+(e?.message||'Check your code or connection.')));
+  }catch(e){note(e.message||'Could not join. Check your internet connection.');}
+ }
+ function restartCurrent(){
+  if(matchMode==='online'){
+   if(!live?.connected)return;
+   if(live.side!==1){gameNotice('Only the room creator can restart the online match.');return}
+   live.conn.send({t:'restart',game:matchGame});
+  }
+  startMatch(matchGame);
+ }
+ function startMatch(name){
+  cancelBot();onlineClick=null;matchGame=name;currentGame=name;
+  cleanup();cleanup=()=>{};area.replaceChildren();title.textContent=gamesNames[name]||name;played();
+  if(!dialog.open)dialog.showModal();
+  if(name==='ttt')startTtt();if(name==='connect4')startConnect4();if(name==='numbers')start2048();
+  if(name==='chess')startChess();if(name==='checkers')startCheckers();if(name==='reversi')startReversi();
+  if(matchMode==='online'){
+   const p=document.createElement('p');p.className='sgx-match-message';p.id='sgxRoomStatus';p.textContent='🌐 Connected • You play '+(live?.side===1?'first':'second');area.prepend(p);
+  }
+ }
+ function startTtt(){
+  let b=Array(9).fill(''),turn=1,done=false;
+  status('⭕ X moves first.');const grid=document.createElement('div');grid.className='sgx-ttt-board';area.append(grid);
+  restartControls(restartCurrent,'Get three in a row to win.');
+  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  const winner=arr=>wins.some(line=>line.every(k=>arr[k]==='X'))?'X':wins.some(line=>line.every(k=>arr[k]==='O'))?'O':null;
+  function draw(){grid.replaceChildren();for(let i=0;i<9;i++){const el=document.createElement('button');el.type='button';el.textContent=b[i];el.disabled=done||!!b[i];el.setAttribute('aria-label','Square '+(i+1));el.addEventListener('click',()=>click(i));grid.append(el)}}
+  function click(i,remote=false){if(done||b[i]||!canTap(turn,[i],remote))return;const symbol=turn===1?'X':'O';b[i]=symbol;const w=winner(b);if(w){status('🎉 '+w+' wins!');done=true}else if(b.every(Boolean)){done=true;status('It’s a draw!')}else{turn=3-turn;status((turn===1?'X':'O')+' to move');if(turn===2)botLater(bot)}draw()}
+  function bot(){if(done||turn!==2)return;let best=-Infinity,pos=0;
+   for(let i=0;i<9;i++){if(b[i])continue;const test=b.slice();test[i]='O';const score=mini(test,false);if(score>best){best=score;pos=i}}
+   click(pos);
+  }
+  function mini(board,maximizing){const win=winner(board);if(win)return win==='O'?10:-10;if(board.every(Boolean))return 0;
+   const scores=[];for(let i=0;i<9;i++)if(!board[i]){board[i]=maximizing?'O':'X';scores.push(mini(board,!maximizing));board[i]=''}return maximizing?Math.max(...scores):Math.min(...scores);
+  }
+  onlineClick=a=>click(a[0],true);draw();
+ }
+
+ function openGame(name){if(!dialog||!area)return;if(twoPlayerGames.has(name))renderChoices(name);else{matchMode="local";closeRoom();startMatch(name)}}
  function status(text){let node=$('sgxGameStatus');if(!node){node=document.createElement('div');node.id='sgxGameStatus';node.className='sgx-status';node.setAttribute('role','status');area.prepend(node)}node.textContent=text}
  function mkButton(label,onClick,cls='sgx-secondary'){const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.addEventListener('click',onClick);return b}
  function gridButton(r,c,markup,light,onClick,selected,target){const b=document.createElement('button');b.type='button';b.className='sgx-square '+(light?'light':'dark')+(selected?' selected':'')+(target?' target':'');b.setAttribute('aria-label','Row '+(r+1)+', column '+(c+1));if(markup){const s=document.createElement('span');s.innerHTML=markup;b.append(s)}b.addEventListener('click',onClick);return b}
  function boardNode(){const div=document.createElement('div');div.className='sgx-board';area.append(div);return div}
  function restartControls(callback,tip){const wrap=document.createElement('div');wrap.className='sgx-controls';wrap.append(mkButton('↻ New game',callback,'sgx-primary'));if(tip){const p=document.createElement('p');p.className='sgx-note';p.textContent=tip;area.append(p)}area.append(wrap)}
- function startConnect4(){let cells=Array.from({length:6},()=>Array(7).fill(0)),player=1,finished=false;status('🔴 Red moves first — tap a column.');const board=document.createElement('div');board.className='sgx-connect4';area.append(board);restartControls(()=>openGame('connect4'),'Two friends can play on the same device. Remote online rooms need a connected game server.');
+ function startConnect4(){let cells=Array.from({length:6},()=>Array(7).fill(0)),player=1,finished=false;status('🔴 Red moves first — tap a column.');const board=document.createElement('div');board.className='sgx-connect4';area.append(board);restartControls(restartCurrent,'Red moves first. Play on one device, versus a bot, or in a friend room.');
   function draw(){board.replaceChildren();for(let r=0;r<6;r++)for(let c=0;c<7;c++){const b=document.createElement('button');b.className='sgx-c4-cell '+(cells[r][c]===1?'red':cells[r][c]===2?'yellow':'');b.type='button';b.setAttribute('aria-label','Column '+(c+1)+', row '+(r+1));b.disabled=finished||cells[0][c]!==0;b.addEventListener('click',()=>move(c));board.append(b)}}
   function win(r,c,p){for(const [dr,dc] of [[1,0],[0,1],[1,1],[1,-1]]){let n=1;for(const dir of [-1,1]){let rr=r+dr*dir,cc=c+dc*dir;while(rr>=0&&rr<6&&cc>=0&&cc<7&&cells[rr][cc]===p){n++;rr+=dr*dir;cc+=dc*dir}}if(n>=4)return true}return false}
-  function move(c){if(finished)return;let r=5;while(r>=0&&cells[r][c]!==0)r--;if(r<0)return;cells[r][c]=player;if(win(r,c,player)){finished=true;status((player===1?'🔴 Red':'🟡 Yellow')+' wins! 🎉');wonConnect()}else if(cells.every(row=>row.every(Boolean))){finished=true;status('It’s a draw — play again!');addXP(8)}else{player=3-player;status((player===1?'🔴 Red':'🟡 Yellow')+' player’s turn.')}draw()}
-  draw();}
+  function move(c,remote=false){if(finished||cells[0][c]||!canTap(player,[c],remote))return;let r=5;while(r>=0&&cells[r][c]!==0)r--;if(r<0)return;cells[r][c]=player;if(win(r,c,player)){finished=true;status((player===1?'🔴 Red':'🟡 Yellow')+' wins! 🎉');wonConnect()}else if(cells.every(row=>row.every(Boolean))){finished=true;status('It’s a draw — play again!');addXP(8)}else{player=3-player;status((player===1?'🔴 Red':'🟡 Yellow')+' player’s turn.');if(player===2)botLater(bot)}draw()}
+  function bot(){if(finished||player!==2)return;const possible=[3,2,4,1,5,0,6].filter(c=>!cells[0][c]);if(!possible.length)return;function outcome(c,p){const a=cells.map(row=>row.slice());let r=5;while(r>=0&&a[r][c])r--;if(r<0)return false;a[r][c]=p;for(const [dr,dc] of [[1,0],[0,1],[1,1],[1,-1]]){let n=1;for(const dir of [-1,1]){let rr=r+dr*dir,cc=c+dc*dir;while(rr>=0&&rr<6&&cc>=0&&cc<7&&a[rr][cc]===p){n++;rr+=dr*dir;cc+=dc*dir}}if(n>=4)return true}return false}
+   const col=possible.find(c=>outcome(c,2))??possible.find(c=>outcome(c,1))??possible[0];move(col);}
+  onlineClick=a=>move(a[0],true);draw();}
  function start2048(){let board=Array(16).fill(0),score=0,over=false;const wrap=document.createElement('div');wrap.className='sgx-2048';wrap.setAttribute('aria-label','2048 game board');area.append(wrap);const buttons=document.createElement('div');buttons.className='sgx-directions';const notes=document.createElement('p');notes.className='sgx-note';notes.textContent='Swipe on your phone, use arrow keys, or tap the buttons below. Merge matching numbers.';area.append(notes);area.append(buttons);
   function spawn(){const empty=board.map((v,i)=>v===0?i:-1).filter(i=>i>=0);if(empty.length)board[empty[Math.floor(Math.random()*empty.length)]]=Math.random()<.9?2:4}
   function draw(){wrap.replaceChildren();let max=0;for(const val of board){max=Math.max(max,val);const t=document.createElement('div');t.className='sgx-2048-cell '+(val?'v'+Math.min(val,2048):'empty');t.textContent=val||'';wrap.append(t)}status((over?'Game over! ':'')+'Score: '+score+' • Best tile: '+max);tileReached(max)}
@@ -2821,25 +3030,27 @@ void start(key);
   const dirs=[['up','↑',1,0],['left','←',0,1],['down','↓',1,1],['right','→',2,1]];dirs.forEach(([d,label,x,y])=>{const b=mkButton(label,()=>move(d));b.style.gridColumn=String(x+1);b.style.gridRow=String(y+1);buttons.append(b)});const control=document.createElement('div');control.className='sgx-controls';control.append(mkButton('↻ Restart',()=>openGame('numbers'),'sgx-primary'));area.append(control);
   function keys(e){if(dialog.open&&currentGame==='numbers'){const d={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[e.key];if(d){e.preventDefault();move(d)}}}document.addEventListener('keydown',keys);let origin;function touchBegin(e){origin=[e.changedTouches[0].clientX,e.changedTouches[0].clientY]}function touchEnd(e){if(!origin)return;const x=e.changedTouches[0].clientX-origin[0],y=e.changedTouches[0].clientY-origin[1];if(Math.max(Math.abs(x),Math.abs(y))>25)move(Math.abs(x)>Math.abs(y)?x>0?'right':'left':y>0?'down':'up');origin=null}wrap.addEventListener('touchstart',touchBegin,{passive:true});wrap.addEventListener('touchend',touchEnd,{passive:true});cleanup=()=>document.removeEventListener('keydown',keys);spawn();spawn();draw();}
  // Checkers: mandatory captures, multi-jumps, and king promotion.
- function startCheckers(){let b=Array.from({length:8},(_,r)=>Array.from({length:8},(_,c)=>(r+c)%2===1?(r<3?'b':r>4?'r':null):null));let turn='r',selected=null,chain=false,end=false;const grid=boardNode();restartControls(()=>openGame('checkers'),'Local two-player game. Captures are mandatory; jump again when a second capture is available.');
+ function startCheckers(){let b=Array.from({length:8},(_,r)=>Array.from({length:8},(_,c)=>(r+c)%2===1?(r<3?'b':r>4?'r':null):null));let turn='r',selected=null,chain=false,end=false;const grid=boardNode();restartControls(restartCurrent,'Captures are mandatory; jump again when another capture is available.');
   const owner=x=>x&&x.toLowerCase();const dirs=x=>x===x.toUpperCase()?[[-1,-1],[-1,1],[1,-1],[1,1]]:owner(x)==='r'?[[-1,-1],[-1,1]]:[[1,-1],[1,1]];const inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
   function options(r,c){const x=b[r][c],out=[];if(!x)return out;for(const [dr,dc] of dirs(x)){const a=r+dr,bb=c+dc;if(!inside(a,bb))continue;if(!b[a][bb])out.push({r:a,c:bb,cap:null});else if(owner(b[a][bb])!==owner(x)&&inside(a+dr,bb+dc)&&!b[a+dr][bb+dc])out.push({r:a+dr,c:bb+dc,cap:[a,bb]})}return out}
   function allOptions(color){const arr=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(owner(b[r][c])===color)arr.push(...options(r,c).map(o=>({...o,from:[r,c]})));const captured=arr.filter(o=>o.cap);return captured.length?captured:arr}
   function legal(r,c){const opts=options(r,c);if(chain)return opts.filter(o=>o.cap);if(allOptions(turn).some(o=>o.cap))return opts.filter(o=>o.cap);return opts}
   function draw(){grid.replaceChildren();const opts=selected?legal(...selected):[];for(let r=0;r<8;r++)for(let c=0;c<8;c++){const x=b[r][c];const selectedHere=selected&&selected[0]===r&&selected[1]===c;const target=opts.some(o=>o.r===r&&o.c===c);const glyph=x?'<span class="sgx-check-piece '+(owner(x)==='r'?'red':'black')+'">'+(x===x.toUpperCase()?'♛':'')+'</span>':'';grid.append(gridButton(r,c,glyph,(r+c)%2===0,()=>click(r,c),selectedHere,target))}status(end?(turn==='r'?'⚫ Black':'🔴 Red')+' wins! 🎉':(turn==='r'?'🔴 Red':'⚫ Black')+' to move'+(chain?' — jump again!':''))}
-  function click(r,c){if(end)return;const x=b[r][c];if(selected){const move=legal(...selected).find(o=>o.r===r&&o.c===c);if(move){const [fr,fc]=selected;b[r][c]=b[fr][fc];b[fr][fc]=null;if(move.cap)b[move.cap[0]][move.cap[1]]=null;if((turn==='r'&&r===0)||(turn==='b'&&r===7))b[r][c]=b[r][c].toUpperCase();selected=[r,c];chain=!!move.cap&&options(r,c).some(o=>o.cap);if(!chain){turn=turn==='r'?'b':'r';selected=null;if(!allOptions(turn).length)end=true}draw();if(end)addXP(20);return}}if(x&&owner(x)===turn&&!chain){selected=[r,c];draw();return}if(!chain){selected=null;draw()}}
-  draw();}
+  function click(r,c,remote=false){if(end||!canTap(turn,[r,c],remote))return;const x=b[r][c];if(selected){const move=legal(...selected).find(o=>o.r===r&&o.c===c);if(move){const [fr,fc]=selected;b[r][c]=b[fr][fc];b[fr][fc]=null;if(move.cap)b[move.cap[0]][move.cap[1]]=null;if((turn==='r'&&r===0)||(turn==='b'&&r===7))b[r][c]=b[r][c].toUpperCase();selected=[r,c];chain=!!move.cap&&options(r,c).some(o=>o.cap);if(!chain){turn=turn==='r'?'b':'r';selected=null;if(!allOptions(turn).length)end=true}draw();if(end)addXP(20);else if(turn==='b')botLater(bot);return}}if(x&&owner(x)===turn&&!chain){selected=[r,c];draw();return}if(!chain){selected=null;draw()}}
+  function bot(){if(end||turn!=='b')return;const available=chain&&selected?legal(...selected).map(m=>({...m,from:selected})):allOptions('b');if(!available.length)return;available.sort((a,b)=>Number(!!b.cap)-Number(!!a.cap));const m=available[0];if(!chain)click(...m.from);click(m.r,m.c);}
+  onlineClick=a=>click(a[0],a[1],true);draw();}
  // Reversi / Othello, complete same-device two-player rules.
- function startReversi(){let b=Array.from({length:8},()=>Array(8).fill(0));b[3][3]=2;b[3][4]=1;b[4][3]=1;b[4][4]=2;let turn=1,end=false;const grid=boardNode();restartControls(()=>openGame('reversi'),'Place a disc to trap the opponent’s discs in straight lines. Most discs wins.');const inb=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
+ function startReversi(){let b=Array.from({length:8},()=>Array(8).fill(0));b[3][3]=2;b[3][4]=1;b[4][3]=1;b[4][4]=2;let turn=1,end=false;const grid=boardNode();restartControls(restartCurrent,'Trap your rival’s discs. Most discs wins.');const inb=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
   function flips(r,c,p){if(!inb(r,c)||b[r][c])return [];const result=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;let rr=r+dr,cc=c+dc,path=[];while(inb(rr,cc)&&b[rr][cc]===3-p){path.push([rr,cc]);rr+=dr;cc+=dc}if(path.length&&inb(rr,cc)&&b[rr][cc]===p)result.push(...path)}return result}
   function moves(p){const m=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(flips(r,c,p).length)m.push([r,c]);return m}
   function draw(){grid.replaceChildren();const legal=moves(turn);for(let r=0;r<8;r++)for(let c=0;c<8;c++){const v=b[r][c],hint=legal.some(([rr,cc])=>r===rr&&c===cc);const glyph=v?'<span class="sgx-check-piece '+(v===1?'black':'red')+'"></span>':'';grid.append(gridButton(r,c,glyph,(r+c)%2===0,()=>click(r,c),false,hint))}const a=b.flat().filter(x=>x===1).length,d=b.flat().filter(x=>x===2).length;status(end?'Match finished — '+(a===d?'Draw':(a>d?'⚫ Black':'🔴 Red')+' wins!')+' ('+a+'–'+d+')':(turn===1?'⚫ Black':'🔴 Red')+' turn • ⚫ '+a+' / 🔴 '+d)}
-  function click(r,c){if(end)return;const f=flips(r,c,turn);if(!f.length)return;b[r][c]=turn;for(const [rr,cc] of f)b[rr][cc]=turn;turn=3-turn;if(!moves(turn).length)turn=3-turn;if(!moves(turn).length){end=true;addXP(20)}draw()}
-  draw();}
+  function click(r,c,remote=false){if(end||!flips(r,c,turn).length||!canTap(turn,[r,c],remote))return;const f=flips(r,c,turn);if(!f.length)return;b[r][c]=turn;for(const [rr,cc] of f)b[rr][cc]=turn;turn=3-turn;if(!moves(turn).length)turn=3-turn;if(!moves(turn).length){end=true;addXP(20)}draw();if(!end&&turn===2)botLater(bot)}
+  function bot(){if(end||turn!==2)return;const opts=moves(2).map(([r,c])=>({r,c,score:flips(r,c,2).length+((r===0||r===7)&&(c===0||c===7)?50:0)}));opts.sort((a,b)=>b.score-a.score);if(opts.length)click(opts[0].r,opts[0].c)}
+  onlineClick=a=>click(a[0],a[1],true);draw();}
  // Chess: legal king-safe moves, check/checkmate, castling, en passant and automatic queen promotion.
  function startChess(){const empty=()=>Array(8).fill(null);let b=Array.from({length:8},empty);let turn='w',selected=null,done=false,ep=null;
   const back=['r','n','b','q','k','b','n','r'];for(let c=0;c<8;c++){b[0][c]={t:back[c],c:'b',m:false};b[1][c]={t:'p',c:'b',m:false};b[6][c]={t:'p',c:'w',m:false};b[7][c]={t:back[c],c:'w',m:false}}
-  const pieces={w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'},b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'}};const grid=boardNode();restartControls(()=>openGame('chess'),'Local two-player chess. Includes check, checkmate, stalemate, castling, en passant, and automatic queen promotion.');
+  const pieces={w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'},b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'}};const grid=boardNode();restartControls(restartCurrent,'Chess with checkmate, castling, en passant, and queen promotion.');
   const inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;const copy=x=>x.map(row=>row.map(p=>p?{...p}:null));const enemy=c=>c==='w'?'b':'w';
   function clear(br,fr,fc,tr,tc){let dr=Math.sign(tr-fr),dc=Math.sign(tc-fc),r=fr+dr,c=fc+dc;while(r!==tr||c!==tc){if(br[r][c])return false;r+=dr;c+=dc}return true}
   function attacked(br,r,c,by){for(let a=0;a<8;a++)for(let d=0;d<8;d++){let p=br[a][d];if(!p||p.c!==by)continue;let dr=r-a,dc=c-d,ad=Math.abs(dr),ac=Math.abs(dc);if(p.t==='p'&&dr===(by==='w'?-1:1)&&ac===1)return true;if(p.t==='n'&&((ad===2&&ac===1)||(ad===1&&ac===2)))return true;if(p.t==='k'&&Math.max(ad,ac)===1)return true;if((p.t==='b'||p.t==='q')&&ad===ac&&ad!==0&&clear(br,a,d,r,c))return true;if((p.t==='r'||p.t==='q')&&((dr===0&&dc!==0)||(dc===0&&dr!==0))&&clear(br,a,d,r,c))return true}return false}
@@ -2855,8 +3066,9 @@ void start(key);
   function legal(br,fr,fc,tr,tc,color,epState){const p=br[fr][fc];if(!p||p.c!==color||!pseudo(br,fr,fc,tr,tc))return false;return !inCheck(simulated(br,fr,fc,tr,tc,epState),color)}
   function hasMoves(color){for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(b[r][c]?.c===color)for(let tr=0;tr<8;tr++)for(let tc=0;tc<8;tc++)if(legal(b,r,c,tr,tc,color,ep))return true;return false}
   let result='';function draw(){grid.replaceChildren();const opts=selected?Array.from({length:64},(_,i)=>[Math.floor(i/8),i%8]).filter(([r,c])=>legal(b,...selected,r,c,turn,ep)):[];for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=b[r][c];const markup=p?'<span class="sgx-chess-piece '+(p.c==='w'?'white':'black')+'">'+pieces[p.c][p.t]+'</span>':'';grid.append(gridButton(r,c,markup,(r+c)%2===0,()=>click(r,c),!!selected&&selected[0]===r&&selected[1]===c,opts.some(([rr,cc])=>rr===r&&cc===c)))}status(result||((turn==='w'?'⚪ White':'⚫ Black')+' to move'+(inCheck(b,turn)?' — CHECK!':'')))}
-  function click(r,c){if(done)return;const p=b[r][c];if(selected&&legal(b,...selected,r,c,turn,ep)){const [fr,fc]=selected;let newep=null;if(b[fr][fc].t==='p'&&Math.abs(r-fr)===2)newep={r:(r+fr)/2,c,color:turn};b=simulated(b,fr,fc,r,c,ep);ep=newep;turn=enemy(turn);selected=null;if(!hasMoves(turn)){done=true;result=inCheck(b,turn)?(turn==='w'?'⚫ Black':'⚪ White')+' wins by checkmate! 🎉':'Draw by stalemate!';addXP(25)}draw();return}if(p&&p.c===turn){selected=[r,c];draw();return}selected=null;draw()}
-  draw();}
+  function click(r,c,remote=false){if(done||!canTap(turn==='w'?1:2,[r,c],remote))return;const p=b[r][c];if(selected&&legal(b,...selected,r,c,turn,ep)){const [fr,fc]=selected;let newep=null;if(b[fr][fc].t==='p'&&Math.abs(r-fr)===2)newep={r:(r+fr)/2,c,color:turn};b=simulated(b,fr,fc,r,c,ep);ep=newep;turn=enemy(turn);selected=null;if(!hasMoves(turn)){done=true;result=inCheck(b,turn)?(turn==='w'?'⚫ Black':'⚪ White')+' wins by checkmate! 🎉':'Draw by stalemate!';addXP(25)}draw();if(!done&&turn==='b')botLater(bot);return}if(p&&p.c===turn){selected=[r,c];draw();return}selected=null;draw()}
+  function bot(){if(done||turn!=='b')return;let opts=[];const value={p:1,n:3,b:3,r:5,q:9,k:99};for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(b[r][c]?.c==='b')for(let tr=0;tr<8;tr++)for(let tc=0;tc<8;tc++)if(legal(b,r,c,tr,tc,'b',ep)){const taken=b[tr][tc],center=4-Math.abs(tr-3.5)-Math.abs(tc-3.5);opts.push({r,c,tr,tc,score:(taken?value[taken.t]*10:0)+center+Math.random()*3})}opts.sort((a,b)=>b.score-a.score);const m=opts[0];if(m){click(m.r,m.c);click(m.tr,m.tc)}}
+  onlineClick=a=>click(a[0],a[1],true);draw();}
  // Local pass is browser-only; server-verified membership is a separate mode.
  let premium=false,preview=false,localMode=false;
  function gameAllowed(){return premium||preview}
@@ -2991,7 +3203,8 @@ void start(key);
  $('sgxBetaPreview')?.addEventListener('click',()=>{preview=!preview;$('sgxBetaPreview').textContent=preview?'Turn off beta preview':'Try Premium game beta';syncPremium()});
  document.querySelectorAll('[data-sgx-game]').forEach(button=>button.addEventListener('click',()=>openGame(button.dataset.sgxGame)));
  document.querySelectorAll('[data-premium-game]').forEach(button=>button.addEventListener('click',()=>openPremium(button.dataset.premiumGame)));
- $('sgxCloseGame')?.addEventListener('click',()=>dialog.close());dialog?.addEventListener('close',()=>{cleanup();cleanup=()=>{};currentGame='' });
+ $('sgxCloseGame')?.addEventListener('click',()=>dialog.close());dialog?.addEventListener('close',()=>{cancelBot();closeRoom();cleanup();cleanup=()=>{};currentGame='';onlineClick=null });
+ document.addEventListener('click',e=>{const b=e.target.closest?.('[data-game="ttt"]');if(b){e.preventDefault();e.stopImmediatePropagation();openGame('ttt')}},true);
  document.querySelectorAll('[data-sgx-view]').forEach(button=>button.addEventListener('click',()=>window.studyGamesShowView?.(button.dataset.sgxView)));
  document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',played));
  initPremium();syncPremium();renderProfile();
@@ -3302,34 +3515,42 @@ void start(key);
 
 <script id="sg-yt-song-switcher">
 (() => {
-  const tracks=[
-    {name:'Digger Funk',id:'LwZ0IbDcIac'},
-    {name:'Shape of You Hardtekk',id:'1J01N9hv_GY'}
-  ];
-  const player=document.getElementById('sgYTPlayer');
-  const watch=document.getElementById('sgYTWatchLink');
-  const label=document.getElementById('sgYTNowPlaying');
-  const choices=[document.getElementById('sgYTChoose0'),document.getElementById('sgYTChoose1')];
-  if(!player||!watch||!label||choices.some(x=>!x))return;
-  let index=0;
-  function choose(next) {
-    index=(next+tracks.length)%tracks.length;
-    const track=tracks[index];
-    // Avoid playing two audio sources at once; local Files recordings are separate from this panel.
-    for(const p of document.querySelectorAll('#sgRecoveredSongs video')){try{p.pause();}catch(e){}}
-    player.title=track.name+' YouTube player';
-    player.src='https://www.youtube-nocookie.com/embed/'+track.id+'?playsinline=1&rel=0&autoplay=1';
-    watch.href='https://www.youtube.com/watch?v='+track.id;
-    label.textContent='Selected: '+track.name+' — if autoplay is blocked, tap Play in the YouTube player';
-    choices.forEach((button,i)=>{
-      const selected=(i===index);
-      button.classList.toggle('sg-yt-selected',selected);
-      button.setAttribute('aria-pressed',String(selected));
-    });
-  }
-  choices.forEach((button,i)=>button.addEventListener('click',()=>choose(i)));
-  document.getElementById('sgYTPrev').addEventListener('click',()=>choose(index-1));
-  document.getElementById('sgYTNext').addEventListener('click',()=>choose(index+1));
+ const tracks=[
+  {name:'Digger Funk',id:'LwZ0IbDcIac',note:'YouTube · Song 1 of 2'},
+  {name:'Shape of You Hardtekk',id:'1J01N9hv_GY',note:'GoldZoro · Song 2 of 2'}
+ ];
+ const get=id=>document.getElementById(id);
+ const player=get('sgYTPlayer'), watch=get('sgYTWatchLink'), artwork=get('sgYTArtwork');
+ const label=get('sgYTNowPlaying'), meta=get('sgYTNowMeta'),status=get('sgYTStatus');
+ const choices=[get('sgYTChoose0'),get('sgYTChoose1')];
+ const prev=get('sgYTPrev'),next=get('sgYTNext'),play=get('sgYTPlay');
+ if(!player||!watch||!artwork||!label||!meta||!status||!prev||!next||!play||choices.some(x=>!x)) return;
+ let index=0;
+ function showSong(i,attemptAutoplay=false){
+  index=((i%tracks.length)+tracks.length)%tracks.length;
+  const song=tracks[index];
+  // Stop privately imported local recordings if a YouTube track is chosen.
+  document.querySelectorAll('#sgRecoveredSongs video').forEach(el=>{try{el.pause()}catch(e){}});
+  label.textContent=song.name;
+  meta.textContent=song.note;
+  artwork.textContent=index===0?'♫':'♪';
+  artwork.setAttribute('aria-label','Artwork for '+song.name);
+  watch.href='https://www.youtube.com/watch?v='+song.id;
+  player.title=song.name+' — official YouTube video player';
+  // Replacing the iframe stops the previous video; autoplay may be blocked by iOS.
+  player.src='https://www.youtube-nocookie.com/embed/'+song.id+'?playsinline=1&rel=0'+(attemptAutoplay?'&autoplay=1':'');
+  choices.forEach((button,n)=>{
+   const selected=n===index;
+   button.setAttribute('aria-pressed',String(selected));
+   const mark=button.querySelector('.sg-music-active-mark');
+   if(mark)mark.hidden=!selected;
+  });
+  status.textContent=attemptAutoplay?('Loaded '+song.name+'. If sound does not begin, tap ▶ inside the YouTube video.'):('Ready: '+song.name+'. Tap ▶ inside the YouTube video.');
+ }
+ choices.forEach((b,n)=>b.addEventListener('click',()=>showSong(n,true)));
+ prev.addEventListener('click',()=>showSong(index-1,true));
+ next.addEventListener('click',()=>showSong(index+1,true));
+ play.addEventListener('click',()=>showSong(index,true));
 })();
 </script>
 
